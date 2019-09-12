@@ -123,6 +123,8 @@ public class Particle : MonoBehaviour
 
         //Lab 2 test: apply gravity: f = mg
 
-        AddForce(ForceGenerator.GenerateForce_Gravity(mass, -9.81f, Vector2.up));
+        //AddForce(ForceGenerator.GenerateForce_Gravity(mass, -9.81f, Vector2.up));
+        AddForce(ForceGenerator.GenerateForce_sliding(new Vector2(0, -9.81f), new Vector2(-.86f, .5f)*9.81f));
     }
+    
 }
