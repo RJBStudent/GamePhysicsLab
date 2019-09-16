@@ -6,7 +6,9 @@ public class Particle : MonoBehaviour
 {
     [Header("Transform Values")]
     // lab 1 step 1
-    public Vector2 position, velocity, acceleration;
+    public Vector2 position;
+    public Vector2 velocity, acceleration;
+    private Vector3 startingPos;
 
     //lab 1 step 1
     public float rotation, angularVelocity, angularAcceleration;
@@ -16,6 +18,24 @@ public class Particle : MonoBehaviour
     //lab 2 step 1
     public float startingMass = 1.0f;
     float mass, massInv;
+
+    [Header("Movement Types")]
+    public bool gravity;
+    public bool sliding;
+    public bool frictionStatic;
+    public bool frictionKinetic;
+    public bool drag;
+    public bool spring;
+
+    public bool startSliding;
+
+    [Header("Testing Variables")]
+    public bool resetPosition;
+    public bool resetData;
+    public float resetTime;
+    private float currentTime = 0;
+    public Vector2 slopeNormal = new Vector2(-0.259f, 0.93f);
+    public Transform springTransform;
 
     //lab 2 step 1
     public void SetMass(float newMass)
@@ -89,13 +109,40 @@ public class Particle : MonoBehaviour
     void Start()
     {
         SetMass(startingMass);
+        position = transform.position;
+
+        startingPos = transform.position;
+
+        if(startSliding)
+        {
+            AddForce(ForceGenerator.GenerateForce_sliding(new Vector2(0, -9.81f), slopeNormal * 9.81f)*70f);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(resetPosition)
+        {
+            ResetPositions();
+        }
+        
 
+    }
 
+    void ResetPositions()
+    {
+        currentTime += Time.deltaTime;
+        if(currentTime > resetTime)
+        {
+            position = startingPos;
+            currentTime = 0f;
+            if(resetData)
+            {
+                velocity = Vector2.zero;
+                acceleration = Vector2.zero;
+            }
+        }
     }
 
     void FixedUpdate()
@@ -112,7 +159,7 @@ public class Particle : MonoBehaviour
         updateRotationEulerExplicit(Time.fixedDeltaTime);
 
         // lab 1:  update transform
-        transform.position = position;
+        transform.position = new Vector3(position.x, position.y, startingPos.z);
         transform.rotation = Quaternion.Euler(0, 0, rotation);
 
 
@@ -122,9 +169,34 @@ public class Particle : MonoBehaviour
         // angularAcceleration = Mathf.Sin(Time.time)*10f;
 
         //Lab 2 test: apply gravity: f = mg
-        //AddForce(ForceGenerator.GenerateForce_Gravity(mass, -9.81f, Vector2.up));
-        AddForce(ForceGenerator.GenerateForce_sliding(new Vector2(0, -9.81f), new Vector2(-.86f, .5f)*9.81f));
 
+        Vector2 f = Vector2.zero;
+
+
+        if(gravity)
+        {
+            AddForce(ForceGenerator.GenerateForce_Gravity(mass, -9.81f, Vector2.up));
+        }
+        if (sliding)
+        {
+            AddForce(ForceGenerator.GenerateForce_sliding(new Vector2(0, -9.81f), slopeNormal * 9.81f));
+        }
+        if (frictionKinetic)
+        {
+            AddForce(ForceGenerator.GenerateForce_friction_kinetic(slopeNormal, velocity, .5f));
+        }
+        if(drag)
+        {
+            AddForce(ForceGenerator.GenerateForce_drag(velocity, new Vector2(0, 3f), .5f, 1, 1.05f));
+        }
+        if(spring)
+        {
+            AddForce(ForceGenerator.GenerateForce_spring(position, springTransform.position, 3f, 3f));
+        }
+        if(frictionStatic)
+        {
+            AddForce(ForceGenerator.GenerateForce_friction_static(slopeNormal, acceleration * mass , 5f));
+        }
     }
     
 }
