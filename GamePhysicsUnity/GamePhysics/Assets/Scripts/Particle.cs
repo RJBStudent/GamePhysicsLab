@@ -2,8 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum shape
+{
+   DISK,
+   RECTANGLE,
+   LINE_SEGMENT,
+   RING
+}
+
 public class Particle : MonoBehaviour
 {
+
     [Header("Transform Values")]
     // lab 1 step 1
     public Vector2 position;
@@ -19,7 +29,7 @@ public class Particle : MonoBehaviour
     public float startingMass = 1.0f;
     float mass, massInv;
 
-    [Header("Movement Types")]
+    [Header("Force Types")]
     public bool gravity;
     public bool sliding;
     public bool frictionStatic;
@@ -36,6 +46,39 @@ public class Particle : MonoBehaviour
     private float currentTime = 0;
     public Vector2 slopeNormal = new Vector2(-0.259f, 0.93f);
     public Transform springTransform;
+
+
+    //Lab 03 step 1
+    [Header("Torque Stuff")]
+    public shape particleShape;
+    public float inner, outer;
+    //Lab 03 step 2
+    [SerializeField]
+    float torque;
+
+
+    //Lab 03 step 1
+    float inertia;
+    void SetInertia()
+    {
+        switch(particleShape)
+        {
+            case shape.DISK:
+                inertia = .5f * mass * (transform.localScale.x * .5f) * (transform.localScale.x * .5f);
+                break;
+            case shape.RECTANGLE:
+                inertia = .0833f * mass * (transform.localScale.x * transform.localScale.x + transform.localScale.y * transform.localScale.y);
+                break;
+            case shape.LINE_SEGMENT:
+                inertia = .0833f * mass * (transform.localScale.y) * (transform.localScale.y);
+                break;
+            case shape.RING:
+                inertia = .0833f * mass * (inner * inner + outer * outer);
+                break;
+            default:
+                break;
+        }
+    }
 
     //lab 2 step 1
     public void SetMass(float newMass)
@@ -58,6 +101,12 @@ public class Particle : MonoBehaviour
     {
         //D'Alembert
         force += newForce;
+    }
+
+    public void AddTorque(float newTorque)
+    {
+        //D'Alembert
+        torque += newTorque;
     }
 
     public void UpdateAcceleration()
@@ -117,6 +166,8 @@ public class Particle : MonoBehaviour
         {
             AddForce(ForceGenerator.GenerateForce_sliding(new Vector2(0, -9.81f), slopeNormal * 9.81f)*70f);
         }
+
+        SetInertia();
     }
 
     // Update is called once per frame

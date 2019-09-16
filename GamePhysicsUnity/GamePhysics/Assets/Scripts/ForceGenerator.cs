@@ -30,7 +30,7 @@ public class ForceGenerator
         return f_sliding;
     }
 
-  public static Vector2 GenerateForce_friction_static(Vector2 f_normal, Vector2 f_opposing, float frictionCoefficient_static)
+    public static Vector2 GenerateForce_friction_static(Vector2 f_normal, Vector2 f_opposing, float frictionCoefficient_static)
     {
         // f_friction_s = -f_opposing if less than max, else -coeff*f_normal (max amount is coeff*|f_normal|)
         float max = frictionCoefficient_static * Mathf.Abs(f_normal.magnitude);
@@ -69,6 +69,8 @@ public class ForceGenerator
 
         return f_spring;
     }
+
+    
 
     static Vector2 Abs(Vector2 v2) 
     {
