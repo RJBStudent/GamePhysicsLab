@@ -1261,7 +1261,7 @@ MonoBehaviour:
   angularVelocity: 0
   angularAcceleration: 0
   startingMass: 1
-  gravity: 0
+  gravity: 1
   sliding: 0
   frictionStatic: 0
   frictionKinetic: 0

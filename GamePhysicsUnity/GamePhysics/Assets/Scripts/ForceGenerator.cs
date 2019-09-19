@@ -33,7 +33,7 @@ public class ForceGenerator
   public static Vector2 GenerateForce_friction_static(Vector2 f_normal, Vector2 f_opposing, float frictionCoefficient_static)
     {
         // f_friction_s = -f_opposing if less than max, else -coeff*f_normal (max amount is coeff*|f_normal|)
-        float max = frictionCoefficient_static * Mathf.Abs(f_normal.magnitude);
+        float max = frictionCoefficient_static * f_normal.magnitude;
         Vector2 f_friction_s = (f_opposing.magnitude < max) ? -f_opposing : -frictionCoefficient_static*f_normal.magnitude*f_opposing.normalized;
         return f_friction_s;
 
@@ -43,7 +43,7 @@ public class ForceGenerator
     {
         
         // f_friction_k = -coeff*|f_normal| * unit(vel)
-        Vector2 f_friction_k = Mathf.Abs(f_normal.magnitude) * particleVelocity * -frictionCoefficient_kinetic;
+        Vector2 f_friction_k = f_normal.magnitude * particleVelocity.normalized * -frictionCoefficient_kinetic;
         return f_friction_k;
 
     }
@@ -53,7 +53,7 @@ public class ForceGenerator
        
         // f_drag = (p * u^2 * area * coeff)/2
         Vector2 u = particleVelocity - fluidVelocity;
-        Vector2 f_drag = (fluidDensity * ( u*u) * objectArea_crossSection * objectDragCoefficient) * .5f;
+        Vector2 f_drag = (fluidDensity * ( u.magnitude*u) * objectArea_crossSection * objectDragCoefficient) * .5f;
         return f_drag;
 
     }
