@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+
 public enum shape
 {
    DISK,
@@ -11,8 +12,17 @@ public enum shape
    RING
 }
 
+[System.Serializable]
+public struct RotationalForce
+{
+    public Vector2 forcePosition;
+    public Vector2 forceDirection;
+}
+
+
 public class Particle : MonoBehaviour
 {
+    
 
     [Header("Transform Values")]
     // lab 1 step 1
@@ -51,10 +61,15 @@ public class Particle : MonoBehaviour
     //Lab 03 step 1
     [Header("Torque Stuff")]
     public shape particleShape;
-    public float inner, outer;
+    public float inner, outer, diskRadius;
     //Lab 03 step 2
     [SerializeField]
     float torque;
+
+    [SerializeField]
+    RotationalForce[] rotationalForce;
+    [SerializeField]
+    Vector2 centerOfMass;
 
 
     //Lab 03 step 1
@@ -64,7 +79,7 @@ public class Particle : MonoBehaviour
         switch(particleShape)
         {
             case shape.DISK:
-                inertia = .5f * mass * (transform.localScale.x * .5f) * (transform.localScale.x * .5f);
+                inertia = .5f * mass * (diskRadius * .5f) * (diskRadius * .5f);
                 break;
             case shape.RECTANGLE:
                 inertia = .0833f * mass * (transform.localScale.x * transform.localScale.x + transform.localScale.y * transform.localScale.y);
@@ -88,7 +103,6 @@ public class Particle : MonoBehaviour
         massInv = mass > 0.0f ? 1.0f / mass : 0.0f;
     }
 
-
     //lab 2 step 1
     public float GetMass()
     {
@@ -109,6 +123,12 @@ public class Particle : MonoBehaviour
         torque += newTorque;
     }
 
+    float calculateTorque(Vector2 pointOfForce, Vector2 force)
+    {
+        pointOfForce = pointOfForce - centerOfMass;
+        return (pointOfForce.x * force.y - pointOfForce.y * force.x);
+    }
+    
     public void UpdateAcceleration()
     {
         //Newton 2
@@ -154,6 +174,13 @@ public class Particle : MonoBehaviour
         angularVelocity += angularAcceleration * dt;
     }
 
+    void updateAngularAcceleration()
+    {
+        angularAcceleration = (1f / inertia) * torque;
+
+        torque = 0;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -167,7 +194,19 @@ public class Particle : MonoBehaviour
             AddForce(ForceGenerator.GenerateForce_sliding(new Vector2(0, -9.81f), slopeNormal * 9.81f)*70f);
         }
 
+        //Lab 3 Add Torque test
+
+        //lab 3 set inertia and torque
         SetInertia();
+        torque = 0;
+
+        //lab 3 add torque force and set acceleration
+        for(int i = 0; i < rotationalForce.Length; i++)
+        {
+            AddTorque(calculateTorque(rotationalForce[i].forcePosition, rotationalForce[i].forceDirection));
+        }
+        updateAngularAcceleration();
+
     }
 
     // Update is called once per frame
@@ -209,9 +248,13 @@ public class Particle : MonoBehaviour
         //Lab 1
         updateRotationEulerExplicit(Time.fixedDeltaTime);
 
+        //Lab 3
+        updateAngularAcceleration();
+
+
         // lab 1:  update transform
         transform.position = new Vector3(position.x, position.y, startingPos.z);
-        transform.rotation = Quaternion.Euler(0, 0, rotation);
+        transform.rotation = Quaternion.Euler(0f, 0f, (float)rotation);
 
 
         // lab 1 step 4
@@ -219,11 +262,11 @@ public class Particle : MonoBehaviour
         //  acceleration.x = -Mathf.Sin(Time.time);
         // angularAcceleration = Mathf.Sin(Time.time)*10f;
 
+        //lab 3 test
+
+
         //Lab 2 test: apply gravity: f = mg
-
-        Vector2 f = Vector2.zero;
-
-
+        
         if(gravity)
         {
             AddForce(ForceGenerator.GenerateForce_Gravity(mass, -9.81f, Vector2.up));
