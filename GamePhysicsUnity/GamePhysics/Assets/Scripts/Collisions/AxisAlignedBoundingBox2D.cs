@@ -65,7 +65,31 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // Same as above twice:
         // first find max extents of OBB, do AABB vs this box
         // then transform this box into OBB space find max extents, repeat
-        // 1. .........
+
+        // 1) Get position of this AABB
+
+        // 2) Get position of OBB
+
+        // 3) Get the x normal of OBB by (+cos(particle.rotation), +sin(particle.rotation))
+
+        // 4) Get the y normal of OBB by (-sin(particle.rotation), +cos(particle.rotation))
+
+        // 5) Get the height and width of the OBB
+
+        // 6) Get the extents of all corners
+
+            // 6/1) TopRightCorner add half of width and add half of heigth
+        
+            // 6/2) TopLeftCorner subtract half of width and add half of heigth
+        
+            // 6/3) BottomRightCorner add half of width and subtract half of heigth
+            
+            // 6/4) BottomLeftCorner subtract half of width and subtract half of heigth
+
+        // 7) rotate the corners with rotation matrix
+
+
+
 
         return false;
     }
@@ -74,6 +98,24 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
     {
 
         //see circle
+
+        // 1) Get Circle position 
+
+        // 2) Get position of AABB collider
+
+        // 3) Get max and min Extents of X boxes
+
+        // 5) Get max and min Extents of Y boxes
+
+        // 6) Clamp circle X position 
+
+        // 7) Clamp circle Y position
+
+        // 8) Create vector2 for closest point on rectangle with clamped position
+
+        // 9) TEST : see if new vector2 is within circle radius
+
+
         return false;
     }
 
