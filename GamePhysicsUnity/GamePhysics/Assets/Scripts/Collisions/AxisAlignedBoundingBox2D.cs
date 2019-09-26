@@ -33,10 +33,25 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
 
         // 2) Get Extent values in space by first halving height and width
-        
-        // 3) 
 
-        
+        // 3) With the halved values add them to partocle position to get max extent
+
+        // 4) subtract for min extents
+
+        // 5) compare max 0 with min 1 on x axis
+
+        // 6) compare max 1 with min 0 on x axis
+
+        // 7) compare to see if x axis test is true
+
+        // 8) compare max 0 with min 1 on y axis
+
+        // 9) compare max 1 with min 0 on y axis
+
+        // 10) Compare y axis test to see if true
+
+        // 11) return true if both axis test are true
+
 
 
         //Get the min and max extents of 
