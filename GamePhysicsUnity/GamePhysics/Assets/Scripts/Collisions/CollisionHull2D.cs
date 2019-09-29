@@ -21,6 +21,9 @@ public abstract class CollisionHull2D : MonoBehaviour
 
     public Particle particle;
 
+    public bool colliding;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,14 +33,40 @@ public abstract class CollisionHull2D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+       
     }
 
     public static bool TestCollision(CollisionHull2D a, CollisionHull2D b)
     {
         //see types and pick function
+        bool collision = false;
+        
+        switch(b.type)
+        {
+            case HullType.AABB:
+                {
+                    AxisAlignedBoundingBox2D AABB = (AxisAlignedBoundingBox2D)b;
+                     collision = a.TestCollisionVsAABB(AABB);
 
-        return false;
+                    break;
+                }
+            case HullType.CIRCLE:
+                {
+                    CircleCollision CIRCLE = (CircleCollision)b;
+                    collision=  a.TestCollisionVsCircle(CIRCLE);
+                    break;
+                }
+            case HullType.OBB:
+                {
+                    ObjectBoundingBox2D OBB = (ObjectBoundingBox2D)b;
+                     collision =  a.TestCollisionVsOBB(OBB);
+                    break;
+                }
+            default:
+                break;
+        }
+        
+        return collision;
     }
 
 

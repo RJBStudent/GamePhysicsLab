@@ -10,18 +10,28 @@ public class CircleCollision : CollisionHull2D
     [Range(0.0f, 100.0f)]
     public float radius;
 
-    public ObjectBoundingBox2D obb;
+    MeshRenderer meshRen;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+      
+        CollisionManager.Instance.AddCollision(this);
+
+        meshRen = GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        TestCollisionVsOBB(obb);
+        if (colliding)
+        {
+            meshRen.material.color = Color.red;
+        }
+        else
+        {
+            meshRen.material.color = Color.blue;
+        }
     }
 
     public override bool TestCollisionVsCircle(CircleCollision other)
@@ -39,6 +49,7 @@ public class CircleCollision : CollisionHull2D
         // 2) differnce of the two
         Vector2 distance = thisPosition - otherPosition;
 
+
         // 3) distance squared
         float distanceSq = Vector2.Dot(distance, distance);
 
@@ -50,11 +61,11 @@ public class CircleCollision : CollisionHull2D
 
         // 6) TEST: distanceSq <= sumSq
 
-        if(distanceSq <= sumSq)
+        if (distanceSq <= sumSq)
         {
-            return true;
+            return true;            
         }
-
+        Debug.Log("false");
         return false;
     }
 
@@ -147,12 +158,10 @@ public class CircleCollision : CollisionHull2D
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= radius)
         {
-            Debug.Log("Circle_OBB YEP");
             return true;
         }
         else
         {
-            //Debug.Log("Circle_OBB NOPE");
             return false;
         }
     }

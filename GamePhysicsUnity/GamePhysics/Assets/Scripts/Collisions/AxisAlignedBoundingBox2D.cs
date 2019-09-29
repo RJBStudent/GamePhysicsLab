@@ -12,25 +12,26 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
     [Range(0.1f, 100.0f)]
     public float height;
 
-    public AxisAlignedBoundingBox2D AABB;
-    public ObjectBoundingBox2D OBB;
+    MeshRenderer meshRen;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        CollisionManager.Instance.AddCollision(this);
+
+        meshRen = GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(TestCollisionVsAABB(AABB) || TestCollisionVsOBB(OBB))
+        if (colliding)
         {
-            GetComponent<MeshRenderer>().material.color = Color.red;
+            meshRen.material.color = Color.red;
         }
         else
         {
-            GetComponent<MeshRenderer>().material.color = Color.blue;
+            meshRen.material.color = Color.blue;
         }
     }
 
