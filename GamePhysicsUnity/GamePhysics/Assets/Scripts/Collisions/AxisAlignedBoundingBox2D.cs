@@ -12,6 +12,9 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
     [Range(0.1f, 100.0f)]
     public float height;
 
+    public AxisAlignedBoundingBox2D AABB;
+    public ObjectBoundingBox2D OBB;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +24,14 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
     // Update is called once per frame
     void Update()
     {
-        
+        if(TestCollisionVsAABB(AABB) || TestCollisionVsOBB(OBB))
+        {
+            GetComponent<MeshRenderer>().material.color = Color.red;
+        }
+        else
+        {
+            GetComponent<MeshRenderer>().material.color = Color.blue;
+        }
     }
 
     public override bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other)
@@ -60,11 +70,11 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
         // (3)
         Vector2 thisMaxExtent = new Vector2(particle.position.x + (width / 2), particle.position.y + (width / 2));
-        Vector2 otherMaxExtent = new Vector2(particle.position.x + (width / 2), particle.position.y + (width / 2));
+        Vector2 otherMaxExtent = new Vector2(otherPos.x + (otherWidth / 2), otherPos.y  + (otherHeight/ 2));
 
         // (4)
-        Vector2 thisMinExtent = new Vector2(particle.position.x - (width / 2), particle.position.y - (width / 2));
-        Vector2 otherMinExtent = new Vector2(particle.position.x - (width / 2), particle.position.y - (width / 2));
+        Vector2 thisMinExtent = new Vector2(particle.position.x - (width / 2), particle.position.y - (height/ 2));
+        Vector2 otherMinExtent = new Vector2(otherPos.x - (otherWidth / 2), otherPos.y - (otherHeight/ 2));
 
         bool xTest = false;
         bool yTest = false;
@@ -194,7 +204,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         Vector2 OBBBottomLeft = new Vector2(- (OBBWidth / 2), - (OBBHeight / 2));
 
         // (7)
-        Quaternion newQuat = Quaternion.Euler(0, 0, other.particle.rotation);
+        Quaternion newQuat = Quaternion.Euler(0, 0, -other.particle.rotation);
         Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);
 
         OBBTopRight = rotationMat.MultiplyPoint3x4(OBBTopRight);
@@ -212,30 +222,31 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         for (int i = 0; i < corners.Length; i++)
         {
             // (8)
-            if(minX <  corners[i].x)
+            if(corners[i].x < minX)
             {
                 minX = corners[i].x;
             }
 
             // (9)
-            if (maxX > corners[i].x)
+            if (corners[i].x > maxX)
             {
                 maxX = corners[i].x;
             }
 
             // (10)
-            if (minY < corners[i].y)
+            if ( corners[i].y < minY )
             {
                 minY = corners[i].y;
             }
 
             // (11)
-            if (minY < corners[i].y)
+            if (corners[i].y > maxY)
             {
-                minY = corners[i].y;
+                maxY = corners[i].y;
             }
 
         }
+
 
         // (12)
         Vector2 maxOBBExtent = new Vector2(OBBpos.x + maxX,OBBpos.y +  maxY);
@@ -257,6 +268,8 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         {
             // (17)
             xTest = true;
+
+            Debug.Log("First X true");
         }
         else
         {
@@ -269,7 +282,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
             // (20)
-            yTest = true;
+            yTest = true; Debug.Log("First Y true");
         }
         else
         {
@@ -310,24 +323,27 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
         for (int i = 0; i < corners.Length; i++)
         {
-            if (minX < corners[i].x)
+            if (corners[i].x < minX)
             {
                 minX = corners[i].x;
             }
 
-            if (maxX > corners[i].x)
+            // (9)
+            if (corners[i].x > maxX)
             {
                 maxX = corners[i].x;
             }
 
-            if (minY < corners[i].y)
+            // (10)
+            if (corners[i].y < minY)
             {
                 minY = corners[i].y;
             }
 
-            if (minY < corners[i].y)
+            // (11)
+            if (corners[i].y > maxY)
             {
-                minY = corners[i].y;
+                maxY = corners[i].y;
             }
 
         }
@@ -338,7 +354,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // (24)
         if (maxOBBExtent.x >= minAABBExtent.x && maxAABBExtent.x >= minOBBExtent.x)
         {
-            xTest = true;
+            xTest = true; Debug.Log("Second X true");
         }
         else
         {
@@ -348,7 +364,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
-            yTest = true;
+            yTest = true; Debug.Log("Second Y true");
         }
         else
         {
