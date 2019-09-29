@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObjectBoundingBox2D : CollisionHull2D
 {
+    public float width;
+    public float height;
 
     public ObjectBoundingBox2D() : base(CollisionHull2D.HullType.OBB) { }
 
