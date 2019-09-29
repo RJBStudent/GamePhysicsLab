@@ -34,28 +34,36 @@ public class ObjectBoundingBox2D : CollisionHull2D
         // 1) Get this OBB position
 
         // 2) get other OBB position
-
-        // 3) rotate the OBB into its world space normals
         
         // 3) Get the x normal of OBB by (+cos(particle.rotation), +sin(particle.rotation))
 
         // 4) Get the y normal of OBB by (-sin(particle.rotation), +cos(particle.rotation))
 
-        // 4) get extents of this rotated box by adding half width and height then subtracting half width half height
+        // 5) rotate the OBB into its world space X normal
 
-        // 5) get extents of other OBB
+        // 6) get extents of this rotated box by adding half width and height then subtracting half width half height
 
-        // 6) rotate other extents to be in their own world space(particle current rotation)
+        // 7) get extents of other OBB
 
-        // 7) Rotate other extents to be in this OBB rotation
+        // 8) rotate other extents to be in their own world space(particle current rotation)
 
-        // 8) get Min and Max of X and Y of other OBB
+        // 9) Rotate other extents to be in this OBB rotation
 
-        // 9) using max X and Y get the Maximum extent
+        // 10) get Min and Max of X and Y of other OBB
+
+        // 11) using max X and Y get the Maximum extent
+
+        // 12) using min X and Y get the minimum extent 
+
+        // 13) Do AABB vs AABB with the new extents of the other OBB
+
+        // 14) Go Back to step 4 and rotate the original positions to be its Y normal
+
+        // 15) step 6 in Y normal world space
         
-        // 10) using min X and Y get the minimum extent 
+        // 16) step 7 - 13
 
-        // 11) Do AABB vs AABB with the new extents of the other OBB
+        // 17) if all AABB are true return true
 
         return false;
     }
