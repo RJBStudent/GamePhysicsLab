@@ -105,9 +105,7 @@ public class CircleCollision : CollisionHull2D
         Vector2 clampedPos = Vector2.zero;
         clampedPos.x = Mathf.Clamp(pos.x, -.5f * other.width, .5f * other.width);
         clampedPos.y = Mathf.Clamp(pos.y, -.5f * other.height, .5f * other.height);
-
-        Debug.Log(pos);
-        Debug.Log(clampedPos);
+        
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= radius)
         {
