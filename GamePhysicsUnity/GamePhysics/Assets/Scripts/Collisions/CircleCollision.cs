@@ -10,6 +10,8 @@ public class CircleCollision : CollisionHull2D
     [Range(0.0f, 100.0f)]
     public float radius;
 
+    public ObjectBoundingBox2D obb;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +21,7 @@ public class CircleCollision : CollisionHull2D
     // Update is called once per frame
     void Update()
     {
-        
+        TestCollisionVsOBB(obb);
     }
 
     public override bool TestCollisionVsCircle(CircleCollision other)
@@ -119,13 +121,38 @@ public class CircleCollision : CollisionHull2D
 
     public override bool TestCollisionVsOBB(ObjectBoundingBox2D other)
     {
+        Vector2 pos = transform.position;
+        //  1. Get z-rotation of OBB
+        float zRot = other.particle.rotation;
+        //  2. Rotate OBB by -Z
 
-        //Same as above, but first...
-        // multiply circle center by box world matrix inverse
+        zRot *= Mathf.Deg2Rad;
+        //  3. Transform circles position by mat2x2 {cos -sin;   sin cos} * {circlePos - boxPos}
+        Vector2 top = new Vector2(Mathf.Cos(-zRot), -Mathf.Sin(-zRot));
+        Vector2 bottom = new Vector2(Mathf.Sin(-zRot), Mathf.Cos(-zRot));
+
+        pos = pos - other.particle.position;
+        pos.x = pos.x * top.x + pos.y * top.y;
+        pos.y = pos.x * bottom.x + pos.y * bottom.y;
 
 
+        //  4. Clamp circle pos by the extents of the box
 
-        return false;
+        Vector2 clampedPos = Vector2.zero;
+        clampedPos.x = Mathf.Clamp(pos.x, -.5f * other.width, .5f * other.width);
+        clampedPos.y = Mathf.Clamp(pos.y, -.5f * other.height, .5f * other.height);
+        
+        //  5. Compare clamped position against circles radius
+        if ((pos - clampedPos).magnitude <= radius)
+        {
+            Debug.Log("Circle_OBB YEP");
+            return true;
+        }
+        else
+        {
+            Debug.Log("Circle_OBB NOPE");
+            return false;
+        }
     }
 
 
