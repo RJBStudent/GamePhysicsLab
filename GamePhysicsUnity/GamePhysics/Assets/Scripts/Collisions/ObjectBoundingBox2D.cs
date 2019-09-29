@@ -7,6 +7,11 @@ public class ObjectBoundingBox2D : CollisionHull2D
 
     public ObjectBoundingBox2D() : base(CollisionHull2D.HullType.OBB) { }
 
+    [Range(0.1f, 100.0f)]
+    public float width;
+    [Range(0.1f, 100.0f)]
+    public float height;
+
     // Start is called before the first frame update
     void Start()
     {

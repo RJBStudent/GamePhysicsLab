@@ -61,24 +61,60 @@ public class CircleCollision : CollisionHull2D
         //Find the closest point to the circle on the box, take the center and the closest point
         // (done by clamping center of circle to be within box dimensions)
         // if closest point is within circle, pass (do point vs circle test)
-        
+
         // 1) Get Circle position 
 
         // 2) Get position of AABB collider
 
         // 3) Get max and min Extents of X boxes
 
-        // 5) Get max and min Extents of Y boxes
+        // 4) Get minimum and max x and y positions for clamping
 
-        // 6) Clamp circle X position 
+        // 5) Clamp circle X position 
 
-        // 7) Clamp circle Y position
+        // 6) Clamp circle Y position
 
-        // 8) Create vector2 for closest point on rectangle with clamped position
+        // 7) Create vector2 for closest point on rectangle with clamped position
 
-        // 9) TEST : see if new vector2 is within circle radius
+        // 8) TEST : see if new vector2 is within circle radius
 
-        return false;
+        // (1)
+        Vector2 otherPos = other.particle.position;
+
+        // (2)
+        Vector2 thisPos = particle.position;
+
+        float otherWidth = other.width;
+        float otherHeight = other.height;
+
+        // (4)
+        float maxX = otherPos.x + (otherWidth / 2);
+        float minX = otherPos.x - (otherWidth / 2);
+                     
+        float maxY = otherPos.y - (otherHeight / 2);
+        float minY = otherPos.y - (otherHeight / 2);
+
+        // (5)
+        float xClosest = thisPos.x;
+        xClosest = Mathf.Clamp(xClosest, minX, maxX);
+
+        // (6)
+        float yClosest = thisPos.y;
+        yClosest = Mathf.Clamp(yClosest, minY, maxY);
+
+        // (7)
+        Vector2 closestPoint = new Vector2(xClosest, yClosest);
+
+        // (8)
+        if ((otherPos - closestPoint).magnitude < radius)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     public override bool TestCollisionVsOBB(ObjectBoundingBox2D other)
