@@ -177,8 +177,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
         {
             // (17)
             xTest = true;
-
-            Debug.Log("First X true");
+            
         }
         else
         {
@@ -191,7 +190,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
             // (20)
-            yTest = true; Debug.Log("First Y true");
+            yTest = true;
         }
         else
         {
@@ -263,7 +262,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
         // (24)
         if (maxOBBExtent.x >= minAABBExtent.x && maxAABBExtent.x >= minOBBExtent.x)
         {
-            xTest = true; Debug.Log("Second X true");
+            xTest = true;
         }
         else
         {
@@ -273,7 +272,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
 
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
-            yTest = true; Debug.Log("Second Y true");
+            yTest = true;
         }
         else
         {
@@ -300,7 +299,11 @@ public class ObjectBoundingBox2D : CollisionHull2D
         bool check1 = checkBoundingBox(this, other);
         bool check2 = checkBoundingBox(other, this);
 
-        Debug.Log(check1 && check2);
+        if(check1 && check2)
+        {
+            Debug.Log("OBB_OBB YEP");
+        }
+        return (check1 && check2);
 
         // DO IT AGAIN!!
 
@@ -333,8 +336,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
         // 16) step 7 - 13
 
         // 17) if all AABB are true return true
-
-        return false;
+        
     }
 
     public override bool TestCollisionVsCircle(CircleCollision other)
@@ -365,8 +367,10 @@ public class ObjectBoundingBox2D : CollisionHull2D
         Vector2 otherPos = obj2.GetComponent<Particle>().position;
 
         float thisRot = obj1.particle.rotation;
+        
 
         Vector2 otherRotatedPos = rotateAroundPoint(otherPos, thisPos, -thisRot);
+        //Vector2 otherRotatedPos = rotationMat.MultiplyPoint3x4(otherPos);
         otherRotatedPos -= thisPos;
 
         float otherRot = obj2.particle.rotation;
@@ -379,7 +383,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
         points[2] = new Vector2(.5f * obj2.width, -.5f * obj2.height);
         points[3] = new Vector2(.5f * obj2.width, .5f * obj2.height);
 
-        Quaternion newQuat = Quaternion.Euler(0, 0, otherRot);
+        Quaternion newQuat = Quaternion.Euler(0, 0, -otherRot);
         Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);
 
         for (int i = 0; i < 4; i++)

@@ -132,10 +132,12 @@ public class CircleCollision : CollisionHull2D
         Vector2 bottom = new Vector2(Mathf.Sin(-zRot), Mathf.Cos(-zRot));
 
         pos = pos - other.particle.position;
-        pos.x = pos.x * top.x + pos.y * top.y;
-        pos.y = pos.x * bottom.x + pos.y * bottom.y;
+        //pos.x = pos.x * top.x + pos.y * top.y;
+        //pos.y = pos.x * bottom.x + pos.y * bottom.y;
 
-
+        Quaternion newQuat = Quaternion.Euler(0, 0, -zRot);
+        Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);
+        pos = rotationMat.MultiplyPoint3x4(pos);
         //  4. Clamp circle pos by the extents of the box
 
         Vector2 clampedPos = Vector2.zero;
@@ -150,7 +152,7 @@ public class CircleCollision : CollisionHull2D
         }
         else
         {
-            Debug.Log("Circle_OBB NOPE");
+            //Debug.Log("Circle_OBB NOPE");
             return false;
         }
     }

@@ -218,7 +218,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         float minX = Mathf.Infinity, maxX = 0, minY = Mathf.Infinity, maxY = 0;
 
         Vector2[] corners = new Vector2[] { OBBTopRight, OBBTopLeft, OBBBottomRight, OBBBottomLeft};
-
+        
         for (int i = 0; i < corners.Length; i++)
         {
             // (8)
@@ -269,7 +269,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
             // (17)
             xTest = true;
 
-            Debug.Log("First X true");
+
         }
         else
         {
@@ -282,7 +282,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
             // (20)
-            yTest = true; Debug.Log("First Y true");
+            yTest = true;
         }
         else
         {
@@ -354,7 +354,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // (24)
         if (maxOBBExtent.x >= minAABBExtent.x && maxAABBExtent.x >= minOBBExtent.x)
         {
-            xTest = true; Debug.Log("Second X true");
+            xTest = true;
         }
         else
         {
@@ -364,7 +364,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
-            yTest = true; Debug.Log("Second Y true");
+            yTest = true;
         }
         else
         {
