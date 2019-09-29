@@ -12,25 +12,26 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
     [Range(0.1f, 100.0f)]
     public float height;
 
-    public AxisAlignedBoundingBox2D AABB;
-    public ObjectBoundingBox2D OBB;
+    MeshRenderer meshRen;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        CollisionManager.Instance.AddCollision(this);
+
+        meshRen = GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(TestCollisionVsAABB(AABB) || TestCollisionVsOBB(OBB))
+        if (colliding)
         {
-            GetComponent<MeshRenderer>().material.color = Color.red;
+            meshRen.material.color = Color.red;
         }
         else
         {
-            GetComponent<MeshRenderer>().material.color = Color.blue;
+            meshRen.material.color = Color.blue;
         }
     }
 
@@ -269,7 +270,6 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
             // (17)
             xTest = true;
 
-            Debug.Log("First X true");
         }
         else
         {
@@ -282,7 +282,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
             // (20)
-            yTest = true; Debug.Log("First Y true");
+            yTest = true;
         }
         else
         {
@@ -354,7 +354,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // (24)
         if (maxOBBExtent.x >= minAABBExtent.x && maxAABBExtent.x >= minOBBExtent.x)
         {
-            xTest = true; Debug.Log("Second X true");
+            xTest = true;
         }
         else
         {
@@ -364,7 +364,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
-            yTest = true; Debug.Log("Second Y true");
+            yTest = true;
         }
         else
         {

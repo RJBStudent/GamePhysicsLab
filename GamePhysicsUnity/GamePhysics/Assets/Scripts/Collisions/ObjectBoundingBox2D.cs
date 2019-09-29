@@ -11,19 +11,28 @@ public class ObjectBoundingBox2D : CollisionHull2D
 
     public ObjectBoundingBox2D() : base(CollisionHull2D.HullType.OBB) { }
 
+    MeshRenderer meshRen;
  
   
-    public ObjectBoundingBox2D obb;
     // Start is called before the first frame update
     void Start()
     {
-        
+        CollisionManager.Instance.AddCollision(this);
+
+        meshRen = GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        TestCollisionVsOBB(obb);
+        if (colliding)
+        {
+            meshRen.material.color = Color.red;
+        }
+        else
+        {
+            meshRen.material.color = Color.blue;
+        }
     }
 
     public override bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other)
@@ -178,7 +187,6 @@ public class ObjectBoundingBox2D : CollisionHull2D
             // (17)
             xTest = true;
 
-            Debug.Log("First X true");
         }
         else
         {
@@ -191,7 +199,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
             // (20)
-            yTest = true; Debug.Log("First Y true");
+            yTest = true; 
         }
         else
         {
@@ -263,7 +271,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
         // (24)
         if (maxOBBExtent.x >= minAABBExtent.x && maxAABBExtent.x >= minOBBExtent.x)
         {
-            xTest = true; Debug.Log("Second X true");
+            xTest = true;
         }
         else
         {
@@ -273,7 +281,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
 
         if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
         {
-            yTest = true; Debug.Log("Second Y true");
+            yTest = true;
         }
         else
         {
@@ -379,9 +387,37 @@ public class ObjectBoundingBox2D : CollisionHull2D
 
     public override bool TestCollisionVsCircle(CircleCollision other)
     {
-               //see circle
+        Vector2 pos = other.transform.position;
+        //  1. Get z-rotation of OBB
+        float zRot = particle.rotation;
+        //  2. Rotate OBB by -Z
 
-        return false;
+        zRot *= Mathf.Deg2Rad;
+        //  3. Transform circles position by mat2x2 {cos -sin;   sin cos} * {circlePos - boxPos}
+        Vector2 top = new Vector2(Mathf.Cos(-zRot), -Mathf.Sin(-zRot));
+        Vector2 bottom = new Vector2(Mathf.Sin(-zRot), Mathf.Cos(-zRot));
+
+        pos = pos - particle.position;
+        pos.x = pos.x * top.x + pos.y * top.y;
+        pos.y = pos.x * bottom.x + pos.y * bottom.y;
+
+
+        //  4. Clamp circle pos by the extents of the box
+
+        Vector2 clampedPos = Vector2.zero;
+        clampedPos.x = Mathf.Clamp(pos.x, -.5f * width, .5f * width);
+        clampedPos.y = Mathf.Clamp(pos.y, -.5f * height, .5f *height);
+
+        //  5. Compare clamped position against circles radius
+        if ((pos - clampedPos).magnitude <= other.radius)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     Vector2 rotateAroundPoint(Vector2 point, Vector2 center, float degree)
