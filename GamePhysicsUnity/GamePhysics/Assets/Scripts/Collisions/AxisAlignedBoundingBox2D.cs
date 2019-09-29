@@ -65,15 +65,94 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // Same as above twice:
         // first find max extents of OBB, do AABB vs this box
         // then transform this box into OBB space find max extents, repeat
-        // 1. .........
+
+        // 1) Get position of this AABB
+
+        // 2) Get position of OBB
+
+        // 3) Get the x normal of OBB by (+cos(particle.rotation), +sin(particle.rotation))
+
+        // 4) Get the y normal of OBB by (-sin(particle.rotation), +cos(particle.rotation))
+
+        // 5) Get the height and width of the OBB
+
+        // 6) Get the extents of all corners
+
+        // 6/1) TopRightCorner add half of width and add half of heigth
+
+        // 6/2) TopLeftCorner subtract half of width and add half of heigth
+
+        // 6/3) BottomRightCorner add half of width and subtract half of heigth
+
+        // 6/4) BottomLeftCorner subtract half of width and subtract half of heigth
+
+        // 7) rotate the corners with rotation matrix
+
+        // 8) Get Min X as lowest X Extent value
+
+        // 9) Get Max X as Highest X Extent  value
+
+        // 10) Get Min Y as Highest Y Extent value
+
+        // 11) Get Max Y as Highest Y Extent value
+
+        // 12) Max Extent is Highest X and Highest Y
+
+        // 13) Min Extent is Lowest X and lowest Y
+
+        // 14) Get Extents of this AABB with half width and half height added and subtracted to the position
+
+        // 15) compare max OBB with min ABB on x axis
+
+        // 16 ) compare max ABB with min OBB on x axis
+
+        // 17) compare to see if x axis test is true
+
+        // 18) compare max OBB with min AABB on y axis
+
+        // 19) compare max AABB with min OBB on y axis
+
+        // 20) Compare y axis test to see if true
+
+        // 21) if both are true continue else return false
+
+        // 22) rotate the AABB to be in the OBB world space 
+
+        // 22/1) Get 4 Extents of AABB (topleft/topRight/bottomLeft/bottomRight)
+
+        // 22/2) multiply AABB position and extents by rotation matrix
+
+        // 23) Get new AABB extents with the highest and lowest X and Y values
+
+        // 24) Do AABB comparision  step 16 - 21
+
+
 
         return false;
     }
 
     public override bool TestCollisionVsCircle(CircleCollision other)
     {
-        
-        
+
+        //see circle
+
+        // 1) Get Circle position 
+
+        // 2) Get position of AABB collider
+
+        // 3) Get max and min Extents of X boxes
+
+        // 5) Get max and min Extents of Y boxes
+
+        // 6) Clamp circle X position 
+
+        // 7) Clamp circle Y position
+
+        // 8) Create vector2 for closest point on rectangle with clamped position
+
+        // 9) TEST : see if new vector2 is within circle radius
+
+
         return false;
     }
 

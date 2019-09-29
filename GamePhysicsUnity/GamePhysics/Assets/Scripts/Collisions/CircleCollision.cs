@@ -63,10 +63,22 @@ public class CircleCollision : CollisionHull2D
         //Find the closest point to the circle on the box, take the center and the closest point
         // (done by clamping center of circle to be within box dimensions)
         // if closest point is within circle, pass (do point vs circle test)
+        
+        // 1) Get Circle position 
 
-        //
+        // 2) Get position of AABB collider
 
+        // 3) Get max and min Extents of X boxes
 
+        // 5) Get max and min Extents of Y boxes
+
+        // 6) Clamp circle X position 
+
+        // 7) Clamp circle Y position
+
+        // 8) Create vector2 for closest point on rectangle with clamped position
+
+        // 9) TEST : see if new vector2 is within circle radius
 
         return false;
     }
