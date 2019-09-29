@@ -304,53 +304,13 @@ public class ObjectBoundingBox2D : CollisionHull2D
         //same as AABB-OBB part 2, twice
 
         // 1) Get this OBB position
-        Vector2 thisPos = GetComponent<Particle>().position;
-        // 2) get other OBB position
-        Vector2 otherPos = other.GetComponent<Particle>().position;
 
-        float thisRot = particle.rotation;
+        bool check1 = checkBoundingBox(this, other);
+        bool check2 = checkBoundingBox(other, this);
 
-        Vector2 otherRotatedPos = rotateAroundPoint(otherPos, thisPos, -thisRot);
-        otherRotatedPos -= thisPos;
+        Debug.Log(check1 && check2);
 
-        float otherRot = other.particle.rotation;
-        otherRot -= thisRot;
-
-        Vector2[] points = new Vector2[4];
-
-        points[0] = new Vector2(-.5f * other.width, -.5f * other.height);
-        points[1] = new Vector2(-.5f * other.width, .5f * other.height);
-        points[2] = new Vector2(.5f * other.width, -.5f * other.height);
-        points[3] = new Vector2(.5f * other.width, .5f * other.height);
-
-        for (int i = 0; i < 4; i++)
-        {
-            points[i] = rotateAroundPoint(points[i], new Vector2(0, 0), otherRot);
-        }
-
-        float otherMaxX = Mathf.Max(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
-        float otherMinX = Mathf.Min(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
-        float otherMaxY = Mathf.Max(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
-        float otherMinY = Mathf.Min(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
-
-        
-
-        float thisMaxX = width * .5f;
-        float thisMinX = -width * .5f;
-        float thisMaxY = height * .5f;
-        float thisMinY = -height * .5f;
-
-        if(name == "OBB_1")
-        {
-            //Debug.Log(otherMinX + "    " + otherMaxX + "    " + otherMinY + "    " + otherMaxY);
-        }
-
-        bool check1 = false;
-        if ((thisMaxX > otherMinX && thisMaxY > otherMinY) && (otherMaxX > thisMinX && otherMaxY > thisMinY))
-        {
-            check1 = true;
-            Debug.Log(check1);
-        }
+        // DO IT AGAIN!!
 
         // 3) Get the x normal of OBB by (+cos(particle.rotation), +sin(particle.rotation))
 
@@ -432,5 +392,56 @@ public class ObjectBoundingBox2D : CollisionHull2D
 
         point += center;
         return point;
+    }
+
+    bool checkBoundingBox(ObjectBoundingBox2D obj1, ObjectBoundingBox2D obj2)
+    {
+        Vector2 thisPos = obj1.particle.position;
+        // 2) get other OBB position
+        Vector2 otherPos = obj2.GetComponent<Particle>().position;
+
+        float thisRot = obj1.particle.rotation;
+
+        Vector2 otherRotatedPos = rotateAroundPoint(otherPos, thisPos, -thisRot);
+        otherRotatedPos -= thisPos;
+
+        float otherRot = obj2.particle.rotation;
+        otherRot -= thisRot;
+
+        Vector2[] points = new Vector2[4];
+
+        points[0] = new Vector2(-.5f * obj2.width, -.5f * obj2.height);
+        points[1] = new Vector2(-.5f * obj2.width, .5f * obj2.height);
+        points[2] = new Vector2(.5f * obj2.width, -.5f * obj2.height);
+        points[3] = new Vector2(.5f * obj2.width, .5f * obj2.height);
+
+        Quaternion newQuat = Quaternion.Euler(0, 0, otherRot);
+        Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);
+
+        for (int i = 0; i < 4; i++)
+        {
+            //points[i] = rotateAroundPoint(points[i], new Vector2(0, 0), otherRot);
+            points[i] = rotationMat.MultiplyPoint3x4(points[i]);
+        }
+
+        float otherMaxX = Mathf.Max(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
+        float otherMinX = Mathf.Min(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
+        float otherMaxY = Mathf.Max(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
+        float otherMinY = Mathf.Min(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
+
+
+
+        float thisMaxX = width * .5f;
+        float thisMinX = -width * .5f;
+        float thisMaxY = height * .5f;
+        float thisMinY = -height * .5f;
+
+        bool check1 = false;
+        if ((thisMaxX > otherMinX && thisMaxY > otherMinY) && (otherMaxX > thisMinX && otherMaxY > thisMinY))
+        {
+            check1 = true;
+        }
+
+        return check1;
     }
 }
