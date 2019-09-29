@@ -309,6 +309,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
         bool check2 = checkBoundingBox(other, this);
 
         Debug.Log(check1 && check2);
+        return (check1 && check2);
 
         // DO IT AGAIN!!
 
@@ -342,7 +343,6 @@ public class ObjectBoundingBox2D : CollisionHull2D
 
         // 17) if all AABB are true return true
 
-        return false;
     }
 
     public override bool TestCollisionVsCircle(CircleCollision other)
