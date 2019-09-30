@@ -34,7 +34,7 @@ public class CircleCollision : CollisionHull2D
         }
     }
 
-    public override bool TestCollisionVsCircle(CircleCollision other)
+    public override bool TestCollisionVsCircle(CircleCollision other, ref Collision c)
     {
 
         // Stepo 2
@@ -69,7 +69,7 @@ public class CircleCollision : CollisionHull2D
         return false;
     }
 
-    public override bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other)
+    public override bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other, ref Collision c)
     {
         //Find the closest point to the circle on the box, take the center and the closest point
         // (done by clamping center of circle to be within box dimensions)
@@ -130,7 +130,7 @@ public class CircleCollision : CollisionHull2D
 
     }
 
-    public override bool TestCollisionVsOBB(ObjectBoundingBox2D other)
+    public override bool TestCollisionVsOBB(ObjectBoundingBox2D other, ref Collision c)
     {
         Vector2 pos = transform.position;
         //  1. Get z-rotation of OBB

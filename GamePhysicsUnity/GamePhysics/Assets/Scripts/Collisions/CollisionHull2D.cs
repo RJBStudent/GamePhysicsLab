@@ -5,6 +5,23 @@ using UnityEngine;
 public abstract class CollisionHull2D : MonoBehaviour
 {
 
+    public class Collision
+    {       
+        public struct Contact
+        {
+            Vector2 point;
+            Vector2 normal;
+            float restitution;
+        }
+
+        public CollisionHull2D a = null, b = null;
+        public Contact[] contacts = new Contact[4];
+        public int contactCount = 0;
+        public bool status = false;
+        
+        public Vector2 closingVelocity = Vector2.zero;
+    }
+
     public enum HullType
     {
         CIRCLE,
@@ -36,7 +53,7 @@ public abstract class CollisionHull2D : MonoBehaviour
        
     }
 
-    public static bool TestCollision(CollisionHull2D a, CollisionHull2D b)
+    public static bool TestCollision(CollisionHull2D a, CollisionHull2D b, ref Collision c)
     {
         //see types and pick function
         bool collision = false;
@@ -46,22 +63,22 @@ public abstract class CollisionHull2D : MonoBehaviour
             case HullType.AABB:
                 {
                     AxisAlignedBoundingBox2D AABB = (AxisAlignedBoundingBox2D)b;
-                     collision = a.TestCollisionVsAABB(AABB);
+                     collision = a.TestCollisionVsAABB(AABB,ref c);
 
-                    break;
                 }
+                    break;
             case HullType.CIRCLE:
                 {
                     CircleCollision CIRCLE = (CircleCollision)b;
-                    collision=  a.TestCollisionVsCircle(CIRCLE);
-                    break;
+                    collision=  a.TestCollisionVsCircle(CIRCLE, ref c);
                 }
+                    break;
             case HullType.OBB:
                 {
                     ObjectBoundingBox2D OBB = (ObjectBoundingBox2D)b;
-                     collision =  a.TestCollisionVsOBB(OBB);
-                    break;
+                     collision =  a.TestCollisionVsOBB(OBB, ref c);
                 }
+                    break;
             default:
                 break;
         }
@@ -70,9 +87,9 @@ public abstract class CollisionHull2D : MonoBehaviour
     }
 
 
-    public abstract bool TestCollisionVsCircle(CircleCollision other);
+    public abstract bool TestCollisionVsCircle(CircleCollision other, ref Collision c);
 
-    public abstract bool TestCollisionVsOBB(ObjectBoundingBox2D other);
+    public abstract bool TestCollisionVsOBB(ObjectBoundingBox2D other, ref Collision c);
 
-    public abstract bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other);
+    public abstract bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other, ref Collision c);
 }

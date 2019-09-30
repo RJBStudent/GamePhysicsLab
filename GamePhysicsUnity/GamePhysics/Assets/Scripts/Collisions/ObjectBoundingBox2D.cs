@@ -35,7 +35,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
         }
     }
 
-    public override bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other)
+    public override bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other, ref Collision c)
     {
         //see AABB
 
@@ -299,7 +299,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
     }
 
 
-    public override bool TestCollisionVsOBB(ObjectBoundingBox2D other)
+    public override bool TestCollisionVsOBB(ObjectBoundingBox2D other, ref Collision c)
     {
         //same as AABB-OBB part 2, twice
 
@@ -308,7 +308,6 @@ public class ObjectBoundingBox2D : CollisionHull2D
         bool check1 = checkBoundingBox(this, other);
         bool check2 = checkBoundingBox(other, this);
 
-        Debug.Log(check1 && check2);
         return (check1 && check2);
 
         // DO IT AGAIN!!
@@ -345,7 +344,7 @@ public class ObjectBoundingBox2D : CollisionHull2D
 
     }
 
-    public override bool TestCollisionVsCircle(CircleCollision other)
+    public override bool TestCollisionVsCircle(CircleCollision other, ref Collision c)
     {
         Vector2 pos = other.transform.position;
         //  1. Get z-rotation of OBB

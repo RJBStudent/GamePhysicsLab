@@ -35,14 +35,16 @@ public class CollisionManager : MonoBehaviour
                 }
                 else
                 {
-                    if(CollisionHull2D.TestCollision(firstCol, secondCol))
+                    CollisionHull2D.Collision newCol = new CollisionHull2D.Collision();
+                    if(CollisionHull2D.TestCollision(firstCol, secondCol, ref newCol))
                     {
-                        Debug.Log("true");
+
                         firstCol.colliding = true;
+                        secondCol.colliding = true;
                     }
                     else
                     {
-                      //  firstCol.colliding = false;
+                        firstCol.colliding = false;
                     }
 
                 }

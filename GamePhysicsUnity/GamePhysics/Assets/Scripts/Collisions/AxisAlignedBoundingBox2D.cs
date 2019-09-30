@@ -35,7 +35,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         }
     }
 
-    public override bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other)
+    public override bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other, ref Collision c)
     {
         //pass if, for all axes, max extent of A is greater than the min extent of B
 
@@ -110,7 +110,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
     }
 
 
-    public override bool TestCollisionVsOBB(ObjectBoundingBox2D other)
+    public override bool TestCollisionVsOBB(ObjectBoundingBox2D other, ref Collision c)
     {
         // Same as above twice:
         // first find max extents of OBB, do AABB vs this box
@@ -207,6 +207,8 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // (7)
         Quaternion newQuat = Quaternion.Euler(0, 0, -other.particle.rotation);
         Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);
+        
+        
 
         OBBTopRight = rotationMat.MultiplyPoint3x4(OBBTopRight);
         OBBTopLeft = rotationMat.MultiplyPoint3x4(OBBTopLeft);
@@ -250,7 +252,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
 
         // (12)
-        Vector2 maxOBBExtent = new Vector2(OBBpos.x + maxX,OBBpos.y +  maxY);
+        Vector2 maxOBBExtent = new Vector2(OBBpos.x + maxX, OBBpos.y +  maxY);
 
         // (13)
         Vector2 minOBBExtent = new Vector2(OBBpos.x + minX, OBBpos.y + minY);
@@ -297,21 +299,24 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         }
 
         // (22)
-        maxOBBExtent = new Vector2(other.width/2, other.height/2);
-        minOBBExtent = new Vector2(-other.width/2, -other.height/2);
+        maxOBBExtent = new Vector2(OBBpos.x + (other.width/2), OBBpos.y + (other.height/2));
+        minOBBExtent = new Vector2(OBBpos.x-(other.width/2), OBBpos.y - (other.height/2));
 
         // (22/1)
-        Vector2 AABBTopRight = new Vector2((particle.position.x +(width / 2) - OBBpos.x), (particle.position.y + (height / 2)) - OBBpos.y);
-        Vector2 AABBTopLeft = new Vector2((particle.position.x -(width / 2) - OBBpos.x), (particle.position.y + (height / 2)) - OBBpos.y);
-        Vector2 AABBBottomRight = new Vector2((particle.position.x +(width / 2) - OBBpos.x), (particle.position.y - (height / 2)) - OBBpos.y);
-        Vector2 AABBBottomLeft = new Vector2((particle.position.x -(width / 2) - OBBpos.x), (particle.position.y - (height / 2)) - OBBpos.y);
+        Vector2 AABBTopRight = new Vector2((particle.position.x +(width / 2)), (particle.position.y + (height / 2)));
+        Vector2 AABBTopLeft = new Vector2((particle.position.x -(width / 2) ), (particle.position.y + (height / 2)) );
+        Vector2 AABBBottomRight = new Vector2((particle.position.x +(width / 2) ), (particle.position.y - (height / 2)) );
+        Vector2 AABBBottomLeft = new Vector2((particle.position.x -(width / 2) ), (particle.position.y - (height / 2)) );
+        Vector2 rotCenter = OBBpos;
 
+        Matrix4x4 translateMat = Matrix4x4.TRS(rotCenter , newQuat, Vector3.one);
 
+        Debug.Log(translateMat);
         // (22/2)
-        AABBTopRight = rotationMat.MultiplyPoint3x4(AABBTopRight);
-        AABBTopLeft = rotationMat.MultiplyPoint3x4(AABBTopLeft);
-        AABBBottomRight = rotationMat.MultiplyPoint3x4(AABBBottomRight);
-        AABBBottomLeft = rotationMat.MultiplyPoint3x4(AABBBottomLeft);
+        AABBTopRight = translateMat.MultiplyPoint3x4(AABBTopRight);
+        AABBTopLeft = translateMat.MultiplyPoint3x4(AABBTopLeft);
+        AABBBottomRight = translateMat.MultiplyPoint3x4(AABBBottomRight);
+        AABBBottomLeft = translateMat.MultiplyPoint3x4(AABBBottomLeft);
 
         //(23)
         minX = Mathf.Infinity;
@@ -375,14 +380,14 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         {
             return false;
         }
-        else
-        {
-            return true;
-        }
+        
+        
+        return true;
+        
 
     }
 
-    public override bool TestCollisionVsCircle(CircleCollision other)
+    public override bool TestCollisionVsCircle(CircleCollision other, ref Collision c)
     {
 
         //see circle
