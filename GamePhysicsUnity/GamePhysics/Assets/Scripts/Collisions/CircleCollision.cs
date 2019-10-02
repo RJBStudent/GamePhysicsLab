@@ -142,9 +142,9 @@ public class CircleCollision : CollisionHull2D
         Vector2 top = new Vector2(Mathf.Cos(-zRot), -Mathf.Sin(-zRot));
         Vector2 bottom = new Vector2(Mathf.Sin(-zRot), Mathf.Cos(-zRot));
 
-        pos = pos - other.particle.position;
-        pos.x = pos.x * top.x + pos.y * top.y;
-        pos.y = pos.x * bottom.x + pos.y * bottom.y;
+        Vector2 localPos = pos - other.particle.position;
+        pos.x = localPos.x * top.x + localPos.y * top.y;
+        pos.y = localPos.x * bottom.x + localPos.y * bottom.y;
 
 
         //  4. Clamp circle pos by the extents of the box

@@ -13,6 +13,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
     public float height;
 
     MeshRenderer meshRen;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -175,216 +176,24 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // 23) Get new AABB extents with the highest and lowest X and Y values
 
         // 24) Do AABB comparision  step 16 - 21
-
-        // (1) 
-        Vector2 AABBpos = particle.position;
-
-        // (2) 
-        Vector2 OBBpos = other.particle.position;
-
-        // (3)
-        Vector2 xNormal = new Vector2(Mathf.Cos(other.particle.rotation * Mathf.Deg2Rad), Mathf.Sin(other.particle.rotation * Mathf.Deg2Rad));
-
-        // (4)
-        Vector2 yNormal = new Vector2(-Mathf.Sin(other.particle.rotation * Mathf.Deg2Rad), Mathf.Cos(other.particle.rotation * Mathf.Deg2Rad));
-
-        // (5)
-        float OBBWidth = other.width;
-        float OBBHeight = other.height;
-
-        // (6/1)
-        Vector2 OBBTopRight = new Vector2( + (OBBWidth/2), + (OBBHeight / 2));
-
-        // (6/2)
-        Vector2 OBBTopLeft = new Vector2(- (OBBWidth / 2), + (OBBHeight / 2));
-
-        // (6/3)
-        Vector2 OBBBottomRight = new Vector2(+ (OBBWidth / 2), - (OBBHeight / 2));
-
-        // (6/4)
-        Vector2 OBBBottomLeft = new Vector2(- (OBBWidth / 2), - (OBBHeight / 2));
-
-        // (7)
-        Quaternion newQuat = Quaternion.Euler(0, 0, -other.particle.rotation);
-        Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);
-        
         
 
-        OBBTopRight = rotationMat.MultiplyPoint3x4(OBBTopRight);
-        OBBTopLeft = rotationMat.MultiplyPoint3x4(OBBTopLeft);
-        OBBBottomRight = rotationMat.MultiplyPoint3x4(OBBBottomRight);
-        OBBBottomLeft = rotationMat.MultiplyPoint3x4(OBBBottomLeft);
+        BoxData box1;
+        box1.pos = particle.position;
+        box1.rotation = particle.rotation;
+        box1.width = width;
+        box1.height = height;
 
-        
-        // (8 - 11)
+        BoxData box2;
+        box2.pos = other.particle.position;
+        box2.rotation = other.particle.rotation;
+        box2.width = other.width;
+        box2.height = other.height;
 
-        float minX = Mathf.Infinity, maxX = 0, minY = Mathf.Infinity, maxY = 0;
+        bool check1 = checkBoundingBox(box1, box2);
+        bool check2 = checkBoundingBox(box2, box1);
 
-        Vector2[] corners = new Vector2[] { OBBTopRight, OBBTopLeft, OBBBottomRight, OBBBottomLeft};
-
-        for (int i = 0; i < corners.Length; i++)
-        {
-            // (8)
-            if(corners[i].x < minX)
-            {
-                minX = corners[i].x;
-            }
-
-            // (9)
-            if (corners[i].x > maxX)
-            {
-                maxX = corners[i].x;
-            }
-
-            // (10)
-            if ( corners[i].y < minY )
-            {
-                minY = corners[i].y;
-            }
-
-            // (11)
-            if (corners[i].y > maxY)
-            {
-                maxY = corners[i].y;
-            }
-
-        }
-
-
-        // (12)
-        Vector2 maxOBBExtent = new Vector2(OBBpos.x + maxX, OBBpos.y +  maxY);
-
-        // (13)
-        Vector2 minOBBExtent = new Vector2(OBBpos.x + minX, OBBpos.y + minY);
-
-        // (14)
-        Vector2 maxAABBExtent = new Vector2(AABBpos.x + (width / 2), AABBpos.y + (height / 2));
-
-        // (15)
-        Vector2 minAABBExtent = new Vector2(AABBpos.x - (width / 2), AABBpos.y - (height / 2));
-
-
-        bool xTest, yTest;
-
-        // (16)                                   (17)
-        if (maxOBBExtent.x >= minAABBExtent.x && maxAABBExtent.x >= minOBBExtent.x)
-        {
-            // (17)
-            xTest = true;
-
-        }
-        else
-        {
-            // (17)
-            xTest = false;
-        }
-
-
-        // (18)                                     (19)
-        if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
-        {
-            // (20)
-            yTest = true;
-        }
-        else
-        {
-            // (20)
-            yTest = false;
-        }
-
-        // (21)
-        if(xTest == false || yTest == false)
-        {
-            return false;
-        }
-
-        // (22)
-        maxOBBExtent = new Vector2(OBBpos.x + (other.width/2), OBBpos.y + (other.height/2));
-        minOBBExtent = new Vector2(OBBpos.x-(other.width/2), OBBpos.y - (other.height/2));
-
-        // (22/1)
-        Vector2 AABBTopRight = new Vector2((particle.position.x +(width / 2)), (particle.position.y + (height / 2)));
-        Vector2 AABBTopLeft = new Vector2((particle.position.x -(width / 2) ), (particle.position.y + (height / 2)) );
-        Vector2 AABBBottomRight = new Vector2((particle.position.x +(width / 2) ), (particle.position.y - (height / 2)) );
-        Vector2 AABBBottomLeft = new Vector2((particle.position.x -(width / 2) ), (particle.position.y - (height / 2)) );
-        Vector2 rotCenter = OBBpos;
-
-        Matrix4x4 translateMat = Matrix4x4.TRS(rotCenter , newQuat, Vector3.one);
-
-        Debug.Log(translateMat);
-        // (22/2)
-        AABBTopRight = translateMat.MultiplyPoint3x4(AABBTopRight);
-        AABBTopLeft = translateMat.MultiplyPoint3x4(AABBTopLeft);
-        AABBBottomRight = translateMat.MultiplyPoint3x4(AABBBottomRight);
-        AABBBottomLeft = translateMat.MultiplyPoint3x4(AABBBottomLeft);
-
-        //(23)
-        minX = Mathf.Infinity;
-        maxX = 0;
-        minY = Mathf.Infinity;
-        maxY = 0;
-
-       corners = new Vector2[] { AABBTopRight, AABBTopLeft, AABBBottomRight, AABBBottomLeft};
-
-        for (int i = 0; i < corners.Length; i++)
-        {
-            if (corners[i].x < minX)
-            {
-                minX = corners[i].x;
-            }
-
-            // (9)
-            if (corners[i].x > maxX)
-            {
-                maxX = corners[i].x;
-            }
-
-            // (10)
-            if (corners[i].y < minY)
-            {
-                minY = corners[i].y;
-            }
-
-            // (11)
-            if (corners[i].y > maxY)
-            {
-                maxY = corners[i].y;
-            }
-
-        }
-
-        maxAABBExtent = new Vector2(maxX, maxY);
-        minAABBExtent = new Vector2(minX, minY);
-        
-        // (24)
-        if (maxOBBExtent.x >= minAABBExtent.x && maxAABBExtent.x >= minOBBExtent.x)
-        {
-            xTest = true;
-        }
-        else
-        {
-            xTest = false;
-        }
-
-
-        if (maxOBBExtent.y >= minAABBExtent.y && maxAABBExtent.y >= minOBBExtent.y)
-        {
-            yTest = true;
-        }
-        else
-        {
-            yTest = false;
-        }
-
-        if (xTest == false || yTest == false)
-        {
-            return false;
-        }
-        
-        
-        return true;
-        
-
+        return (check1 && check2);
     }
 
     public override bool TestCollisionVsCircle(CircleCollision other, ref Collision c)
@@ -445,4 +254,77 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
     }
 
+    Vector2 rotateAroundPoint(Vector2 point, Vector2 center, float degree)
+    {
+        degree *= Mathf.Deg2Rad;
+        Vector2 top = new Vector2(Mathf.Cos(degree), -Mathf.Sin(degree));
+        Vector2 bottom = new Vector2(Mathf.Sin(degree), Mathf.Cos(degree));
+
+        Vector2 localPos = point - center;
+        point.x = localPos.x * top.x + localPos.y * top.y;
+        point.y = localPos.x * bottom.x + localPos.y * bottom.y;
+
+        point += center;
+        return point;
+    }
+
+    bool checkBoundingBox(BoxData box1, BoxData box2)
+    {
+        Vector2 thisPos = box1.pos;
+        // 2) get other OBB position
+        Vector2 otherPos = box2.pos;
+
+        float thisRot = box1.rotation;
+
+        Vector2 otherRotatedPos;
+        if (box1.rotation != 0)
+        {
+            otherRotatedPos = rotateAroundPoint(otherPos, thisPos, -thisRot);
+            otherRotatedPos -= thisPos;
+        }
+        else
+        {
+            otherRotatedPos = otherPos;
+        }
+        
+
+        float otherRot = box2.rotation;
+        otherRot -= thisRot;
+
+        Vector2[] points = new Vector2[4];
+
+        points[0] = new Vector2(-.5f * box2.width, -.5f * box2.height);
+        points[1] = new Vector2(-.5f * box2.width, .5f * box2.height);
+        points[2] = new Vector2(.5f * box2.width, -.5f * box2.height);
+        points[3] = new Vector2(.5f * box2.width, .5f * box2.height);
+
+        Quaternion newQuat = Quaternion.Euler(0, 0, otherRot);
+        Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);
+
+        for (int i = 0; i < 4; i++)
+        {
+            //points[i] = rotateAroundPoint(points[i], new Vector2(0, 0), otherRot);
+            points[i] = rotationMat.MultiplyPoint3x4(points[i]);
+        }
+
+        float otherMaxX = Mathf.Max(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
+        float otherMinX = Mathf.Min(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
+        float otherMaxY = Mathf.Max(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
+        float otherMinY = Mathf.Min(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
+
+
+
+        float thisMaxX = width * .5f;
+        float thisMinX = -width * .5f;
+        float thisMaxY = height * .5f;
+        float thisMinY = -height * .5f;
+
+        bool check1 = false;
+        if ((thisMaxX > otherMinX && thisMaxY > otherMinY) && (otherMaxX > thisMinX && otherMaxY > thisMinY))
+        {
+            check1 = true;
+        }
+
+        return check1;
+    }
 }

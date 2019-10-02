@@ -4,6 +4,13 @@ using UnityEngine;
 
 public abstract class CollisionHull2D : MonoBehaviour
 {
+    public struct BoxData
+    {
+        public Vector2 pos;
+        public float width;
+        public float height;
+        public float rotation;
+    }
 
     public class Collision
     {       

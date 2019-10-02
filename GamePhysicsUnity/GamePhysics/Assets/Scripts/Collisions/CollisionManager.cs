@@ -22,21 +22,21 @@ public class CollisionManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    //Update is called once per frame
     void Update()
     {
         foreach (CollisionHull2D firstCol in collisionList)
         {
             foreach (CollisionHull2D secondCol in collisionList)
             {
-                if(firstCol.gameObject == secondCol.gameObject)
+                if (firstCol.gameObject == secondCol.gameObject)
                 {
-                    
+
                 }
                 else
                 {
                     CollisionHull2D.Collision newCol = new CollisionHull2D.Collision();
-                    if(CollisionHull2D.TestCollision(firstCol, secondCol, ref newCol))
+                    if (CollisionHull2D.TestCollision(firstCol, secondCol, ref newCol))
                     {
 
                         firstCol.colliding = true;
