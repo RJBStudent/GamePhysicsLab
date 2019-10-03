@@ -19,13 +19,15 @@ public abstract class CollisionHull2D : MonoBehaviour
             Vector2 point;
             Vector2 normal;
             float restitution;
+            float collisionDepth;
         }
 
         public CollisionHull2D a = null, b = null;
         public Contact[] contacts = new Contact[4];
         public int contactCount = 0;
         public bool status = false;
-        
+        public bool resovled = false;
+
         public Vector2 closingVelocity = Vector2.zero;
     }
 

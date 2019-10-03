@@ -92,34 +92,16 @@ public class CircleCollision : CollisionHull2D
         // 8) TEST : see if new vector2 is within circle radius
 
         // (1)
-        Vector2 otherPos = other.particle.position;
+        Vector2 pos = transform.position;
 
-        // (2)
-        Vector2 thisPos = particle.position;
+        pos = pos - other.particle.position;
 
-        float otherWidth = other.width;
-        float otherHeight = other.height;
+        Vector2 clampedPos = Vector2.zero;
+        clampedPos.x = Mathf.Clamp(pos.x, -.5f * other.width, .5f * other.width);
+        clampedPos.y = Mathf.Clamp(pos.y, -.5f * other.height, .5f * other.height);
 
-        // (4)
-        float maxX = otherPos.x + (otherWidth / 2);
-        float minX = otherPos.x - (otherWidth / 2);
-                     
-        float maxY = otherPos.y - (otherHeight / 2);
-        float minY = otherPos.y - (otherHeight / 2);
-
-        // (5)
-        float xClosest = thisPos.x;
-        xClosest = Mathf.Clamp(xClosest, minX, maxX);
-
-        // (6)
-        float yClosest = thisPos.y;
-        yClosest = Mathf.Clamp(yClosest, minY, maxY);
-
-        // (7)
-        Vector2 closestPoint = new Vector2(xClosest, yClosest);
-
-        // (8)
-        if ((otherPos - closestPoint).magnitude < radius)
+        //  5. Compare clamped position against circles radius
+        if ((pos - clampedPos).magnitude <= radius)
         {
             return true;
         }

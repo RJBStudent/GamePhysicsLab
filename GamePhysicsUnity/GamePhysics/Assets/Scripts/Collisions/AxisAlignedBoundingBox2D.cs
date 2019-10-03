@@ -218,32 +218,16 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // 8) TEST : see if new vector2 is within circle radius
 
         // (1)
-        Vector2 otherPos = other.particle.position;
+        Vector2 pos = other.particle.position;
 
-        // (2)
-        Vector2 thisPos = particle.position;
+        pos = pos - particle.position;
 
-       
-        // (4)
-        float maxX = thisPos.x + (width / 2);
-        float minX = thisPos.x - (width / 2);
+        Vector2 clampedPos = Vector2.zero;
+        clampedPos.x = Mathf.Clamp(pos.x, -.5f * width, .5f * width);
+        clampedPos.y = Mathf.Clamp(pos.y, -.5f * height, .5f * height);
 
-        float maxY = thisPos.y - (height / 2);
-        float minY = thisPos.y - (height / 2);
-
-        // (5)
-        float xClosest = otherPos.x;
-        xClosest = Mathf.Clamp(xClosest, minX, maxX);
-
-        // (6)
-        float yClosest = otherPos.y;
-        yClosest = Mathf.Clamp(yClosest, minY, maxY);
-
-        // (7)
-        Vector2 closestPoint = new Vector2(xClosest, yClosest);
-
-        // (8)
-        if((thisPos - closestPoint).magnitude < other.radius)
+        //  5. Compare clamped position against circles radius
+        if ((pos - clampedPos).magnitude <= other.radius)
         {
             return true;
         }
