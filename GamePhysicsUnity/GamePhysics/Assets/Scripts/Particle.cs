@@ -27,6 +27,8 @@ public class Particle : MonoBehaviour
     [Header("Transform Values")]
     // lab 1 step 1
     public Vector2 position;
+    Vector2 changedPosition;
+    Vector2 deltaPosition;
     public Vector2 velocity, acceleration;
     private Vector3 startingPos;
 
@@ -186,6 +188,7 @@ public class Particle : MonoBehaviour
     {
         SetMass(startingMass);
         position = transform.position;
+        changedPosition = position;
 
         startingPos = transform.position;
 
@@ -253,7 +256,12 @@ public class Particle : MonoBehaviour
 
 
         // lab 1:  update transform
+        changedPosition = transform.position;
+        deltaPosition = changedPosition - position;
+        position = position + deltaPosition;
         transform.position = new Vector3(position.x, position.y, startingPos.z);
+        
+        
         transform.rotation = Quaternion.Euler(0f, 0f, (float)rotation);
 
 
