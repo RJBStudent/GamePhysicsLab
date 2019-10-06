@@ -66,6 +66,8 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         Vector2 otherPos = other.particle.position;
         Vector2 thisPos = particle.position;
 
+        Vector2 distance = thisPos - otherPos;
+
         // (2)
         float otherWidth = other.width;
         float otherHeight = other.height;
@@ -73,10 +75,18 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // (3)
         Vector2 thisMaxExtent = new Vector2(particle.position.x + (width / 2), particle.position.y + (width / 2));
         Vector2 otherMaxExtent = new Vector2(otherPos.x + (otherWidth / 2), otherPos.y  + (otherHeight/ 2));
+        
 
         // (4)
         Vector2 thisMinExtent = new Vector2(particle.position.x - (width / 2), particle.position.y - (height/ 2));
         Vector2 otherMinExtent = new Vector2(otherPos.x - (otherWidth / 2), otherPos.y - (otherHeight/ 2));
+
+        // lab 5 collision response
+        Vector2 thisExtent = new Vector2(thisMaxExtent.x - thisMinExtent.x, thisMaxExtent.y - thisMinExtent.y);
+        Vector2 otherExtent = new Vector2(otherMaxExtent.x - otherMinExtent.x, otherMaxExtent.y - otherMinExtent.y);
+
+        float xOverlap = thisExtent.x + otherExtent.x - Mathf.Abs(distance.x);
+        float yOverlap = thisExtent.y + otherExtent.y - Mathf.Abs(distance.y);
 
         bool xTest = false;
         bool yTest = false;
@@ -107,7 +117,37 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         }
 
         // (11)
-        return (xTest && yTest);
+        if (xTest && yTest)
+        {
+            c.contacts[0].point.x = Mathf.Max(thisMinExtent.x, otherMinExtent.x);
+            c.contacts[0].point.y = Mathf.Max(thisMinExtent.y, otherMinExtent.y);
+
+            c.contacts[1].point.x = Mathf.Min(thisMaxExtent.x, otherMaxExtent.x);
+            c.contacts[1].point.y = Mathf.Min(thisMaxExtent.y, otherMaxExtent.y);
+
+            if (xOverlap>yOverlap)
+            {
+                c.contacts[0].normal = distance.x < 0 ? new Vector2(1, 0) : new Vector2(-1, 0);
+                c.contacts[1].normal = distance.x < 0 ? new Vector2(1, 0) : new Vector2(-1, 0);
+                c.contacts[0].collisionDepth = xOverlap;
+                c.contacts[1].collisionDepth = xOverlap;
+            }
+            else
+            {
+                c.contacts[0].normal = distance.y < 0 ? new Vector2(0, 1) : new Vector2(0, -1);
+                c.contacts[1].normal = distance.y < 0 ? new Vector2(0, 1) : new Vector2(0, -1);
+                c.contacts[0].collisionDepth = yOverlap;
+                c.contacts[1].collisionDepth = yOverlap;
+            }
+
+            c.contactCount = 2;
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 
@@ -193,7 +233,14 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         bool check1 = checkBoundingBox(box1, box2);
         bool check2 = checkBoundingBox(box2, box1);
 
-        return (check1 && check2);
+        if(check1 && check2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public override bool TestCollisionVsCircle(CircleCollision other, ref Collision c)
@@ -229,6 +276,14 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= other.radius)
         {
+            c.contacts[0].normal = clampedPos - pos;
+
+            c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+
+            c.contacts[0].point = other.particle.position + (c.contacts[0].normal.normalized * other.radius);
+
+            c.contactCount = 1;
+
             return true;
         }
         else

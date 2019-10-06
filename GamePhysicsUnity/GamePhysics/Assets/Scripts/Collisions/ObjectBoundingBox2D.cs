@@ -205,6 +205,21 @@ public class ObjectBoundingBox2D : CollisionHull2D
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= other.radius)
         {
+
+            top = new Vector2(Mathf.Cos(-zRot), Mathf.Sin(-zRot));
+            bottom = new Vector2(-Mathf.Sin(-zRot), Mathf.Cos(-zRot));
+
+
+            c.contacts[0].normal = clampedPos - pos;
+
+            c.contacts[0].normal.x = c.contacts[0].normal.x * top.x + c.contacts[0].normal.y * top.y;
+            c.contacts[0].normal.y = c.contacts[0].normal.x * bottom.x + c.contacts[0].normal.y * bottom.y;
+
+            c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+
+            c.contacts[0].point = other.particle.position + (c.contacts[0].normal.normalized * other.radius);
+
+            c.contactCount = 1;
             return true;
         }
         else

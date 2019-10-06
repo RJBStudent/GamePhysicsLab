@@ -16,10 +16,10 @@ public abstract class CollisionHull2D : MonoBehaviour
     {       
         public struct Contact
         {
-            Vector2 point;
-            Vector2 normal;
-            float restitution;
-            float collisionDepth;
+           public Vector2 point;
+           public Vector2 normal;
+           public float restitution;
+           public float collisionDepth;
         }
 
         public CollisionHull2D a = null, b = null;
@@ -101,4 +101,13 @@ public abstract class CollisionHull2D : MonoBehaviour
     public abstract bool TestCollisionVsOBB(ObjectBoundingBox2D other, ref Collision c);
 
     public abstract bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other, ref Collision c);
+
+
+    public Vector2 CalculateClosingVelocity(Particle a, Particle b) 
+    {
+        //negate if opposite
+        // closing velocity = (scalar position a - scalar position b) * (position a - position b)
+
+        return (a.position.magnitude - b.position.magnitude) * (a.position * b.position);
+    }
 }

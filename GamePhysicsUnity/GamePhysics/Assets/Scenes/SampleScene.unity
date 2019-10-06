@@ -795,7 +795,7 @@ Transform:
   m_GameObject: {fileID: 481055434}
   m_LocalRotation: {x: -0, y: -0.0036047157, z: -0, w: 0.9999935}
   m_LocalPosition: {x: -3.28, y: 0.31, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 1234686774}
   m_RootOrder: 3
@@ -852,7 +852,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particle: {fileID: 481055436}
   colliding: 0
-  radius: 0.5
+  radius: 1
 --- !u!135 &481055438
 SphereCollider:
   m_ObjectHideFlags: 0

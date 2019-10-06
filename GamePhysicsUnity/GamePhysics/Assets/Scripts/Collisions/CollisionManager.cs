@@ -62,6 +62,8 @@ public class CollisionManager : MonoBehaviour
         {
             firstCol.colliding = true;
         }
+
+        //ResolveCollisions();
     }
 
     public void AddCollision(CollisionHull2D newCol)
@@ -74,12 +76,52 @@ public class CollisionManager : MonoBehaviour
         collisionList.Remove(newCol);
     }
 
+    //TEMP GIZMO POSITION
+    Vector3 draw;
+
     void ResolveCollisions()
     {
         foreach(CollisionHull2D.Collision col in currentCollisions)
         {
             //resove?
             //if not resolved keep in list else delete from list
+
+            
+            //calculate seperating velocity
+
+            // Check whether there is a collision to solve in other words if it is stationary
+
+            //calculate new seperating velcocity with restitution
+
+            //get the change in the seperating velocities
+
+            //Apply the change in velocity to each object proprotionate to inverse mass
+
+            //add the two inverse masses together
+
+            // impulse = change in seperating velocites / total inverse mass
+            
+            //the ammount of impulses per mass is the contact normal * impulse
+
+            //new velocity = old velocity + impulses per mass * inverse mass;
+
+            // the other particle goes om the inverse direction (negate inverse mass)
+
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        if(currentCollisions == null)
+        {
+            return;
+        }
+        foreach (CollisionHull2D.Collision col in currentCollisions)
+        {
+            draw = col.contacts[0].point;
+            draw.z = 5;
+            Gizmos.DrawSphere(draw, 0.1f);
         }
     }
 }

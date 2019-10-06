@@ -63,9 +63,19 @@ public class CircleCollision : CollisionHull2D
 
         if (distanceSq <= sumSq)
         {
+            //Collision Depth
+            c.contacts[0].collisionDepth = (other.radius + radius) - distance.magnitude;
+
+            //Collision Normal 
+            c.contacts[0].normal = distance / distance.magnitude;
+
+            c.contacts[0].point = c.contacts[0].normal.normalized * other.radius + other.particle.position;
+
+            c.contactCount = 1;
+
             return true;            
         }
-        Debug.Log("false");
+
         return false;
     }
 
@@ -103,6 +113,14 @@ public class CircleCollision : CollisionHull2D
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= radius)
         {
+            c.contacts[0].normal = clampedPos - pos;
+
+            c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+
+            c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
+
+            c.contactCount = 1;
+
             return true;
         }
         else
@@ -138,6 +156,20 @@ public class CircleCollision : CollisionHull2D
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= radius)
         {
+            top = new Vector2(Mathf.Cos(-zRot), Mathf.Sin(-zRot));
+            bottom = new Vector2(-Mathf.Sin(-zRot), Mathf.Cos(-zRot));
+
+
+            c.contacts[0].normal = clampedPos - pos;
+
+            c.contacts[0].normal.x = c.contacts[0].normal.x * top.x + c.contacts[0].normal.y * top.y;
+            c.contacts[0].normal.y = c.contacts[0].normal.x * bottom.x + c.contacts[0].normal.y * bottom.y;
+
+            c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+
+            c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
+
+            c.contactCount = 1;
             return true;
         }
         else
