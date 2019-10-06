@@ -86,26 +86,48 @@ public class CollisionManager : MonoBehaviour
             //resove?
             //if not resolved keep in list else delete from list
 
-            
+
             //calculate seperating velocity
+
+            Vector2 relativeVelocity = col.a.particle.velocity - col.b.particle.velocity;
+            relativeVelocity *= col.contacts[0].normal.normalized;
 
             // Check whether there is a collision to solve in other words if it is stationary
 
+            
             //calculate new seperating velcocity with restitution
+            Vector2 newSepVelocity = -relativeVelocity * col.contacts[0].restitution;
 
             //get the change in the seperating velocities
+
+
+            Vector2 deltaVelocity = newSepVelocity - relativeVelocity;
+
 
             //Apply the change in velocity to each object proprotionate to inverse mass
 
             //add the two inverse masses together
 
+            float totalInverseMass = (1 / col.a.particle.GetMass()) + (1 / col.b.particle.GetMass());
+
+
             // impulse = change in seperating velocites / total inverse mass
-            
+
+            Vector2 impulse = deltaVelocity / totalInverseMass;
+
             //the ammount of impulses per mass is the contact normal * impulse
+
+            Vector2 impulsePerMass = col.contacts[0].normal * impulse;
 
             //new velocity = old velocity + impulses per mass * inverse mass;
 
+            col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * (1 / col.a.particle.GetMass());
+
+
+
             // the other particle goes om the inverse direction (negate inverse mass)
+
+            col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * -(1 / col.b.particle.GetMass());
 
         }
     }
@@ -119,9 +141,15 @@ public class CollisionManager : MonoBehaviour
         }
         foreach (CollisionHull2D.Collision col in currentCollisions)
         {
-            draw = col.contacts[0].point;
-            draw.z = 5;
-            Gizmos.DrawSphere(draw, 0.1f);
+
+            for(int i = 0; i < col.contactCount; i++)
+            {
+                    draw = col.contacts[i].point;
+                    draw.z = -3;
+                    Gizmos.DrawSphere(draw, 0.1f);
+            }
         }
+
+        currentCollisions.Clear();
     }
 }

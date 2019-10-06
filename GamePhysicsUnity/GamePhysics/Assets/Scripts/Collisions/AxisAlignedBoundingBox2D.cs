@@ -82,8 +82,8 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         Vector2 otherMinExtent = new Vector2(otherPos.x - (otherWidth / 2), otherPos.y - (otherHeight/ 2));
 
         // lab 5 collision response
-        Vector2 thisExtent = new Vector2(thisMaxExtent.x - thisMinExtent.x, thisMaxExtent.y - thisMinExtent.y);
-        Vector2 otherExtent = new Vector2(otherMaxExtent.x - otherMinExtent.x, otherMaxExtent.y - otherMinExtent.y);
+        Vector2 thisExtent = new Vector2((thisMaxExtent.x - thisMinExtent.x)/2, (thisMaxExtent.y - thisMinExtent.y)/2);
+        Vector2 otherExtent = new Vector2((otherMaxExtent.x - otherMinExtent.x)/2, (otherMaxExtent.y - otherMinExtent.y)/2);
 
         float xOverlap = thisExtent.x + otherExtent.x - Mathf.Abs(distance.x);
         float yOverlap = thisExtent.y + otherExtent.y - Mathf.Abs(distance.y);
@@ -119,21 +119,27 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         // (11)
         if (xTest && yTest)
         {
-            c.contacts[0].point.x = Mathf.Max(thisMinExtent.x, otherMinExtent.x);
-            c.contacts[0].point.y = Mathf.Max(thisMinExtent.y, otherMinExtent.y);
 
-            c.contacts[1].point.x = Mathf.Min(thisMaxExtent.x, otherMaxExtent.x);
-            c.contacts[1].point.y = Mathf.Min(thisMaxExtent.y, otherMaxExtent.y);
+
+                c.contacts[0].point.x = Mathf.Max(thisMinExtent.x, otherMinExtent.x);
+                c.contacts[0].point.y = Mathf.Max(thisMinExtent.y, otherMinExtent.y);
+
+                c.contacts[1].point.x = Mathf.Min(thisMaxExtent.x, otherMaxExtent.x);
+                c.contacts[1].point.y = Mathf.Min(thisMaxExtent.y, otherMaxExtent.y);
+
+
 
             if (xOverlap>yOverlap)
             {
+
+
                 c.contacts[0].normal = distance.x < 0 ? new Vector2(1, 0) : new Vector2(-1, 0);
                 c.contacts[1].normal = distance.x < 0 ? new Vector2(1, 0) : new Vector2(-1, 0);
                 c.contacts[0].collisionDepth = xOverlap;
                 c.contacts[1].collisionDepth = xOverlap;
             }
             else
-            {
+            { 
                 c.contacts[0].normal = distance.y < 0 ? new Vector2(0, 1) : new Vector2(0, -1);
                 c.contacts[1].normal = distance.y < 0 ? new Vector2(0, 1) : new Vector2(0, -1);
                 c.contacts[0].collisionDepth = yOverlap;
