@@ -40,10 +40,8 @@ public class PlayerScript : MonoBehaviour
         bullets = new List<GameObject>();
         for(int i = 0; i < bulletCount; i++)
         {
-            GameObject newBullet = Instantiate(playerBullet, Vector3.zero, Quaternion.identity) as GameObject;
+            GameObject newBullet = Instantiate(playerBullet, transform.position, Quaternion.identity) as GameObject;
             bullets.Add(newBullet);
-
-            bullets[currentBulletIndex].GetComponent<Particle>().position = transform.position;
             newBullet.SetActive(false);
         }
     }
@@ -83,8 +81,12 @@ public class PlayerScript : MonoBehaviour
             Debug.Log("Shoot : " + currentBulletIndex);
             currentBulletIndex = (currentBulletIndex+1) % bulletCount;
             bullets[currentBulletIndex].SetActive(true);
-            //bullets[currentBulletIndex].transform.position = transform.position;
-
+            // bullets[currentBulletIndex].GetComponent<Particle>().position = thisParticle.position;
+            bullets[currentBulletIndex].transform.position = thisParticle.position + (direction.normalized * 2f);
+            bullets[currentBulletIndex].GetComponent<Particle>().position = bullets[currentBulletIndex].transform.position;
+            bullets[currentBulletIndex].GetComponent<CollisionHull2D>().enabled = true;
+            bullets[currentBulletIndex].GetComponent<Particle>().AddForce(direction.normalized * 100f);
+            bullets[currentBulletIndex].GetComponent<Particle>().velocity = Vector2.zero;
         }
     }
 }

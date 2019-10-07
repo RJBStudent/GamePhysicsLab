@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c36a87be20e94b4e8d4617d0edb74b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0}
+  position: {x: 1, y: 1}
   velocity: {x: 0, y: 0}
   acceleration: {x: 0, y: 0}
   rotation: 0
@@ -116,9 +116,7 @@ MonoBehaviour:
   outer: 0
   diskRadius: 0.5
   torque: 0
-  rotationalForce:
-  - forcePosition: {x: 0, y: 0}
-    forceDirection: {x: 0, y: 0}
+  rotationalForce: []
   centerOfMass: {x: 0, y: 0}
 --- !u!114 &7736533776229184767
 MonoBehaviour:
@@ -127,7 +125,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8312842846561151515}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 744aa592fd6a13f41a7c8e430498f5fb, type: 3}
   m_Name: 
