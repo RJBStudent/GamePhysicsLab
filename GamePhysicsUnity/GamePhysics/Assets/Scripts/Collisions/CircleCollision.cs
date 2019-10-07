@@ -119,7 +119,7 @@ public class CircleCollision : CollisionHull2D
 
             c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
 
-            c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
+            c.contacts[0].point = particle.position - (pos.normalized * radius);
 
             c.contactCount = 1;
 
