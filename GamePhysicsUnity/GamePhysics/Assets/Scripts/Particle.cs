@@ -258,7 +258,7 @@ public class Particle : MonoBehaviour
         // lab 1:  update transform
         changedPosition = transform.position;
         deltaPosition = changedPosition - position;
-        position = position + deltaPosition;
+        //position = position + deltaPosition;
         transform.position = new Vector3(position.x, position.y, startingPos.z);
         
         

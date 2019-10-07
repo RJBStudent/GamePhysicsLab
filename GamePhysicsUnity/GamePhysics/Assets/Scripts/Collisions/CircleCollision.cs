@@ -115,11 +115,14 @@ public class CircleCollision : CollisionHull2D
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= radius)
         {
-            c.contacts[0].normal = clampedPos - pos;
+            c.contacts[0].normal = pos - clampedPos;
 
             c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+            c.contacts[0].normal.Normalize();
 
-            c.contacts[0].point = particle.position - (pos.normalized * radius);
+            c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
+
+            c.contacts[0].restitution = 0.0001f;
 
             c.contactCount = 1;
 

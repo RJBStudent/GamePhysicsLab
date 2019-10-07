@@ -285,8 +285,10 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
             c.contacts[0].normal = clampedPos - pos;
 
             c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+            c.contacts[0].normal.Normalize();
+            c.contacts[0].point = other.particle.position + (c.contacts[0].normal.normalized * other.radius);
 
-            c.contacts[0].point = other.particle.position - (pos.normalized * other.radius);
+            c.contacts[0].restitution = 0.0001f;
 
             c.contactCount = 1;
 
