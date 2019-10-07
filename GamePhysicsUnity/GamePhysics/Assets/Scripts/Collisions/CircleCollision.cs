@@ -71,7 +71,7 @@ public class CircleCollision : CollisionHull2D
 
             c.contacts[0].point = c.contacts[0].normal.normalized * other.radius + other.particle.position;
 
-            c.contacts[0].restitution = 1f;
+            c.contacts[0].restitution = 0.0001f;
 
             c.contactCount = 1;
 

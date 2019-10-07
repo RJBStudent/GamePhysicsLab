@@ -89,6 +89,7 @@ public class CollisionManager : MonoBehaviour
 
             //calculate seperating velocity
             ContactResolve(col);
+            //RestingContactResolution(col);
             ResolveInterpentration(col);
            
 
@@ -151,13 +152,13 @@ public class CollisionManager : MonoBehaviour
 
         //new velocity = old velocity + impulses per mass * inverse mass;
 
-        col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * (1 / col.a.particle.GetMass());
+        col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * -(1 / col.a.particle.GetMass());
 
 
 
         // the other particle goes om the inverse direction (negate inverse mass)
 
-        col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * -(1 / col.b.particle.GetMass());
+        col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * (1 / col.b.particle.GetMass());
     }
 
     void ResolveInterpentration(CollisionHull2D.Collision col)
@@ -202,7 +203,7 @@ public class CollisionManager : MonoBehaviour
         // Get velcoity build up due to accleration
 
         Vector2 accCausedVelocity = col.a.particle.acceleration - col.b.particle.acceleration;
-        float accCausedSepVelocity = (accCausedVelocity * col.contacts[0].normal).magnitude;
+        float accCausedSepVelocity = (accCausedVelocity * col.contacts[0].normal.normalized).magnitude;
 
 
         //remove it new seperating velocity
@@ -230,13 +231,13 @@ public class CollisionManager : MonoBehaviour
 
         //new velocity = old velocity + impulses per mass * inverse mass;
 
-        col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * (1 / col.a.particle.GetMass());
+        col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * -(1 / col.a.particle.GetMass());
 
 
 
         // the other particle goes om the inverse direction (negate inverse mass)
 
-        col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * -(1 / col.b.particle.GetMass());
+        col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * (1 / col.b.particle.GetMass());
 
     }
 }
