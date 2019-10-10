@@ -13,6 +13,7 @@ public class PlayerScript : MonoBehaviour
     Vector2 playerForce;
     float rotationForce;
 
+
     Vector2 direction;
 
     [SerializeField]
@@ -32,31 +33,44 @@ public class PlayerScript : MonoBehaviour
 
     int currentBulletIndex;
 
+    [SerializeField]
+    float projectileSpeed;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
+
+
         playerForce = new Vector2();
         direction = new Vector2();
         bullets = new List<GameObject>();
         for(int i = 0; i < bulletCount; i++)
         {
-            GameObject newBullet = Instantiate(playerBullet, Vector3.zero, Quaternion.identity) as GameObject;
+            GameObject newBullet = Instantiate(playerBullet, transform.position, Quaternion.identity) as GameObject;
             bullets.Add(newBullet);
-
-            bullets[currentBulletIndex].GetComponent<Particle>().position = transform.position;
             newBullet.SetActive(false);
         }
+
+        GetComponent<CollisionHull2D>().callMethod = OnCollisionEvent;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+
         GetInput();
+        
         thisParticle.AddTorque(rotationForce);
+
+
         thisParticle.AddForce(playerForce);
 
         Shoot();
     }
+
+ 
 
     void GetInput()
     {
@@ -83,8 +97,40 @@ public class PlayerScript : MonoBehaviour
             Debug.Log("Shoot : " + currentBulletIndex);
             currentBulletIndex = (currentBulletIndex+1) % bulletCount;
             bullets[currentBulletIndex].SetActive(true);
-            //bullets[currentBulletIndex].transform.position = transform.position;
-
+            // bullets[currentBulletIndex].GetComponent<Particle>().position = thisParticle.position;
+            bullets[currentBulletIndex].transform.position = thisParticle.position + (direction.normalized * 2f);
+            bullets[currentBulletIndex].GetComponent<Particle>().position = bullets[currentBulletIndex].transform.position;
+            bullets[currentBulletIndex].GetComponent<CollisionHull2D>().enabled = true;
+            bullets[currentBulletIndex].GetComponent<Particle>().AddForce(direction.normalized * projectileSpeed);
+            bullets[currentBulletIndex].GetComponent<Particle>().velocity = Vector2.zero;
         }
     }
-}
+
+    void OnCollisionEvent(CollisionHull2D col)
+    {
+        Debug.Log("Player");
+        if (col.gameObject.tag == "PlayerBullet")
+        {
+            col.gameObject.SetActive(false);
+        }
+        if (col.gameObject.tag == "Asteroid")
+        {
+            ScoreManagerScript.Instance.currentLives--;
+            if(ScoreManagerScript.Instance.currentLives <= 0)
+            {
+                ScoreManagerScript.Instance.GameOver();
+            }
+
+            col.generateCollisionEvent = false;
+            StartCoroutine(HitStun(col));
+        }
+    }
+
+    IEnumerator HitStun(CollisionHull2D col)
+    {
+        
+        yield return new WaitForSecondsRealtime(0.5f);
+        col.generateCollisionEvent = true;
+    }
+
+ }                        

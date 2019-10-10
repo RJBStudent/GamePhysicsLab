@@ -13,9 +13,12 @@ GameObject:
   - component: {fileID: 1495649557125560113}
   - component: {fileID: 5670176507777896536}
   - component: {fileID: 7736533776229184767}
+  - component: {fileID: 7337014564918621267}
+  - component: {fileID: 485143049255107197}
+  - component: {fileID: -4618140843589197800}
   m_Layer: 0
   m_Name: Projectile
-  m_TagString: Untagged
+  m_TagString: PlayerBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -92,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c36a87be20e94b4e8d4617d0edb74b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0}
+  position: {x: 1, y: 1}
   velocity: {x: 0, y: 0}
   acceleration: {x: 0, y: 0}
   rotation: 0
@@ -116,9 +119,7 @@ MonoBehaviour:
   outer: 0
   diskRadius: 0.5
   torque: 0
-  rotationalForce:
-  - forcePosition: {x: 0, y: 0}
-    forceDirection: {x: 0, y: 0}
+  rotationalForce: []
   centerOfMass: {x: 0, y: 0}
 --- !u!114 &7736533776229184767
 MonoBehaviour:
@@ -135,3 +136,44 @@ MonoBehaviour:
   particle: {fileID: 5670176507777896536}
   colliding: 0
   radius: 0.25
+--- !u!114 &7337014564918621267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8312842846561151515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 278c95c070e29df44ab014cd03e2fa9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yWrapPos: 11
+  xWrapPos: 18
+--- !u!114 &485143049255107197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8312842846561151515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed108e3ec20658b4b85135d57e859743, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeed: 50
+  maxRotation: 100
+--- !u!114 &-4618140843589197800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8312842846561151515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 119303b0643b54d46bcfed39f1ba9269, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTime: 5

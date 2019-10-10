@@ -18,9 +18,23 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
     // Start is called before the first frame update
     void Start()
     {
+        if (callMethod == null)
+        {
+            callMethod = AbstractCollisionEvent;
+        }
+
         CollisionManager.Instance.AddCollision(this);
 
         meshRen = GetComponent<MeshRenderer>();
+    }
+    private void OnEnable()
+    {
+        if (CollisionManager.Instance)
+            CollisionManager.Instance.AddCollision(this);
+    }
+    private void OnDisable()
+    {
+        CollisionManager.Instance.RemoveCollision(this);
     }
 
     // Update is called once per frame
@@ -32,7 +46,7 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
         }
         else
         {
-            meshRen.material.color = Color.blue;
+            meshRen.material.color = Color.yellow;
         }
     }
 
@@ -374,4 +388,6 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
         return check1;
     }
+
+    public override void AbstractCollisionEvent(CollisionHull2D col) { }
 }

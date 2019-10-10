@@ -68,12 +68,17 @@ public class CollisionManager : MonoBehaviour
 
     public void AddCollision(CollisionHull2D newCol)
     {
-        collisionList.Add(newCol);
+        if(!collisionList.Contains(newCol))
+            collisionList.Add(newCol);
     }
 
     public void RemoveCollision(CollisionHull2D newCol)
     {
-        collisionList.Remove(newCol);
+
+        if (collisionList.Contains(newCol))
+            collisionList.Remove(newCol);
+
+
     }
 
     //TEMP GIZMO POSITION
@@ -91,7 +96,11 @@ public class CollisionManager : MonoBehaviour
             ContactResolve(col);
             //RestingContactResolution(col);
             ResolveInterpentration(col);
-           
+
+
+            if(col.a.generateCollisionEvent)
+                col.a.CollisionDelegate(col.a.callMethod, col.b);
+            //col.b.CollisionDelegate(col.b.callMethod, col.a);
 
         }
         currentCollisions.Clear();
@@ -232,7 +241,6 @@ public class CollisionManager : MonoBehaviour
         //new velocity = old velocity + impulses per mass * inverse mass;
 
         col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * -(1 / col.a.particle.GetMass());
-
 
 
         // the other particle goes om the inverse direction (negate inverse mass)
