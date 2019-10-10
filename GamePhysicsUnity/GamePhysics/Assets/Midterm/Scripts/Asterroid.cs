@@ -21,7 +21,7 @@ public class Asterroid : MonoBehaviour
     {
         if(Input.GetButtonDown("Fire1"))
         {
-            BreakApart();
+           // BreakApart();
         }
     }
 
@@ -64,7 +64,7 @@ public class Asterroid : MonoBehaviour
         {
             col.gameObject.SetActive(false);
             BreakApart();
-            
+            ScoreManagerScript.Instance.score += 100;
             Debug.Log("Col Asteroid");
         }
     }

@@ -97,10 +97,10 @@ public class CollisionManager : MonoBehaviour
             //RestingContactResolution(col);
             ResolveInterpentration(col);
 
-            //CollisionEvent(col.a, col.b);
-            //col.a->CollisionEvent(col.b);
-            col.a.CollisionDelegate(col.a.callMethod, col.b);
-            col.b.CollisionDelegate(col.b.callMethod, col.a);
+
+            if(col.a.generateCollisionEvent)
+                col.a.CollisionDelegate(col.a.callMethod, col.b);
+            //col.b.CollisionDelegate(col.b.callMethod, col.a);
 
         }
         currentCollisions.Clear();

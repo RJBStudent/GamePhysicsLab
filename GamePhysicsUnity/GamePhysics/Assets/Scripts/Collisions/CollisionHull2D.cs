@@ -54,6 +54,8 @@ public abstract class CollisionHull2D : MonoBehaviour
     public delegate void CollisionEvent(CollisionHull2D col);
     public CollisionEvent callMethod;
 
+    public bool generateCollisionEvent = true;
+    public bool isStatic = false;
 
     // Start is called before the first frame update
     void Start()

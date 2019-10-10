@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -37,15 +36,6 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]
     float projectileSpeed;
 
-    [SerializeField]
-    Text scoreText;
-
-    [SerializeField]
-    Text liveText;
-
-    int score = 0;
-
-    int currentLives = 3;
 
 
     // Start is called before the first frame update
@@ -70,8 +60,6 @@ public class PlayerScript : MonoBehaviour
     void FixedUpdate()
     {
 
-        UpdateUI();
-
         GetInput();
         
         thisParticle.AddTorque(rotationForce);
@@ -82,17 +70,7 @@ public class PlayerScript : MonoBehaviour
         Shoot();
     }
 
-    void UpdateUI()
-    {
-        scoreText.text = "Score : " + score.ToString();
-
-        liveText.text = "Lives : ";
-        for(int i = 0; i < currentLives; i++)
-        {
-            liveText.text = liveText.text + " O ";
-        }
-
-    }
+ 
 
     void GetInput()
     {
@@ -135,6 +113,24 @@ public class PlayerScript : MonoBehaviour
         {
             col.gameObject.SetActive(false);
         }
+        if (col.gameObject.tag == "Asteroid")
+        {
+            ScoreManagerScript.Instance.currentLives--;
+            if(ScoreManagerScript.Instance.currentLives <= 0)
+            {
+                ScoreManagerScript.Instance.GameOver();
+            }
+
+            col.generateCollisionEvent = false;
+            StartCoroutine(HitStun(col));
+        }
+    }
+
+    IEnumerator HitStun(CollisionHull2D col)
+    {
+        
+        yield return new WaitForSecondsRealtime(0.5f);
+        col.generateCollisionEvent = true;
     }
 
  }                        
