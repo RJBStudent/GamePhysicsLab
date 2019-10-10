@@ -51,6 +51,10 @@ public abstract class CollisionHull2D : MonoBehaviour
     public bool colliding;
 
 
+    public delegate void CollisionEvent(CollisionHull2D col);
+    public CollisionEvent callMethod;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -103,6 +107,12 @@ public abstract class CollisionHull2D : MonoBehaviour
 
     public abstract bool TestCollisionVsAABB(AxisAlignedBoundingBox2D other, ref Collision c);
 
+    public void CollisionDelegate(CollisionEvent collisionEvent, CollisionHull2D col)
+    {
+        collisionEvent(col);
+    }
+
+    public abstract void AbstractCollisionEvent(CollisionHull2D col);
 
     public Vector2 CalculateClosingVelocity(Particle a, Particle b) 
     {

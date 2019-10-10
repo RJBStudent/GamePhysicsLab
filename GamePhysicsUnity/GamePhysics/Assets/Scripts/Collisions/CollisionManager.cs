@@ -96,9 +96,11 @@ public class CollisionManager : MonoBehaviour
             ContactResolve(col);
             //RestingContactResolution(col);
             ResolveInterpentration(col);
-           
+
             //CollisionEvent(col.a, col.b);
             //col.a->CollisionEvent(col.b);
+            col.a.CollisionDelegate(col.a.callMethod, col.b);
+            col.b.CollisionDelegate(col.b.callMethod, col.a);
 
         }
         currentCollisions.Clear();
@@ -239,7 +241,6 @@ public class CollisionManager : MonoBehaviour
         //new velocity = old velocity + impulses per mass * inverse mass;
 
         col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * -(1 / col.a.particle.GetMass());
-
 
 
         // the other particle goes om the inverse direction (negate inverse mass)

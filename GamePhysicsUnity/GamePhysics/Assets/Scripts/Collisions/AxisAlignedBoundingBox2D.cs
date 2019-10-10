@@ -18,6 +18,11 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
     // Start is called before the first frame update
     void Start()
     {
+        if (callMethod == null)
+        {
+            callMethod = AbstractCollisionEvent;
+        }
+
         CollisionManager.Instance.AddCollision(this);
 
         meshRen = GetComponent<MeshRenderer>();
@@ -383,4 +388,6 @@ public class AxisAlignedBoundingBox2D : CollisionHull2D
 
         return check1;
     }
+
+    public override void AbstractCollisionEvent(CollisionHull2D col) { }
 }

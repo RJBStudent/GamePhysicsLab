@@ -48,10 +48,11 @@ public class PlayerScript : MonoBehaviour
     int currentLives = 3;
 
 
-
     // Start is called before the first frame update
     void Start()
     {
+
+
         playerForce = new Vector2();
         direction = new Vector2();
         bullets = new List<GameObject>();
@@ -61,6 +62,8 @@ public class PlayerScript : MonoBehaviour
             bullets.Add(newBullet);
             newBullet.SetActive(false);
         }
+
+        GetComponent<CollisionHull2D>().callMethod = OnCollisionEvent;
     }
 
     // Update is called once per frame
@@ -124,4 +127,14 @@ public class PlayerScript : MonoBehaviour
             bullets[currentBulletIndex].GetComponent<Particle>().velocity = Vector2.zero;
         }
     }
-}
+
+    void OnCollisionEvent(CollisionHull2D col)
+    {
+        Debug.Log("Player");
+        if (col.gameObject.tag == "PlayerBullet")
+        {
+            col.gameObject.SetActive(false);
+        }
+    }
+
+ }                        

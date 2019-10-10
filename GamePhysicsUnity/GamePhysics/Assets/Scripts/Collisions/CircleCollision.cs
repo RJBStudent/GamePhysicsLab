@@ -15,7 +15,10 @@ public class CircleCollision : CollisionHull2D
     // Start is called before the first frame update
     void Start()
     {
-      
+        if (callMethod == null)
+        {
+            callMethod = AbstractCollisionEvent;
+        }
         CollisionManager.Instance.AddCollision(this);
 
         meshRen = GetComponent<MeshRenderer>();
@@ -29,11 +32,11 @@ public class CircleCollision : CollisionHull2D
     {
         CollisionManager.Instance.RemoveCollision(this);
     }
-
-
+    
     // Update is called once per frame
     void Update()
     {
+        /*
         if (colliding)
         {
             meshRen.material.color = Color.red;
@@ -41,7 +44,7 @@ public class CircleCollision : CollisionHull2D
         else
         {
             meshRen.material.color = Color.yellow;
-        }
+        }*/
     }
 
     public override bool TestCollisionVsCircle(CircleCollision other, ref Collision c)
@@ -194,5 +197,5 @@ public class CircleCollision : CollisionHull2D
     }
 
 
-
+    public override void AbstractCollisionEvent(CollisionHull2D col) { }
 }
