@@ -12,7 +12,8 @@ public class Asterroid : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
+        GetComponent<CollisionHull2D>().callMethod = OnCollisionEvent;
     }
 
     // Update is called once per frame
@@ -54,6 +55,17 @@ public class Asterroid : MonoBehaviour
             asteroidTwo.GetComponent<Particle>().AddForce(-randomDirection * separationForce);
 
             Destroy(gameObject);
+        }
+    }
+
+    void OnCollisionEvent(CollisionHull2D col)
+    {
+        if (col.gameObject.tag == "PlayerBullet")
+        {
+            col.gameObject.SetActive(false);
+            BreakApart();
+            
+            Debug.Log("Col Asteroid");
         }
     }
 }
