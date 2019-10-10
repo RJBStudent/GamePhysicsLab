@@ -68,12 +68,17 @@ public class CollisionManager : MonoBehaviour
 
     public void AddCollision(CollisionHull2D newCol)
     {
-        collisionList.Add(newCol);
+        if(!collisionList.Contains(newCol))
+            collisionList.Add(newCol);
     }
 
     public void RemoveCollision(CollisionHull2D newCol)
     {
-        collisionList.Remove(newCol);
+
+        if (collisionList.Contains(newCol))
+            collisionList.Remove(newCol);
+
+
     }
 
     //TEMP GIZMO POSITION
@@ -92,6 +97,8 @@ public class CollisionManager : MonoBehaviour
             //RestingContactResolution(col);
             ResolveInterpentration(col);
            
+            //CollisionEvent(col.a, col.b);
+            //col.a->CollisionEvent(col.b);
 
         }
         currentCollisions.Clear();

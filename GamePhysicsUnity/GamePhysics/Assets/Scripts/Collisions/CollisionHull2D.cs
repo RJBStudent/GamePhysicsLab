@@ -30,6 +30,7 @@ public abstract class CollisionHull2D : MonoBehaviour
 
         public Vector2 closingVelocity = Vector2.zero;
     }
+    
 
     public enum HullType
     {

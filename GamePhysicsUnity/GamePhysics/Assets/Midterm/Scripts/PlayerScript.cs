@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerScript : MonoBehaviour
 
     Vector2 playerForce;
     float rotationForce;
+
 
     Vector2 direction;
 
@@ -32,6 +34,21 @@ public class PlayerScript : MonoBehaviour
 
     int currentBulletIndex;
 
+    [SerializeField]
+    float projectileSpeed;
+
+    [SerializeField]
+    Text scoreText;
+
+    [SerializeField]
+    Text liveText;
+
+    int score = 0;
+
+    int currentLives = 3;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,11 +66,29 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
+        UpdateUI();
+
         GetInput();
+        
         thisParticle.AddTorque(rotationForce);
+
+
         thisParticle.AddForce(playerForce);
 
         Shoot();
+    }
+
+    void UpdateUI()
+    {
+        scoreText.text = "Score : " + score.ToString();
+
+        liveText.text = "Lives : ";
+        for(int i = 0; i < currentLives; i++)
+        {
+            liveText.text = liveText.text + " O ";
+        }
+
     }
 
     void GetInput()
@@ -85,7 +120,7 @@ public class PlayerScript : MonoBehaviour
             bullets[currentBulletIndex].transform.position = thisParticle.position + (direction.normalized * 2f);
             bullets[currentBulletIndex].GetComponent<Particle>().position = bullets[currentBulletIndex].transform.position;
             bullets[currentBulletIndex].GetComponent<CollisionHull2D>().enabled = true;
-            bullets[currentBulletIndex].GetComponent<Particle>().AddForce(direction.normalized * 100f);
+            bullets[currentBulletIndex].GetComponent<Particle>().AddForce(direction.normalized * projectileSpeed);
             bullets[currentBulletIndex].GetComponent<Particle>().velocity = Vector2.zero;
         }
     }

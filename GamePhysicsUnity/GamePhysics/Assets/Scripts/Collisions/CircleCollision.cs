@@ -20,6 +20,16 @@ public class CircleCollision : CollisionHull2D
 
         meshRen = GetComponent<MeshRenderer>();
     }
+    private void OnEnable()
+    {
+        if (CollisionManager.Instance) 
+            CollisionManager.Instance.AddCollision(this);
+    }
+    private void OnDisable()
+    {
+        CollisionManager.Instance.RemoveCollision(this);
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -30,7 +40,7 @@ public class CircleCollision : CollisionHull2D
         }
         else
         {
-            meshRen.material.color = Color.blue;
+            meshRen.material.color = Color.yellow;
         }
     }
 
