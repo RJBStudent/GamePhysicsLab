@@ -8,8 +8,8 @@ using UnityEngine;
 public class ScreenWrap : MonoBehaviour
 {
 
-    [SerializeField] float yWrapPos;
-    [SerializeField] float xWrapPos;
+    public float yWrapPos;
+    public float xWrapPos;
 
     Particle thisParticle;
 

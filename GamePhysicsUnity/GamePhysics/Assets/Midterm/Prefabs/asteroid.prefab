@@ -96,7 +96,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particle: {fileID: 576919982107229401}
   colliding: 0
-  radius: 0.5
+  generateCollisionEvent: 1
+  isStatic: 0
+  radius: 2.5
 --- !u!114 &576919982107229401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,6 +152,7 @@ MonoBehaviour:
   size: 5
   asteroidPrefab: {fileID: 576919982107229400}
   separationForce: 70
+  maxSpeed: 7
 --- !u!114 &4403444622761152803
 MonoBehaviour:
   m_ObjectHideFlags: 0

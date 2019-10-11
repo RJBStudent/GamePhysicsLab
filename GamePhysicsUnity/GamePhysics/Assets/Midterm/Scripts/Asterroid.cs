@@ -9,20 +9,46 @@ public class Asterroid : MonoBehaviour
     public GameObject asteroidPrefab;
 
     public float separationForce;
+
+    Particle particle;
+    ScreenWrap screenWrap;
+
+    public float maxSpeed;
+
+
     // Start is called before the first frame update
     void Start()
     {
-
+        particle = GetComponent<Particle>();
+        screenWrap = GetComponent<ScreenWrap>();
+        bool xGood = particle.position.x < screenWrap.xWrapPos && particle.position.x > -screenWrap.xWrapPos;
+        bool yGood = particle.position.y < screenWrap.yWrapPos && particle.position.y > -screenWrap.yWrapPos;
+        if (xGood && yGood)
+        {
+            screenWrap.enabled = true;
+        }
+        else
+        {
+            screenWrap.enabled = false;
+        }
         GetComponent<CollisionHull2D>().callMethod = OnCollisionEvent;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Fire1"))
+        if(screenWrap.enabled == false)
         {
-           // BreakApart();
+            bool xGood =  particle.position.x < screenWrap.xWrapPos && particle.position.x > -screenWrap.xWrapPos;
+            bool yGood = particle.position.y < screenWrap.yWrapPos && particle.position.y > -screenWrap.yWrapPos;
+
+            if (xGood && yGood)
+            {
+                screenWrap.enabled = true;
+            }
         }
+
+        particle.velocity = Vector2.ClampMagnitude(particle.velocity, maxSpeed);
     }
 
     void BreakApart()

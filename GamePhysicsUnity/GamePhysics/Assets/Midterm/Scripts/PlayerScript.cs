@@ -7,7 +7,7 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField, Range(1, 100)]
     float forwardSpeed=1;
-    [SerializeField, Range(1, 100)]
+    [SerializeField, Range(1, 300)]
     float rotationSpeed=1;
 
     Vector2 playerForce;
@@ -36,7 +36,11 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]
     float projectileSpeed;
 
+    bool invincible = false;
+    public Material invincibleMat;
+    public Material regularMat;
 
+    public float adjustmentSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -59,10 +63,10 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
-        GetInput();
         
-        thisParticle.AddTorque(rotationForce);
+        GetInput();
+
+        thisParticle.angularVelocity = rotationForce;
 
 
         thisParticle.AddForce(playerForce);
@@ -75,6 +79,7 @@ public class PlayerScript : MonoBehaviour
     void GetInput()
     {
         //playerForce.x = Input.GetAxis("Horizontal") * xSpeed;
+        float prevPlayerForce = playerForce.x;
         playerForce.x = Input.GetAxis("Vertical") * forwardSpeed;
 
         rotationForce = -Input.GetAxis("Horizontal") * rotationSpeed;
@@ -84,6 +89,15 @@ public class PlayerScript : MonoBehaviour
 
 
         playerForce = direction * playerForce.x;
+
+        if(playerForce.x != 0)
+        {
+            thisParticle.acceleration = Vector2.Lerp(thisParticle.acceleration, playerForce, adjustmentSpeed);
+        }
+        else
+        {
+            thisParticle.velocity = Vector2.Lerp(thisParticle.velocity, Vector2.zero, adjustmentSpeed);
+        }
 
         lastSpaceInput = spaceInput;
         spaceInput = Input.GetAxisRaw("Shoot");
@@ -113,7 +127,7 @@ public class PlayerScript : MonoBehaviour
         {
             col.gameObject.SetActive(false);
         }
-        if (col.gameObject.tag == "Asteroid")
+        if (col.gameObject.tag == "Asteroid" && !invincible)
         {
             ScoreManagerScript.Instance.currentLives--;
             if(ScoreManagerScript.Instance.currentLives <= 0)
@@ -122,6 +136,7 @@ public class PlayerScript : MonoBehaviour
             }
 
             col.generateCollisionEvent = false;
+            invincible = true;
             StartCoroutine(HitStun(col));
         }
     }
@@ -129,8 +144,9 @@ public class PlayerScript : MonoBehaviour
     IEnumerator HitStun(CollisionHull2D col)
     {
         
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(3f);
         col.generateCollisionEvent = true;
+        invincible = false;
     }
 
  }                        
