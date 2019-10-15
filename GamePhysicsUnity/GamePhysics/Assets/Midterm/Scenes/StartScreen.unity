@@ -362,7 +362,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Some Space Game
+  m_Text: Sans Undertale 2
 --- !u!222 &769089115
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -397,7 +397,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 782212136}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c389d0e88307fa4bac630c1ceaf93be, type: 3}
+  m_Script: {fileID: 11500000, guid: 09d985fd0ee097e4988a22772c9f0422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &782212138

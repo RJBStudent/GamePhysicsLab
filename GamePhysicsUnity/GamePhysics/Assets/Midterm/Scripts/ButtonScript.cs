@@ -9,6 +9,7 @@ public class ButtonScript : MonoBehaviour
 
     public void StartButton()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("Tommy_GameScene");
     }
 

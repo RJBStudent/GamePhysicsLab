@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ScoreManagerScript : MonoBehaviour
 {
@@ -49,7 +50,14 @@ public class ScoreManagerScript : MonoBehaviour
 
     public void GameOver()
     {
+        StartCoroutine(GameOverCourutine());
+    }
+
+    IEnumerator GameOverCourutine()
+    {
         Time.timeScale = 0f;
         gameOverText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(5);
+        SceneManager.LoadScene("StartScreen");
     }
 }
