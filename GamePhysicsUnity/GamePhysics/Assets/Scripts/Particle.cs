@@ -260,8 +260,8 @@ public class Particle : MonoBehaviour
         deltaPosition = changedPosition - position;
         //position = position + deltaPosition;
         transform.position = new Vector3(position.x, position.y, startingPos.z);
-        
-        
+
+        ClampRotation();
         transform.rotation = Quaternion.Euler(0f, 0f, (float)rotation);
 
 
@@ -301,4 +301,17 @@ public class Particle : MonoBehaviour
         }
     }
     
+    void ClampRotation()
+    {
+        if(rotation > 360)
+        {
+            rotation = -360;
+        }
+        else if (rotation < -360)
+        {
+            rotation = 360;
+        }
+    }
+
+
 }
