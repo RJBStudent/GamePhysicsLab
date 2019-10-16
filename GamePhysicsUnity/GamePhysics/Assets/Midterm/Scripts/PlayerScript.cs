@@ -37,6 +37,7 @@ public class PlayerScript : MonoBehaviour
     float projectileSpeed;
 
     bool invincible = false;
+    public MeshRenderer heartMesh;
     public Material invincibleMat;
     public Material regularMat;
 
@@ -137,6 +138,7 @@ public class PlayerScript : MonoBehaviour
 
             col.generateCollisionEvent = false;
             invincible = true;
+            heartMesh.material = invincibleMat;
             StartCoroutine(HitStun(col));
         }
     }
@@ -145,6 +147,7 @@ public class PlayerScript : MonoBehaviour
     {
         
         yield return new WaitForSecondsRealtime(3f);
+        heartMesh.material = regularMat;
         col.generateCollisionEvent = true;
         invincible = false;
     }
