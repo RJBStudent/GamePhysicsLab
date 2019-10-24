@@ -1195,7 +1195,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0.265625, y: 0.09765625, z: 0.03515625, w: -0.05078125}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -4045,8 +4045,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
   acceleration: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
-  angularVelocity: {x: 5, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 1}
+  angularVelocity: {x: 2, y: 0, z: 0}
   angularAcceleration: {x: 0, y: 0, z: 0}
   startingMass: 1
   gravity: 0

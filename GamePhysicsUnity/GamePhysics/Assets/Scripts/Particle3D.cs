@@ -142,14 +142,10 @@ public class Particle3D : MonoBehaviour
     void updateRotationEulerExplicit(float dt)
     {
         // newQuat = oldQuat + (.5 * dt * angularVelocity * oldQuat)
-        Quaternion velQuat = new Quaternion();
-        velQuat.w = 0;
-        velQuat.x = angularVelocity.x;
-        velQuat.y = angularVelocity.y;
-        velQuat.z = angularVelocity.z;
 
-        Quaternion velXrotation = quaternionMultiplication(velQuat, rotation);
-       velXrotation.Normalize();
+
+        Quaternion velXrotation = vectorXquaternion(angularVelocity, rotation);
+        //velXrotation.Normalize();
 
         rotation.w += .5f * dt * velXrotation.w;
         rotation.x += .5f * dt * velXrotation.x;
@@ -162,12 +158,11 @@ public class Particle3D : MonoBehaviour
         angularVelocity += angularAcceleration * dt;
     }
 
-    Quaternion quaternionMultiplication(Quaternion lhs, Quaternion rhs)
+    Quaternion vectorXquaternion(Vector3 lhs, Quaternion rhs)
     {
-        Vector3 lhsVector = new Vector3(lhs.x, lhs.y, lhs.z);
         Vector3 rhsVector = new Vector3(rhs.x, rhs.y, rhs.z);
-        float newQuatsW = (lhs.w * rhs.w) + Vector3.Dot(lhsVector, rhsVector);
-        Vector3 newQuatsVector = (lhs.w * rhsVector) + (rhs.w* lhsVector) + Vector3.Cross(lhsVector, rhsVector);
+        float newQuatsW = -Vector3.Dot(lhs, rhsVector);
+        Vector3 newQuatsVector = (rhs.w* lhs) + Vector3.Cross(lhs, rhsVector);
 
         Quaternion newQuat = new Quaternion();
         newQuat.w = newQuatsW;
@@ -216,10 +211,7 @@ public class Particle3D : MonoBehaviour
         }
         updateAngularAcceleration();
 
-        /*rotation.w = 1;*/
-        /*rotation.x = 1;*/
-        /*rotation.y = 1;*/
-        /*rotation.z = 1;*/
+        rotation.w = 1;
     }
 
     // Update is called once per frame
