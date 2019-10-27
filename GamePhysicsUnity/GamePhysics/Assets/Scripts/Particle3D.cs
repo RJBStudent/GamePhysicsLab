@@ -47,7 +47,7 @@ public class Particle3D : MonoBehaviour
     [SerializeField]
     RotationalForce[] rotationalForce;
     [SerializeField]
-    Vector2 centerOfMass;
+    Vector3 centerOfMass;
 
 
     //Lab 03 step 1
@@ -101,7 +101,7 @@ public class Particle3D : MonoBehaviour
         torque += newTorque;
     }
 
-    float calculateTorque(Vector2 pointOfForce, Vector2 force)
+    float calculateTorque(Vector3 pointOfForce, Vector2 force)
     {
         pointOfForce = pointOfForce - centerOfMass;
         return (pointOfForce.x * force.y - pointOfForce.y * force.x);
@@ -158,6 +158,7 @@ public class Particle3D : MonoBehaviour
         angularVelocity += angularAcceleration * dt;
     }
 
+    //Lab 06
     Quaternion vectorXquaternion(Vector3 lhs, Quaternion rhs)
     {
         Vector3 rhsVector = new Vector3(rhs.x, rhs.y, rhs.z);
@@ -202,7 +203,7 @@ public class Particle3D : MonoBehaviour
 
         //lab 3 set inertia and torque
         SetInertia();
-        torque = Vector3.zero;
+        torque = angularAcceleration;
 
         //lab 3 add torque force and set acceleration
         for (int i = 0; i < rotationalForce.Length; i++)
@@ -225,8 +226,8 @@ public class Particle3D : MonoBehaviour
     {
         //  step 3
         //  choose integrator
-        //updatePositionExplicitEuler(Time.fixedDeltaTime);
-        updatePositionKinematic(Time.fixedDeltaTime);
+        updatePositionExplicitEuler(Time.fixedDeltaTime);
+        //updatePositionKinematic(Time.fixedDeltaTime);
 
         //Lab 2 
         UpdateAcceleration();

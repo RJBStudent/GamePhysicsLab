@@ -4044,10 +4044,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  acceleration: {x: 0, y: 0, z: 0}
+  acceleration: {x: 2, y: -15, z: 0}
   rotation: {x: 0, y: 0, z: 0, w: 1}
-  angularVelocity: {x: 2, y: 0, z: 0}
-  angularAcceleration: {x: 0, y: 0, z: 0}
+  angularVelocity: {x: 0, y: 0, z: 0}
+  angularAcceleration: {x: 20, y: 15, z: 2}
   startingMass: 1
   gravity: 0
   sliding: 0
@@ -4067,7 +4067,7 @@ MonoBehaviour:
   diskRadius: 0
   torque: {x: 0, y: 0, z: 0}
   rotationalForce: []
-  centerOfMass: {x: 0, y: 0}
+  centerOfMass: {x: 0, y: 0, z: 0}
 --- !u!65 &2016005086
 BoxCollider:
   m_ObjectHideFlags: 0
