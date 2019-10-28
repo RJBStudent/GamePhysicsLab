@@ -63,6 +63,7 @@ public class Particle3D : MonoBehaviour
 
     //Lab 03 step 1
     Matrix4x4 inertia;
+    Matrix4x4 inverseInertiaTensor;
     void SetInertia()
     {
 
@@ -108,6 +109,7 @@ public class Particle3D : MonoBehaviour
             default:
                 break;
         }
+
     }
 
     //lab 2 step 1
@@ -138,10 +140,10 @@ public class Particle3D : MonoBehaviour
         torque += newTorque;
     }
 
-    float calculateTorque(Vector3 pointOfForce, Vector2 force)
+    Vector3 calculateTorque(Vector3 pointOfForce, Vector3 force)
     {
         pointOfForce = pointOfForce - centerOfMass;
-        return (pointOfForce.x * force.y - pointOfForce.y * force.x);
+        return Vector3.Cross(pointOfForce, force);
     }
 
     public void UpdateAcceleration()
@@ -221,8 +223,14 @@ public class Particle3D : MonoBehaviour
     void updateAngularAcceleration()
     {
         //angularAcceleration = (1f / inertia) * torque;
-        angularAcceleration = torque;
+        updateInverseInertiaTensor();
+        angularAcceleration = inverseInertiaTensor * (Vector4)torque;
         torque = Vector3.zero;
+    }
+
+    void updateInverseInertiaTensor()
+    {
+        inverseInertiaTensor = transform.worldToLocalMatrix * inertia.inverse * transform.localToWorldMatrix;
     }
 
     // Start is called before the first frame update
@@ -245,7 +253,7 @@ public class Particle3D : MonoBehaviour
         //lab 3 add torque force and set acceleration
         for (int i = 0; i < rotationalForce.Length; i++)
         {
-            //AddTorque(calculateTorque(rotationalForce[i].forcePosition, rotationalForce[i].forceDirection));
+            AddTorque(calculateTorque(rotationalForce[i].forcePosition, rotationalForce[i].forceDirection));
         }
         updateAngularAcceleration();
 

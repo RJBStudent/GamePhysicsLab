@@ -15,8 +15,8 @@ public enum shape
 [System.Serializable]
 public struct RotationalForce
 {
-    public Vector2 forcePosition;
-    public Vector2 forceDirection;
+    public Vector3 forcePosition;
+    public Vector3 forceDirection;
 }
 
 
