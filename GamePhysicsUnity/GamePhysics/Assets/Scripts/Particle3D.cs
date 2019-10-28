@@ -1,5 +1,16 @@
 ﻿using UnityEngine;
 
+public enum Shape3D
+{
+    SOLID_SPHERE,
+    HOLLOW_SPHERE,
+    SOLID_BOX,
+    HOLLOW_BOX,
+    SOLID_CYLINDER,
+    SOLID_CONE
+}
+
+
 public class Particle3D : MonoBehaviour
 {
     [Header("Transform Values")]
@@ -38,8 +49,8 @@ public class Particle3D : MonoBehaviour
 
     //Lab 03 step 1
     [Header("Torque Stuff")]
-    public shape particleShape;
-    public float inner, outer, diskRadius;
+    public Shape3D particleShape3D;
+    public float length, radius;
     //Lab 03 step 2
     [SerializeField]
     Vector3 torque;
@@ -51,22 +62,48 @@ public class Particle3D : MonoBehaviour
 
 
     //Lab 03 step 1
-    float inertia;
+    Matrix4x4 inertia;
     void SetInertia()
     {
-        switch (particleShape)
+
+        inertia = new Matrix4x4();
+        switch (particleShape3D)
         {
-            case shape.DISK:
-                inertia = .5f * mass * (diskRadius * .5f) * (diskRadius * .5f);
+            case Shape3D.SOLID_SPHERE:
+                inertia.SetRow(0, new Vector4(.4f * mass * (radius * radius), 0f, 0f, 0f));
+                inertia.SetRow(1, new Vector4(0f, .4f * mass * (radius * radius), 0f, 0f));
+                inertia.SetRow(2, new Vector4(0f, 0f, .4f * mass * (radius * radius), 0f));
+                inertia.SetRow(3, new Vector4(0f, 0f, 0f, 1f));
                 break;
-            case shape.RECTANGLE:
-                inertia = .0833f * mass * (transform.localScale.x * transform.localScale.x + transform.localScale.y * transform.localScale.y);
+            case Shape3D.HOLLOW_SPHERE:
+                inertia.SetRow(0, new Vector4(.666f * mass * (radius * radius), 0f, 0f, 0f));
+                inertia.SetRow(1, new Vector4(0f, .666f * mass * (radius * radius), 0f, 0f));
+                inertia.SetRow(2, new Vector4(0f, 0f, .666f * mass * (radius * radius), 0f));
+                inertia.SetRow(3, new Vector4(0f, 0f, 0f, 1f));
                 break;
-            case shape.LINE_SEGMENT:
-                inertia = .0833f * mass * (transform.localScale.y) * (transform.localScale.y);
+            case Shape3D.SOLID_BOX:
+                inertia.SetRow(0, new Vector4(.083f * mass * (transform.localScale.y* transform.localScale.y + transform.localScale.z * transform.localScale.z), 0f, 0f, 0f));
+                inertia.SetRow(1, new Vector4(0f, .083f * mass * (transform.localScale.z * transform.localScale.z + transform.localScale.x * transform.localScale.x), 0f, 0f));
+                inertia.SetRow(2, new Vector4(0f, 0f, .083f * mass * (transform.localScale.x * transform.localScale.x + transform.localScale.y * transform.localScale.y), 0f));
+                inertia.SetRow(3, new Vector4(0f, 0f, 0f, 1f));
                 break;
-            case shape.RING:
-                inertia = .0833f * mass * (inner * inner + outer * outer);
+            case Shape3D.HOLLOW_BOX:
+                inertia.SetRow(0, new Vector4(1.66f * mass * (transform.localScale.y * transform.localScale.y + transform.localScale.z * transform.localScale.z), 0f, 0f, 0f));
+                inertia.SetRow(1, new Vector4(0f, 1.66f * mass * (transform.localScale.z * transform.localScale.z + transform.localScale.x * transform.localScale.x), 0f, 0f));
+                inertia.SetRow(2, new Vector4(0f, 0f, 1.66f * mass * (transform.localScale.x * transform.localScale.x + transform.localScale.y * transform.localScale.y), 0f));
+                inertia.SetRow(3, new Vector4(0f, 0f, 0f, 1f));
+                break;
+            case Shape3D.SOLID_CYLINDER:
+                inertia.SetRow(0, new Vector4(1.66f * mass * (3*(radius * radius) + transform.localScale.y * transform.localScale.y), 0f, 0f, 0f));
+                inertia.SetRow(1, new Vector4(0f, 1.66f * mass * (3 * (radius * radius) + transform.localScale.y * transform.localScale.y), 0f, 0f));
+                inertia.SetRow(2, new Vector4(0f, 0f, 1.66f * mass * (radius * radius), 0f));
+                inertia.SetRow(3, new Vector4(0f, 0f, 0f, 1f));
+                break;
+            case Shape3D.SOLID_CONE:
+                inertia.SetRow(0, new Vector4((0.6f * mass * (transform.localScale.y * transform.localScale.y))+(.15f*mass*(radius*radius)), 0f, 0f, 0f));
+                inertia.SetRow(1, new Vector4(0f, (0.6f * mass * (transform.localScale.y * transform.localScale.y)) + (.15f * mass * (radius * radius)), 0f, 0f));
+                inertia.SetRow(2, new Vector4(0f, 0f, 0.3f * mass * (radius * radius), 0f));
+                inertia.SetRow(3, new Vector4(0f, 0f, 0f, 1f));
                 break;
             default:
                 break;
