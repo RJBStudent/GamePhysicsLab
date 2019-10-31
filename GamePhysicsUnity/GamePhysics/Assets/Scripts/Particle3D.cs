@@ -17,6 +17,7 @@ public class Particle3D : MonoBehaviour
     // lab 1 step 1
     public Vector3 position;
     public Vector3 velocity, acceleration;
+    public Matrix4x4 worldTransformationMatrix;
 
     //lab 1 step 1
     public Quaternion rotation;
@@ -64,6 +65,28 @@ public class Particle3D : MonoBehaviour
     //Lab 03 step 1
     Matrix4x4 inertia;
     Matrix4x4 inverseInertiaTensor;
+
+    void updateWorldTransformationMatrix()
+    {
+        //worldTransformationMatrix
+        Matrix4x4 scaleMat = new Matrix4x4(new Vector4(transform.localScale.x, 0, 0, 0), new Vector4(0, transform.localScale.y, 0, 0), 
+            new Vector4(0, 0, transform.localScale.z, 0), new Vector4(0, 0, 0, 1));
+
+        Vector4 vec1 = new Vector4(rotation.w * rotation.w + rotation.x * rotation.x - rotation.y * rotation.y - rotation.z * rotation.z,
+            2 * rotation.x * rotation.y - 2 * rotation.w * rotation.z, 2 * rotation.x * rotation.z + 2 * rotation.w * rotation.y, 0);
+
+        Vector4 vec2 = new Vector4(2 * rotation.x * rotation.y + 2 * rotation.w * rotation.z,
+            rotation.w * rotation.w - rotation.x * rotation.x + rotation.y * rotation.y - rotation.z * rotation.z, 2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x, 0);
+
+        Vector4 vec3 = new Vector4(2 * rotation.x * rotation.z - 2 * rotation.w * rotation.y,
+            2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x, rotation.w * rotation.w - rotation.x * rotation.x - rotation.y * rotation.y + rotation.z * rotation.z, 0);
+
+        Vector4 vec4 = new Vector4(0, 0, 0, 1);
+
+        Matrix4x4 rotMat = new Matrix4x4(vec1, vec2, vec3, vec4);
+        
+    }
+
     void SetInertia()
     {
 
@@ -291,6 +314,7 @@ public class Particle3D : MonoBehaviour
         ClampRotation();
         transform.rotation = rotation;
 
+        updateWorldTransformationMatrix();
 
         // lab 1 step 4
         //  test by faking motion along a curve
