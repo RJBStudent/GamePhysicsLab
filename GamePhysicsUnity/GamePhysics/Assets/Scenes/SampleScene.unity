@@ -3488,8 +3488,8 @@ MonoBehaviour:
   radius: 0.5
   torque: {x: 0, y: 0, z: 0}
   rotationalForce:
-  - forcePosition: {x: 0, y: -3, z: 0}
-    forceDirection: {x: 0, y: 0, z: -50}
+  - forcePosition: {x: 0, y: 3, z: 0}
+    forceDirection: {x: 0, y: 0, z: 50}
   centerOfMass: {x: 0, y: 0, z: 0}
 --- !u!23 &1560068844
 MeshRenderer:

@@ -65,13 +65,46 @@ public class Particle3D : MonoBehaviour
     //Lab 03 step 1
     Matrix4x4 inertia;
     Matrix4x4 inverseInertiaTensor;
+    Matrix4x4 scaleMat;
+    Matrix4x4 inverseScaleMat;
+    Matrix4x4 rotationMat;
+    Matrix4x4 inverseRotationMat;
+    Matrix4x4 localToWorldMatrix;
+    Matrix4x4 worldToLocalMatrix;
+
+    void Start()
+    {
+        SetMass(startingMass);
+        position = transform.position;
+
+        if (startSliding)
+        {
+            AddForce(ForceGenerator.GenerateForce_sliding(new Vector2(0, -9.81f), slopeNormal * 9.81f) * 70f);
+        }
+
+        //Lab 3 Add Torque test
+
+        //lab 3 set inertia and torque
+        SetInertia();
+        torque = angularAcceleration;
+
+        scaleMat = new Matrix4x4(new Vector4(transform.localScale.x, 0, 0, 0), new Vector4(0, transform.localScale.y, 0, 0),
+            new Vector4(0, 0, transform.localScale.z, 0), new Vector4(0, 0, 0, 1));
+        inverseScaleMat = new Matrix4x4(new Vector4(1 / transform.localScale.x, 0, 0, 0), new Vector4(0, 1 / transform.localScale.y, 0, 0),
+            new Vector4(0, 0, 1 / transform.localScale.z, 0), new Vector4(0, 0, 0, 1));
+
+        //lab 3 add torque force and set acceleration
+        for (int i = 0; i < rotationalForce.Length; i++)
+        {
+            AddTorque(calculateTorque(rotationalForce[i].forcePosition, rotationalForce[i].forceDirection));
+        }
+        updateAngularAcceleration();
+
+        rotation.w = 1;
+    }
 
     void updateWorldTransformationMatrix()
     {
-        //worldTransformationMatrix
-        Matrix4x4 scaleMat = new Matrix4x4(new Vector4(transform.localScale.x, 0, 0, 0), new Vector4(0, transform.localScale.y, 0, 0), 
-            new Vector4(0, 0, transform.localScale.z, 0), new Vector4(0, 0, 0, 1));
-
         Vector4 vec1 = new Vector4(rotation.w * rotation.w + rotation.x * rotation.x - rotation.y * rotation.y - rotation.z * rotation.z,
             2 * rotation.x * rotation.y - 2 * rotation.w * rotation.z, 2 * rotation.x * rotation.z + 2 * rotation.w * rotation.y, 0);
 
@@ -83,8 +116,15 @@ public class Particle3D : MonoBehaviour
 
         Vector4 vec4 = new Vector4(0, 0, 0, 1);
 
-        Matrix4x4 rotMat = new Matrix4x4(vec1, vec2, vec3, vec4);
-        
+        rotationMat = new Matrix4x4(vec1, vec2, vec3, vec4);
+        inverseRotationMat = rotationMat.transpose;
+
+        Matrix4x4 positionMat = new Matrix4x4(new Vector4(1, 0, 0, position.x), new Vector4(0, 1, 0, position.y), new Vector4(0, 0, 1, position.z), new Vector4(0, 0, 0, 1));
+        Matrix4x4 inversePositionMat = new Matrix4x4(new Vector4(1, 0, 0, -position.x), new Vector4(0, 1, 0, -position.y), new Vector4(0, 0, 1, -position.z), new Vector4(0, 0, 0, 1));
+
+
+        localToWorldMatrix =  scaleMat * rotationMat * positionMat;
+        worldToLocalMatrix = inverseScaleMat * inverseRotationMat * inversePositionMat;
     }
 
     void SetInertia()
@@ -253,35 +293,14 @@ public class Particle3D : MonoBehaviour
 
     void updateInverseInertiaTensor()
     {
-        inverseInertiaTensor = transform.worldToLocalMatrix * inertia.inverse * transform.localToWorldMatrix;
+        //inverseInertiaTensor = transform.worldToLocalMatrix * inertia.inverse * transform.localToWorldMatrix;
+        updateWorldTransformationMatrix();
+        
+        inverseInertiaTensor = worldToLocalMatrix * inertia.inverse * localToWorldMatrix;
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
-        SetMass(startingMass);
-        position = transform.position;
-
-        if (startSliding)
-        {
-            AddForce(ForceGenerator.GenerateForce_sliding(new Vector2(0, -9.81f), slopeNormal * 9.81f) * 70f);
-        }
-
-        //Lab 3 Add Torque test
-
-        //lab 3 set inertia and torque
-        SetInertia();
-        torque = angularAcceleration;
-
-        //lab 3 add torque force and set acceleration
-        for (int i = 0; i < rotationalForce.Length; i++)
-        {
-            AddTorque(calculateTorque(rotationalForce[i].forcePosition, rotationalForce[i].forceDirection));
-        }
-        updateAngularAcceleration();
-
-        rotation.w = 1;
-    }
+    
 
     // Update is called once per frame
     void Update()
