@@ -17,7 +17,7 @@ public class Particle3D : MonoBehaviour
     // lab 1 step 1
     public Vector3 position;
     public Vector3 velocity, acceleration;
-    public Matrix4x4 worldTransformationMatrix;
+    Matrix4x4 worldTransformationMatrix;
 
     //lab 1 step 1
     public Quaternion rotation;
@@ -69,8 +69,9 @@ public class Particle3D : MonoBehaviour
     Matrix4x4 inverseScaleMat;
     Matrix4x4 rotationMat;
     Matrix4x4 inverseRotationMat;
-    [HideInInspector]
+    //[HideInInspector]
     public Matrix4x4 localToWorldMatrix;
+    public Matrix4x4 aaaaaaa;
     [HideInInspector]
     public Matrix4x4 worldToLocalMatrix;
 
@@ -107,14 +108,14 @@ public class Particle3D : MonoBehaviour
 
     void updateWorldTransformationMatrix()
     {
-        Vector4 vec1 = new Vector4(rotation.w * rotation.w + rotation.x * rotation.x - rotation.y * rotation.y - rotation.z * rotation.z,
+        Vector4 vec1 = new Vector4(1 - 2 * rotation.y * rotation.y - 2*rotation.z * rotation.z,
             2 * rotation.x * rotation.y - 2 * rotation.w * rotation.z, 2 * rotation.x * rotation.z + 2 * rotation.w * rotation.y, 0);
 
         Vector4 vec2 = new Vector4(2 * rotation.x * rotation.y + 2 * rotation.w * rotation.z,
-            rotation.w * rotation.w - rotation.x * rotation.x + rotation.y * rotation.y - rotation.z * rotation.z, 2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x, 0);
+            1 - 2*rotation.x * rotation.x - 2*rotation.z * rotation.z, 2 * rotation.y * rotation.z - 2 * rotation.w * rotation.x, 0);
 
         Vector4 vec3 = new Vector4(2 * rotation.x * rotation.z - 2 * rotation.w * rotation.y,
-            2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x, rotation.w * rotation.w - rotation.x * rotation.x - rotation.y * rotation.y + rotation.z * rotation.z, 0);
+            2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x, 1 - 2*rotation.x * rotation.x - 2*rotation.y * rotation.y, 0);
 
         Vector4 vec4 = new Vector4(0, 0, 0, 1);
 
@@ -297,7 +298,9 @@ public class Particle3D : MonoBehaviour
     {
         //inverseInertiaTensor = transform.worldToLocalMatrix * inertia.inverse * transform.localToWorldMatrix;
         updateWorldTransformationMatrix();
-        
+
+        aaaaaaa = transform.localToWorldMatrix;
+
         inverseInertiaTensor = worldToLocalMatrix * inertia.inverse * localToWorldMatrix;
     }
 

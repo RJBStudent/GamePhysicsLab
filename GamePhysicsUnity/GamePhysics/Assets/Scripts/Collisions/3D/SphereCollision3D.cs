@@ -161,7 +161,7 @@ public class SphereCollision3D : CollisionHull3D
         //Vector2 top = new Vector2(Mathf.Cos(-zRot), -Mathf.Sin(-zRot));
         //Vector2 bottom = new Vector2(Mathf.Sin(-zRot), Mathf.Cos(-zRot));
 
-        Vector3 posInOBBSpace = other.particle.worldToLocalMatrix.MultiplyPoint3x4(pos);
+        Vector3 posInOBBSpace = other.transform.worldToLocalMatrix.MultiplyPoint3x4(pos);
         
         //Vector3 localPos = pos - other.particle.position;
         //pos.x = localPos.x * top.x + localPos.y * top.y;
