@@ -79,33 +79,36 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         // 11) return true if both axis test are true
 
         // (1)
-        Vector2 otherPos = other.particle.position;
-        Vector2 thisPos = particle.position;
+        Vector3 otherPos = other.particle.position;
+        Vector3 thisPos = particle.position;
 
-        Vector2 distance = thisPos - otherPos;
+        Vector3 distance = thisPos - otherPos;
 
         // (2)
         float otherWidth = other.width;
         float otherHeight = other.height;
+        float otherDepth = other.depth;
 
         // (3)
-        Vector2 thisMaxExtent = new Vector2(particle.position.x + (width / 2), particle.position.y + (width / 2));
-        Vector2 otherMaxExtent = new Vector2(otherPos.x + (otherWidth / 2), otherPos.y  + (otherHeight/ 2));
+        Vector3 thisMaxExtent = new Vector3(particle.position.x + (width / 2), particle.position.y + (height / 2), particle.position.z + +(depth/ 2));
+        Vector3 otherMaxExtent = new Vector3(otherPos.x + (otherWidth / 2), otherPos.y  + (otherHeight/ 2), otherPos.z + (otherDepth/2));
         
 
         // (4)
-        Vector2 thisMinExtent = new Vector2(particle.position.x - (width / 2), particle.position.y - (height/ 2));
-        Vector2 otherMinExtent = new Vector2(otherPos.x - (otherWidth / 2), otherPos.y - (otherHeight/ 2));
+        Vector3 thisMinExtent = new Vector3(particle.position.x - (width / 2), particle.position.y - (height/ 2), particle.position.z - (depth / 2));
+        Vector3 otherMinExtent = new Vector3(otherPos.x - (otherWidth / 2), otherPos.y - (otherHeight/ 2), otherPos.z - (otherDepth / 2));
 
         // lab 5 collision response
-        Vector2 thisExtent = new Vector2((thisMaxExtent.x - thisMinExtent.x)/2, (thisMaxExtent.y - thisMinExtent.y)/2);
-        Vector2 otherExtent = new Vector2((otherMaxExtent.x - otherMinExtent.x)/2, (otherMaxExtent.y - otherMinExtent.y)/2);
+        Vector3 thisExtent = new Vector3((thisMaxExtent.x - thisMinExtent.x)/2, (thisMaxExtent.y - thisMinExtent.y)/2);
+        Vector3 otherExtent = new Vector3((otherMaxExtent.x - otherMinExtent.x)/2, (otherMaxExtent.y - otherMinExtent.y)/2);
 
         float xOverlap = thisExtent.x + otherExtent.x - Mathf.Abs(distance.x);
         float yOverlap = thisExtent.y + otherExtent.y - Mathf.Abs(distance.y);
+        float zOverlap = thisExtent.z + otherExtent.z - Mathf.Abs(distance.z);
 
         bool xTest = false;
         bool yTest = false;
+        bool zTest = false;
 
         // (5)                                     (6)
         if(thisMaxExtent.x >= otherMinExtent.x && otherMaxExtent.x >= thisMinExtent.x)
@@ -132,11 +135,22 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
             yTest = false;
         }
 
+        if (thisMaxExtent.z >= otherMinExtent.z && otherMaxExtent.z >= thisMinExtent.z)
+        {
+            // (10)
+            zTest = true;
+        }
+        else
+        {
+            // (10)
+            zTest = false;
+        }
+
         // (11)
-        if (xTest && yTest)
+        if (xTest && yTest && zTest)
         {
 
-
+/*
                 c.contacts[0].point.x = Mathf.Max(thisMinExtent.x, otherMinExtent.x);
                 c.contacts[0].point.y = Mathf.Max(thisMinExtent.y, otherMinExtent.y);
 
@@ -163,6 +177,7 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
             }
 
             c.contactCount = 2;
+            */
 
             return true;
         }
@@ -246,6 +261,8 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         box1.dimensions.x = width;
         box1.dimensions.y = height;
         box1.dimensions.z = depth;
+        box1.particleRef = particle;
+        box1.transformRef= transform;
 
         BoxData3D box2;
         box2.pos = other.particle.position;
@@ -253,6 +270,8 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         box2.dimensions.x = other.width;
         box2.dimensions.y = other.height;
         box2.dimensions.z = other.depth;
+        box2.particleRef = other.particle;
+        box2.transformRef = other.transform;
 
         bool check1 = checkBoundingBox(box1, box2);
         bool check2 = checkBoundingBox(box2, box1);
@@ -336,33 +355,38 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
 
     bool checkBoundingBox(BoxData3D box1, BoxData3D box2)
     {
-        //Vector2 thisPos = box1.pos;
+        Vector3 thisPos = box1.pos;
         //// 2) get other OBB position
-        //Vector2 otherPos = box2.pos;
+        Vector3 otherPos = box2.pos;
 
         //float thisRot = box1.rotation;
 
-        //Vector2 otherRotatedPos;
-        //if (box1.rotation != 0)
-        //{
-        //    otherRotatedPos = rotateAroundPoint(otherPos, thisPos, -thisRot);
-        //    otherRotatedPos -= thisPos;
-        //}
-        //else
-        //{
-        //    otherRotatedPos = otherPos;
-        //}
+        Vector3 otherRotatedPos;
+        if (box1.rotation.eulerAngles.magnitude != 0)
+        {
+            // otherRotatedPos = rotateAroundPoint(otherPos, thisPos, -thisRot);
+            otherRotatedPos = box1.transformRef.worldToLocalMatrix.MultiplyPoint3x4(otherPos); 
+            otherRotatedPos -= thisPos;
+        }
+        else
+        {
+            otherRotatedPos = otherPos;
+        }
 
 
         //float otherRot = box2.rotation;
         //otherRot -= thisRot;
 
-        //Vector2[] points = new Vector2[4];
+        Vector3[] points = new Vector3[8];
 
-        //points[0] = new Vector2(-.5f * box2.width, -.5f * box2.height);
-        //points[1] = new Vector2(-.5f * box2.width, .5f * box2.height);
-        //points[2] = new Vector2(.5f * box2.width, -.5f * box2.height);
-        //points[3] = new Vector2(.5f * box2.width, .5f * box2.height);
+        points[0] = new Vector3(-.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
+        points[1] = new Vector3(-.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
+        points[2] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
+        points[3] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
+        points[4] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
+        points[5] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
+        points[6] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
+        points[7] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
 
         //Quaternion newQuat = Quaternion.Euler(0, 0, otherRot);
         //Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);

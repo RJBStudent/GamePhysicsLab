@@ -9,6 +9,10 @@ public abstract class CollisionHull3D : MonoBehaviour
         public Vector3 pos;
         public Vector3 dimensions;
         public Quaternion rotation;
+        public Particle3D particleRef;
+        [Tooltip("Delete This")]
+        public Transform transformRef;
+
     }
 
     public class Collision3D

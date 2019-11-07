@@ -129,6 +129,8 @@ public class ObjectBoundingBox3D : CollisionHull3D
         box1.dimensions.x = width;
         box1.dimensions.y = height;
         box1.dimensions.z = depth;
+        box1.particleRef = particle;
+        box1.transformRef = transform;
 
         BoxData3D box2;
         box2.pos = other.particle.position;
@@ -136,6 +138,8 @@ public class ObjectBoundingBox3D : CollisionHull3D
         box2.dimensions.x = other.width;
         box2.dimensions.y = other.height;
         box2.dimensions.z = other.depth;
+        box2.particleRef = particle;
+        box2.transformRef = transform;
 
         bool check1 = checkBoundingBox(box1, box2);
         bool check2 = checkBoundingBox(box2, box1);
@@ -156,6 +160,8 @@ public class ObjectBoundingBox3D : CollisionHull3D
         box1.dimensions.x = width;
         box1.dimensions.y = height;
         box1.dimensions.z = depth;
+        box1.particleRef = particle;
+        box1.transformRef = transform;
 
         BoxData3D box2;
         box2.pos = other.particle.position;
@@ -163,6 +169,8 @@ public class ObjectBoundingBox3D : CollisionHull3D
         box2.dimensions.x = other.width;
         box2.dimensions.y = other.height;
         box2.dimensions.z = other.depth;
+        box2.particleRef = particle;
+        box2.transformRef = transform;
 
         bool check1 = checkBoundingBox(box1, box2);
         bool check2 = checkBoundingBox(box2, box1);
@@ -216,7 +224,7 @@ public class ObjectBoundingBox3D : CollisionHull3D
         //
         //
         //Vector2 localPos = pos - particle.position;
-        Vector3 posInOBBSpace = particle.worldToLocalMatrix.MultiplyPoint3x4(pos);
+        Vector3 posInOBBSpace = transform.worldToLocalMatrix.MultiplyPoint3x4(pos);
 
         //
         //pos.x = localPos.x * top.x + localPos.y * top.y;

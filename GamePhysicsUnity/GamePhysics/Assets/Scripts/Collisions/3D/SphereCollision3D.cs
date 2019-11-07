@@ -120,12 +120,12 @@ public class SphereCollision3D : CollisionHull3D
         Vector3 pos = transform.position;
 
         pos = pos - other.particle.position;
-
+       
         Vector3 clampedPos = Vector2.zero;
         clampedPos.x = Mathf.Clamp(pos.x, -.5f * other.width, .5f * other.width);
         clampedPos.y = Mathf.Clamp(pos.y, -.5f * other.height, .5f * other.height);
         clampedPos.z = Mathf.Clamp(pos.z, -.5f * other.depth, .5f * other.depth);
-
+        
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= radius)
         {
@@ -139,7 +139,6 @@ public class SphereCollision3D : CollisionHull3D
             //c.contacts[0].restitution = 0.0001f;
             //
             //c.contactCount = 1;
-
             return true;
         }
         else
@@ -148,6 +147,8 @@ public class SphereCollision3D : CollisionHull3D
         }
 
     }
+
+   
 
     public override bool TestCollisionVsOBB_3D(ObjectBoundingBox3D other, ref Collision3D c)
     {
@@ -161,8 +162,7 @@ public class SphereCollision3D : CollisionHull3D
         //Vector2 top = new Vector2(Mathf.Cos(-zRot), -Mathf.Sin(-zRot));
         //Vector2 bottom = new Vector2(Mathf.Sin(-zRot), Mathf.Cos(-zRot));
 
-        Vector3 posInOBBSpace = other.particle.worldToLocalMatrix.MultiplyPoint3x4(pos);
-        
+        Vector3 posInOBBSpace = other.transform.worldToLocalMatrix.MultiplyPoint3x4(pos );
         //Vector3 localPos = pos - other.particle.position;
         //pos.x = localPos.x * top.x + localPos.y * top.y;
         //pos.y = localPos.x * bottom.x + localPos.y * bottom.y;
@@ -170,28 +170,29 @@ public class SphereCollision3D : CollisionHull3D
         //
         ////  4. Clamp circle pos by the extents of the box
         //
-        Vector3 clampedPos = Vector3.zero;
+        Vector3 clampedPos = Vector3.zero; 
         clampedPos.x = Mathf.Clamp(posInOBBSpace.x, -.5f * other.width, .5f * other.width);
         clampedPos.y = Mathf.Clamp(posInOBBSpace.y, -.5f * other.height, .5f * other.height);
         clampedPos.z = Mathf.Clamp(posInOBBSpace.z, -.5f * other.depth, .5f * other.depth);
-        //
+
         ////  5. Compare clamped position against circles radius
         if ((posInOBBSpace - clampedPos).magnitude <= radius)
         {
-        //    //top = new Vector2(Mathf.Cos(-zRot), Mathf.Sin(-zRot));
-        //    //bottom = new Vector2(-Mathf.Sin(-zRot), Mathf.Cos(-zRot));
-        //    //
-        //    //
-        //    //c.contacts[0].normal = clampedPos - pos;
-        //    //
-        //    //c.contacts[0].normal.x = c.contacts[0].normal.x * top.x + c.contacts[0].normal.y * top.y;
-        //    //c.contacts[0].normal.y = c.contacts[0].normal.x * bottom.x + c.contacts[0].normal.y * bottom.y;
-        //    //
-        //    //c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
-        //    //
-        //    //c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
-        //    //
-        //    //c.contactCount = 1;
+            //    //top = new Vector2(Mathf.Cos(-zRot), Mathf.Sin(-zRot));
+            //    //bottom = new Vector2(-Mathf.Sin(-zRot), Mathf.Cos(-zRot));
+            //    //
+            //    //
+            //    //c.contacts[0].normal = clampedPos - pos;
+            //    //
+            //    //c.contacts[0].normal.x = c.contacts[0].normal.x * top.x + c.contacts[0].normal.y * top.y;
+            //    //c.contacts[0].normal.y = c.contacts[0].normal.x * bottom.x + c.contacts[0].normal.y * bottom.y;
+            //    //
+            //    //c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+            //    //
+            //    //c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
+            //    //
+            //    //c.contactCount = 1;
+            Debug.Log("hewwo");
             return true;
         }
         else
