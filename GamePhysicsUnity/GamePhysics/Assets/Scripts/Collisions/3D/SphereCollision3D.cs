@@ -19,20 +19,20 @@ public class SphereCollision3D : CollisionHull3D
         {
             callMethod = AbstractCollisionEvent;
         }
-       // CollisionManager.Instance.AddCollision(this);
+         CollisionManager3D.Instance.AddCollision(this);
 
         meshRen = GetComponent<MeshRenderer>();
     }
     private void OnEnable()
     {
-        //if (CollisionManager.Instance) 
-          //  CollisionManager.Instance.AddCollision(this);
+        if (CollisionManager3D.Instance) 
+          CollisionManager3D.Instance.AddCollision(this);
     }
     private void OnDisable()
     {
-       // CollisionManager.Instance.RemoveCollision(this);
+         CollisionManager3D.Instance.RemoveCollision(this);
     }
-    
+
     // Update is called once per frame
     void Update()
     {
@@ -124,6 +124,7 @@ public class SphereCollision3D : CollisionHull3D
         Vector3 clampedPos = Vector2.zero;
         clampedPos.x = Mathf.Clamp(pos.x, -.5f * other.width, .5f * other.width);
         clampedPos.y = Mathf.Clamp(pos.y, -.5f * other.height, .5f * other.height);
+        clampedPos.z = Mathf.Clamp(pos.z, -.5f * other.depth, .5f * other.depth);
 
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= radius)
@@ -150,7 +151,7 @@ public class SphereCollision3D : CollisionHull3D
 
     public override bool TestCollisionVsOBB_3D(ObjectBoundingBox3D other, ref Collision3D c)
     {
-        //Vector3 pos = transform.position;
+        Vector3 pos = transform.position;
         ////  1. Get z-rotation of OBB
         //float zRot = other.particle.rotation;
         ////  2. Rotate OBB by -Z
@@ -159,7 +160,9 @@ public class SphereCollision3D : CollisionHull3D
         ////  3. Transform circles position by mat2x2 {cos -sin;   sin cos} * {circlePos - boxPos}
         //Vector2 top = new Vector2(Mathf.Cos(-zRot), -Mathf.Sin(-zRot));
         //Vector2 bottom = new Vector2(Mathf.Sin(-zRot), Mathf.Cos(-zRot));
-        //
+
+        Vector3 posInOBBSpace = other.particle.worldToLocalMatrix.MultiplyPoint3x4(pos);
+        
         //Vector3 localPos = pos - other.particle.position;
         //pos.x = localPos.x * top.x + localPos.y * top.y;
         //pos.y = localPos.x * bottom.x + localPos.y * bottom.y;
@@ -167,13 +170,14 @@ public class SphereCollision3D : CollisionHull3D
         //
         ////  4. Clamp circle pos by the extents of the box
         //
-        //Vector3 clampedPos = Vector2.zero;
-        //clampedPos.x = Mathf.Clamp(pos.x, -.5f * other.width, .5f * other.width);
-        //clampedPos.y = Mathf.Clamp(pos.y, -.5f * other.height, .5f * other.height);
+        Vector3 clampedPos = Vector3.zero;
+        clampedPos.x = Mathf.Clamp(posInOBBSpace.x, -.5f * other.width, .5f * other.width);
+        clampedPos.y = Mathf.Clamp(posInOBBSpace.y, -.5f * other.height, .5f * other.height);
+        clampedPos.z = Mathf.Clamp(posInOBBSpace.z, -.5f * other.depth, .5f * other.depth);
         //
         ////  5. Compare clamped position against circles radius
-        //if ((pos - clampedPos).magnitude <= radius)
-        //{
+        if ((posInOBBSpace - clampedPos).magnitude <= radius)
+        {
         //    //top = new Vector2(Mathf.Cos(-zRot), Mathf.Sin(-zRot));
         //    //bottom = new Vector2(-Mathf.Sin(-zRot), Mathf.Cos(-zRot));
         //    //
@@ -188,14 +192,14 @@ public class SphereCollision3D : CollisionHull3D
         //    //c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
         //    //
         //    //c.contactCount = 1;
-        //    return true;
-        //}
-        //else
-        //{
-        //    return false;
-        //}
+            return true;
+        }
+        else
+        {
+            return false;
+        }
 
-        return false;
+        //return false;
     }
 
 

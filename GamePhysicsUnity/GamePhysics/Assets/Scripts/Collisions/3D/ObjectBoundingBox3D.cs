@@ -25,7 +25,7 @@ public class ObjectBoundingBox3D : CollisionHull3D
             callMethod = AbstractCollisionEvent;
         }
 
-       // CollisionManager.Instance.AddCollision(this);
+         CollisionManager3D.Instance.AddCollision(this);
 
         meshRen = GetComponent<MeshRenderer>();
     }
@@ -33,13 +33,13 @@ public class ObjectBoundingBox3D : CollisionHull3D
 
     private void OnEnable()
     {
-        //if (CollisionManager.Instance)
-        //    CollisionManager.Instance.AddCollision(this);
+        if (CollisionManager3D.Instance)
+           CollisionManager3D.Instance.AddCollision(this);
     }
 
     private void OnDisable()
     {
-       // CollisionManager.Instance.RemoveCollision(this);
+         CollisionManager3D.Instance.RemoveCollision(this);
     }
 
 
@@ -205,7 +205,7 @@ public class ObjectBoundingBox3D : CollisionHull3D
 
     public override bool TestCollisionVsSphere_3D(SphereCollision3D other, ref Collision3D c)
     {
-        //Vector2 pos = other.transform.position;
+        Vector3 pos = other.transform.position;
         ////  1. Get z-rotation of OBB
         //float zRot = particle.rotation;
         ////  2. Rotate OBB by -Z
@@ -216,19 +216,22 @@ public class ObjectBoundingBox3D : CollisionHull3D
         //
         //
         //Vector2 localPos = pos - particle.position;
+        Vector3 posInOBBSpace = particle.worldToLocalMatrix.MultiplyPoint3x4(pos);
+
         //
         //pos.x = localPos.x * top.x + localPos.y * top.y;
         //pos.y = localPos.x * bottom.x + localPos.y * bottom.y;
         //
         ////  4. Clamp circle pos by the extents of the box
         //
-        //Vector2 clampedPos = Vector2.zero;
-        //clampedPos.x = Mathf.Clamp(pos.x, -.5f * width, .5f * width );
-        //clampedPos.y = Mathf.Clamp(pos.y, -.5f * height, .5f * height);
+        Vector3 clampedPos = Vector2.zero;
+        clampedPos.x = Mathf.Clamp(pos.x, -.5f * width, .5f * width );
+        clampedPos.y = Mathf.Clamp(pos.y, -.5f * height, .5f * height);
+        clampedPos.z = Mathf.Clamp(pos.z, -.5f * depth, .5f * depth);
         //
         ////  5. Compare clamped position against circles radius
-        //if ((pos - clampedPos).magnitude <= other.radius)
-        //{
+        if ((posInOBBSpace - clampedPos).magnitude <= other.radius)
+        {
         //
         //    top = new Vector2(Mathf.Cos(-zRot), Mathf.Sin(-zRot));
         //    bottom = new Vector2(-Mathf.Sin(-zRot), Mathf.Cos(-zRot));
@@ -244,14 +247,14 @@ public class ObjectBoundingBox3D : CollisionHull3D
         //    c.contacts[0].point = other.particle.position + (c.contacts[0].normal.normalized * other.radius);
         //
         //    c.contactCount = 1;
-        //    return true;
-        //}
-        //else
-        //{
-        //    return false;
-        //}
+            return true;
+        }
+        else
+        { 
+            return false;
+        }
 
-        return false;
+        //return false;
     }
 
     Vector2 rotateAroundPoint(Vector2 point, Vector2 center, float degree)
