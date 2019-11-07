@@ -25,18 +25,18 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
             callMethod = AbstractCollisionEvent;
         }
 
-       // CollisionManager.Instance.AddCollision(this);
+        CollisionManager3D.Instance.AddCollision(this);
 
         meshRen = GetComponent<MeshRenderer>();
     }
     private void OnEnable()
     {
-       // if (CollisionManager.Instance)
-        //    CollisionManager.Instance.AddCollision(this);
+        if (CollisionManager3D.Instance)
+            CollisionManager3D.Instance.AddCollision(this);
     }
     private void OnDisable()
     {
-       // CollisionManager.Instance.RemoveCollision(this);
+        CollisionManager3D.Instance.RemoveCollision(this);
     }
 
     // Update is called once per frame
@@ -296,6 +296,7 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         Vector3 clampedPos = Vector2.zero;
         clampedPos.x = Mathf.Clamp(pos.x, -.5f * width, .5f * width);
         clampedPos.y = Mathf.Clamp(pos.y, -.5f * height, .5f * height);
+        clampedPos.y = Mathf.Clamp(pos.z, -.5f * depth, .5f * depth);
 
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= other.radius)

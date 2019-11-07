@@ -69,8 +69,10 @@ public class Particle3D : MonoBehaviour
     Matrix4x4 inverseScaleMat;
     Matrix4x4 rotationMat;
     Matrix4x4 inverseRotationMat;
-    Matrix4x4 localToWorldMatrix;
-    Matrix4x4 worldToLocalMatrix;
+    [HideInInspector]
+    public Matrix4x4 localToWorldMatrix;
+    [HideInInspector]
+    public Matrix4x4 worldToLocalMatrix;
 
     void Start()
     {
