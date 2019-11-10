@@ -353,6 +353,15 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         return point;
     }
 
+    Vector3 thisMaxExtent = new Vector3();
+    Vector3 thisMinExtent = new Vector3();
+    Vector3 otherMaxExtent = new Vector3();
+    Vector3 otherMinExtent = new Vector3();
+
+    Vector3[] points;
+    List<Vector3> drawPoints = new List<Vector3>();
+    List<Vector3> drawExtents = new List<Vector3>();
+
     bool checkBoundingBox(BoxData3D box1, BoxData3D box2)
     {
         Vector3 thisPos = box1.pos;
@@ -361,63 +370,147 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
 
         //float thisRot = box1.rotation;
 
-        Vector3 otherRotatedPos;
-        if (box1.rotation.eulerAngles.magnitude != 0)
+        points = new Vector3[8];
+
+        points[0] = .5f * box2.dimensions.x * box2.transformRef.right + .5f * box2.dimensions.y * box2.transformRef.up + .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[1] = .5f * box2.dimensions.x * box2.transformRef.right + .5f * box2.dimensions.y * box2.transformRef.up - .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[2] = .5f * box2.dimensions.x * box2.transformRef.right - .5f * box2.dimensions.y * box2.transformRef.up + .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[3] = .5f * box2.dimensions.x * box2.transformRef.right - .5f * box2.dimensions.y * box2.transformRef.up - .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[4] = -.5f * box2.dimensions.x * box2.transformRef.right + .5f * box2.dimensions.y * box2.transformRef.up + .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[5] = -.5f * box2.dimensions.x * box2.transformRef.right + .5f * box2.dimensions.y * box2.transformRef.up - .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[6] = -.5f * box2.dimensions.x * box2.transformRef.right - .5f * box2.dimensions.y * box2.transformRef.up + .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[7] = -.5f * box2.dimensions.x * box2.transformRef.right - .5f * box2.dimensions.y * box2.transformRef.up - .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+
+
+       
+
+
+        for (int i = 0; i < points.Length; i++)
         {
-            // otherRotatedPos = rotateAroundPoint(otherPos, thisPos, -thisRot);
-            otherRotatedPos = box1.transformRef.worldToLocalMatrix.MultiplyPoint3x4(otherPos); 
-            otherRotatedPos -= thisPos;
+            //points[i] = rotateAroundPoint(points[i], new Vector2(0, 0), otherRot);
+            //points[i] = box1.transformRef.worldToLocalMatrix.MultiplyPoint3x4(points[i]);
+
+            drawPoints.Add(points[i]);
         }
-        else
-        {
-            otherRotatedPos = otherPos;
-        }
+
+
+        //Vector3 otherRotatedPos;
+        //if (box1.rotation.eulerAngles.magnitude != 0)
+        //{
+        //    // otherRotatedPos = rotateAroundPoint(otherPos, thisPos, -thisRot);
+        //    otherRotatedPos = box1.transformRef.worldToLocalMatrix.MultiplyPoint3x4(otherPos); 
+        //    //otherRotatedPos -= thisPos;
+        //}
+        //else
+        //{
+        //    otherRotatedPos = otherPos;
+        //}
 
 
         //float otherRot = box2.rotation;
         //otherRot -= thisRot;
 
-        Vector3[] points = new Vector3[8];
 
-        points[0] = new Vector3(-.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
-        points[1] = new Vector3(-.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
-        points[2] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
-        points[3] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
-        points[4] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
-        points[5] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
-        points[6] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
-        points[7] = new Vector3(.5f * box2.dimensions.x, -.5f * box2.dimensions.y, -.5f * box2.dimensions.z);
-
-        //Quaternion newQuat = Quaternion.Euler(0, 0, otherRot);
-        //Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);
-
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    //points[i] = rotateAroundPoint(points[i], new Vector2(0, 0), otherRot);
-        //    points[i] = rotationMat.MultiplyPoint3x4(points[i]);
-        //}
-
-        //float otherMaxX = Mathf.Max(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
-        //float otherMinX = Mathf.Min(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
-        //float otherMaxY = Mathf.Max(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
-        //float otherMinY = Mathf.Min(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
+        float otherMaxX = Mathf.Max(points[0].x, points[1].x, points[2].x, points[3].x, points[4].x, points[5].x, points[6].x, points[7].x);
+        float otherMinX = Mathf.Min(points[0].x, points[1].x, points[2].x, points[3].x, points[4].x, points[5].x, points[6].x, points[7].x);
+        float otherMaxY = Mathf.Max(points[0].y, points[1].y, points[2].y, points[3].y, points[4].y, points[5].y, points[6].y, points[7].y);
+        float otherMinY = Mathf.Min(points[0].y, points[1].y, points[2].y, points[3].y, points[4].y, points[5].y, points[6].y, points[7].y);
+        float otherMaxZ = Mathf.Max(points[0].z, points[1].z, points[2].z, points[3].z, points[4].z, points[5].z, points[6].z, points[7].z);
+        float otherMinZ = Mathf.Min(points[0].z, points[1].z, points[2].z, points[3].z, points[4].z, points[5].z, points[6].z, points[7].z);
 
 
+        otherMinExtent = new Vector3(otherMinX, otherMinY, otherMinZ);
+        otherMaxExtent = new Vector3(otherMaxX, otherMaxY, otherMaxZ);
+        drawExtents.Add(otherMinExtent);
+        drawExtents.Add(otherMaxExtent);
 
-        //float thisMaxX = width * .5f;
-        //float thisMinX = -width * .5f;
-        //float thisMaxY = height * .5f;
-        //float thisMinY = -height * .5f;
 
-        //bool check1 = false;
-        //if ((thisMaxX > otherMinX && thisMaxY > otherMinY) && (otherMaxX > thisMinX && otherMaxY > thisMinY))
-        //{
-        //    check1 = true;
-        //}
+        otherMinExtent = box1.transformRef.worldToLocalMatrix.MultiplyPoint3x4(otherMinExtent);
+        otherMaxExtent = box1.transformRef.worldToLocalMatrix.MultiplyPoint3x4(otherMaxExtent);
+        
 
-        //return check1;
-        return false;
+        float thisMaxX = width * .5f;
+        float thisMinX = -width * .5f;
+        float thisMaxY = height * .5f;
+        float thisMinY = -height * .5f;
+        float thisMaxZ = depth * .5f;
+        float thisMinZ = -depth * .5f;
+
+
+        thisMinExtent = new Vector3(thisMinX, thisMinY,thisMinZ);
+        thisMaxExtent= new Vector3(thisMaxX, thisMaxY,thisMaxZ);
+        
+        
+        bool xTest = false;
+        bool yTest = false;
+        bool zTest = false;
+
+        // (5)                                     (6)
+        if (thisMaxExtent.x >= otherMinExtent.x && otherMaxExtent.x >= thisMinExtent.x)
+        {
+            // (7)
+            xTest = true;
+        }
+        else
+        {
+            // (7)
+            xTest = false;
+        }
+
+
+        // (8)                                     (9)
+        if (thisMaxExtent.y >= otherMinExtent.y && otherMaxExtent.y >= thisMinExtent.y)
+        {
+            // (10)
+            yTest = true;
+        }
+        else
+        {
+            // (10)
+            yTest = false;
+        }
+
+        if (thisMaxExtent.z >= otherMinExtent.z && otherMaxExtent.z >= thisMinExtent.z)
+        {
+            // (10)
+            zTest = true;
+        }
+        else
+        {
+            // (10)
+            zTest = false;
+        }
+
+        // (11)
+        if (xTest && yTest && zTest)
+        {
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        //return false;
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        foreach( Vector3 v in drawPoints)
+        {
+            Gizmos.DrawSphere(v, 0.1f);
+        }
+        drawPoints.Clear();
+
+        Gizmos.color = Color.red;
+        foreach (Vector3 v in drawExtents)
+        {
+            Gizmos.DrawSphere(v, 0.2f);
+        }
+        drawExtents.Clear();
+    }
+
 
     public override void AbstractCollisionEvent(CollisionHull3D col) { }
 }
