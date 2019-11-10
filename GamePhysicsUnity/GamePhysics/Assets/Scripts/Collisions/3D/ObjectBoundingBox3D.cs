@@ -279,58 +279,116 @@ public class ObjectBoundingBox3D : CollisionHull3D
         return point;
     }
 
+    Vector3 thisMaxExtent = new Vector3();
+    Vector3 thisMinExtent = new Vector3();
+    Vector3 otherMaxExtent = new Vector3();
+    Vector3 otherMinExtent = new Vector3();
+
+    Vector3[] points;
+
     bool checkBoundingBox(BoxData3D box1, BoxData3D box2)
     {
-        //Vector2 thisPos = box1.pos;
+        Vector3 thisPos = box1.pos;
         //// 2) get other OBB position
-        //Vector2 otherPos = box2.pos;
-        //
-        //float thisRot = box1.rotation;
-        //
-        //Vector2 otherRotatedPos = rotateAroundPoint(otherPos, thisPos, -thisRot);
-        //otherRotatedPos -= thisPos;
-        //
-        //float otherRot = box2.rotation;
-        //otherRot -= thisRot;
-        //
-        //Vector2[] points = new Vector2[4];
-        //
-        //points[0] = new Vector2(-.5f * box2.width, -.5f * box2.height);
-        //points[1] = new Vector2(-.5f * box2.width, .5f * box2.height);
-        //points[2] = new Vector2(.5f * box2.width, -.5f * box2.height);
-        //points[3] = new Vector2(.5f * box2.width, .5f * box2.height);
-        //
-        //Quaternion newQuat = Quaternion.Euler(0, 0, otherRot);
-        //Matrix4x4 rotationMat = Matrix4x4.Rotate(newQuat);
-        //
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    //points[i] = rotateAroundPoint(points[i], new Vector2(0, 0), otherRot);
-        //    points[i] = rotationMat.MultiplyPoint3x4(points[i]);
-        //}
-        //
-        //float otherMaxX = Mathf.Max(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
-        //float otherMinX = Mathf.Min(points[0].x, points[1].x, points[2].x, points[3].x) + otherRotatedPos.x;
-        //float otherMaxY = Mathf.Max(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
-        //float otherMinY = Mathf.Min(points[0].y, points[1].y, points[2].y, points[3].y) + otherRotatedPos.y;
-        //
-        //
-        //
-        //float thisMaxX = width * .5f;
-        //float thisMinX = -width * .5f;
-        //float thisMaxY = height * .5f;
-        //float thisMinY = -height * .5f;
-        //
-        //bool check1 = false;
-        //if ((thisMaxX > otherMinX && thisMaxY > otherMinY) && (otherMaxX > thisMinX && otherMaxY > thisMinY))
-        //{
-        //    check1 = true;
-        //}
-        //
-        //return check1;
+        Vector3 otherPos = box2.pos;
 
-        return false;
+        //float thisRot = box1.rotation;
+
+        points = new Vector3[8];
+
+        points[0] = .5f * box2.dimensions.x * box2.transformRef.right + .5f * box2.dimensions.y * box2.transformRef.up + .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[1] = .5f * box2.dimensions.x * box2.transformRef.right + .5f * box2.dimensions.y * box2.transformRef.up - .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[2] = .5f * box2.dimensions.x * box2.transformRef.right - .5f * box2.dimensions.y * box2.transformRef.up + .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[3] = .5f * box2.dimensions.x * box2.transformRef.right - .5f * box2.dimensions.y * box2.transformRef.up - .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[4] = -.5f * box2.dimensions.x * box2.transformRef.right + .5f * box2.dimensions.y * box2.transformRef.up + .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[5] = -.5f * box2.dimensions.x * box2.transformRef.right + .5f * box2.dimensions.y * box2.transformRef.up - .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[6] = -.5f * box2.dimensions.x * box2.transformRef.right - .5f * box2.dimensions.y * box2.transformRef.up + .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+        points[7] = -.5f * box2.dimensions.x * box2.transformRef.right - .5f * box2.dimensions.y * box2.transformRef.up - .5f * box2.dimensions.z * box2.transformRef.forward + otherPos;
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            //points[i] = rotateAroundPoint(points[i], new Vector2(0, 0), otherRot);
+           // points[i] = box1.transformRef.worldToLocalMatrix.MultiplyPoint3x4(points[i]);
+        }
+
+
+        float otherMaxX = Mathf.Max(points[0].x, points[1].x, points[2].x, points[3].x, points[4].x, points[5].x, points[6].x, points[7].x);
+        float otherMinX = Mathf.Min(points[0].x, points[1].x, points[2].x, points[3].x, points[4].x, points[5].x, points[6].x, points[7].x);
+        float otherMaxY = Mathf.Max(points[0].y, points[1].y, points[2].y, points[3].y, points[4].y, points[5].y, points[6].y, points[7].y);
+        float otherMinY = Mathf.Min(points[0].y, points[1].y, points[2].y, points[3].y, points[4].y, points[5].y, points[6].y, points[7].y);
+        float otherMaxZ = Mathf.Max(points[0].z, points[1].z, points[2].z, points[3].z, points[4].z, points[5].z, points[6].z, points[7].z);
+        float otherMinZ = Mathf.Min(points[0].z, points[1].z, points[2].z, points[3].z, points[4].z, points[5].z, points[6].z, points[7].z);
+
+
+        otherMinExtent = box1.transformRef.worldToLocalMatrix.MultiplyPoint3x4(new Vector3(otherMinX, otherMinY, otherMinZ));
+        otherMaxExtent = box1.transformRef.worldToLocalMatrix.MultiplyPoint3x4(new Vector3(otherMaxX, otherMaxY, otherMaxZ));
+        //Debug.Log(box2.transformRef.gameObject + " " + otherMaxX + " " + otherMinX + " " + otherMinY + " " + otherMaxY + " " + otherMinZ + " " + otherMaxZ);
+
+        float thisMaxX = width * .5f;
+        float thisMinX = -width * .5f;
+        float thisMaxY = height * .5f;
+        float thisMinY = -height * .5f;
+        float thisMaxZ = depth * .5f;
+        float thisMinZ = -depth * .5f;
+
+
+
+        thisMinExtent = new Vector3(thisMinX, thisMinY, thisMinZ);
+        thisMaxExtent = new Vector3(thisMaxX, thisMaxY, thisMaxZ);
+
+        bool xTest = false;
+        bool yTest = false;
+        bool zTest = false;
+
+        // (5)                                     (6)
+        if (thisMaxExtent.x >= otherMinExtent.x && otherMaxExtent.x >= thisMinExtent.x)
+        {
+            // (7)
+            xTest = true;
+        }
+        else
+        {
+            // (7)
+            xTest = false;
+        }
+
+
+        // (8)                                     (9)
+        if (thisMaxExtent.y >= otherMinExtent.y && otherMaxExtent.y >= thisMinExtent.y)
+        {
+            // (10)
+            yTest = true;
+        }
+        else
+        {
+            // (10)
+            yTest = false;
+        }
+
+        if (thisMaxExtent.z >= otherMinExtent.z && otherMaxExtent.z >= thisMinExtent.z)
+        {
+            // (10)
+            zTest = true;
+        }
+        else
+        {
+            // (10)
+            zTest = false;
+        }
+
+        // (11)
+        if (xTest && yTest && zTest)
+        {
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
     }
+
 
     public override void AbstractCollisionEvent(CollisionHull3D col) { }
 
