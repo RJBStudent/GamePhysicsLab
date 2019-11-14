@@ -1,0 +1,7 @@
+﻿  pch.cpp
+  dllmain.cpp
+  Foo.cpp
+  PhysicsPlugin.cpp
+  Generating Code...
+     Creating library C:\Users\richard.bourdelais\Desktop\Physics\PhysicsPlugin\x64\Debug\PhysicsPlugin.lib and object C:\Users\richard.bourdelais\Desktop\Physics\PhysicsPlugin\x64\Debug\PhysicsPlugin.exp
+  PhysicsPlugin.vcxproj -> C:\Users\richard.bourdelais\Desktop\Physics\PhysicsPlugin\x64\Debug\PhysicsPlugin.dll
