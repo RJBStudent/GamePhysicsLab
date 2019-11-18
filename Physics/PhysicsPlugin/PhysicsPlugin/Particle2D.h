@@ -2,17 +2,44 @@
 #include <math.h>
 
 
-class Particle3D
+class Particle2D
 {
 public:
-	Particle3D();
-	~Particle3D();
+	Particle2D();
+	~Particle2D();
 
 	
+	Vector3 position;
+	Vector3 velocity;
+	Vector3 acceleration;
+	float rotation;
+	float angularVelocity;
+	float angularAcceleration;
+
+	float mass;
+	float massInv;
+
+	void Update();
+
 
 private:
-	
+	float inertia;
 
+	void SetInertia();
+	void SetMass();
+	Vector3 force;
+	void AddForce();
+
+	float torque;
+	void AddTorque();
+
+	void UpdateAcceleration();
+	void UpdatePosition();
+
+	void UpdateRotation();
+	void UpdateAngularAcceleration();
+
+	void ClampRotation();
 
 
 };
