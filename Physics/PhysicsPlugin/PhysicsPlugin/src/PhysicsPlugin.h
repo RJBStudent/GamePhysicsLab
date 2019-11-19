@@ -9,9 +9,13 @@ extern "C"
 
 #endif //  __cplusplus
 
-PHYSICSPLUGIN_SYMBOL int InitFoo(int f_new);
-PHYSICSPLUGIN_SYMBOL int DoFoo(int bar);
-PHYSICSPLUGIN_SYMBOL int TermFoo();
+struct ParticleWrapper;
+
+PHYSICSPLUGIN_SYMBOL int InitParticleManager();
+PHYSICSPLUGIN_SYMBOL void UpdateParticleManager();
+PHYSICSPLUGIN_SYMBOL int TermParticleManager();
+PHYSICSPLUGIN_SYMBOL int AddNewParticle(ParticleWrapper particle);
+
 
 #ifdef  __cplusplus
 }

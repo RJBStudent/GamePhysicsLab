@@ -1,35 +1,46 @@
 #include "PhysicsPlugin.h"
+#include "../ParticleManager.h"
 
-#include "Foo.h"
+ParticleManager* inst = NULL;
 
-Foo* inst = 0;
 
-int InitFoo(int f_new)
+int InitParticleManager()
 {
 	if (!inst)
 	{
-		inst = new Foo(f_new);
+		inst = new ParticleManager();
+		return 1;
+	}
+	return 0;
+
+}
+
+
+void UpdateParticleManager()
+{
+	if (inst)
+	{
+		inst->Update();
+		
+	}
+}
+
+
+int TermParticleManager()
+{
+	if (inst)
+	{
+		delete inst;
 		return 1;
 	}
 	return 0;
 }
 
-int DoFoo(int bar)
+int AddNewParticle(ParticleWrapper particle)
 {
 	if (inst)
 	{
-		int result = inst->doFoo(bar);
-		return result;
-	}
-	return 0;
-}
-
-int TermFoo()
-{
-	if (inst)
-	{
-		delete inst;
-		inst = 0;
+		inst->AddParticle(particle);
 		return 1;
 	}
 	return 0;

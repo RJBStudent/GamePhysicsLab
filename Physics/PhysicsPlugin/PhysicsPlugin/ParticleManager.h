@@ -4,21 +4,7 @@
 
 class Particle2D;
 
-class ParticleManager
-{
-public:
-
-	void AddParticle(ParticleWrapper particle);
-
-	void Update();
-
-private:
-	ParticleManager();
-	~ParticleManager();
-
-	std::vector<Particle2D> particleList;
-
-};
+#define hiDan auto
 
 struct ParticleWrapper
 {
@@ -29,3 +15,22 @@ struct ParticleWrapper
 	float mass;
 
 };
+
+class ParticleManager
+{
+public:
+
+	void AddParticle(ParticleWrapper particle);
+
+	void Update();
+
+
+	ParticleManager();
+	~ParticleManager();
+
+private:
+
+	std::vector<Particle2D*> particleList;
+
+};
+

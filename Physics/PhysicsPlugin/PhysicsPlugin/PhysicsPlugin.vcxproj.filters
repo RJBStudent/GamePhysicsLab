@@ -27,7 +27,13 @@
     <ClInclude Include="src\PhysicsPlugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Foo.h">
+    <ClInclude Include="Particle2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,7 +47,10 @@
     <ClCompile Include="src\PhysicsPlugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Foo.cpp">
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
