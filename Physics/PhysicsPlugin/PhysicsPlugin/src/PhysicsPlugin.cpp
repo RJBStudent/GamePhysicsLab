@@ -22,7 +22,6 @@ void UpdateParticleManager(float dt)
 	if (inst)
 	{
 		inst->Update(dt);
-		
 	}
 }
 
@@ -32,6 +31,7 @@ int TermParticleManager()
 	if (inst)
 	{
 		delete inst;
+		inst = NULL;
 		return 1;
 	}
 	return 0;
@@ -45,6 +45,22 @@ float* getParticleValues(int key)
 		float particleData[4] = {p->position.x, p->position.y, p->position.z, p->rotation};
 
 		return particleData;
+	}
+}
+
+float getParticlePosX(int key)
+{
+	if (inst)
+	{
+		Particle2D* p = inst->getParticle(key);
+		float particleData = p->mass;
+
+		Vector3 pee = Vector3(1, 1, 1);
+		Vector3 poo = Vector3(2, 2, 2);
+
+		pee += poo;
+
+		return pee.x;
 	}
 }
 

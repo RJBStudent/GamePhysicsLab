@@ -1,7 +1,10 @@
-﻿  pch.cpp
-  dllmain.cpp
-  Foo.cpp
-  PhysicsPlugin.cpp
-  Generating Code...
-     Creating library C:\Users\richard.bourdelais\Desktop\Physics\PhysicsPlugin\x64\Debug\PhysicsPlugin.lib and object C:\Users\richard.bourdelais\Desktop\Physics\PhysicsPlugin\x64\Debug\PhysicsPlugin.exp
-  PhysicsPlugin.vcxproj -> C:\Users\richard.bourdelais\Desktop\Physics\PhysicsPlugin\x64\Debug\PhysicsPlugin.dll
+﻿  PhysicsPlugin.cpp
+C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\Vector3.h(7,46): warning C4244:  'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\Vector3.h(7,52): warning C4244:  'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\Vector3.h(7,58): warning C4244:  'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\src\PhysicsPlugin.cpp(81,26): warning C4244:  'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\src\PhysicsPlugin.cpp(81,23): warning C4244:  'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\src\PhysicsPlugin.cpp(81,23): warning C4244: C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\src\PhysicsPlugin.cpp(49) : warning C4715: 'getParticleValues': not all control paths return a value
+C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\src\PhysicsPlugin.cpp(81,23): warning C4244: C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\src\PhysicsPlugin.cpp(47) : warning C4172: returning address of local variable or temporary: particleData
+C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\src\PhysicsPlugin.cpp(81,23): warning C4244: C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\src\PhysicsPlugin.cpp(65) : warning C4715: 'getParticlePosX': not all control paths return a value
+  PhysicsPlugin.vcxproj -> C:\Users\richard.bourdelais\Desktop\GamePhysicsLab\Physics\PhysicsPlugin\x64\Debug\PhysicsPlugin.dll

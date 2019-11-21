@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ParticleManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+
     void Start()
     {
       Debug.Log(PhysicsPlugin.InitParticleManager()); 
@@ -14,5 +14,10 @@ public class ParticleManager : MonoBehaviour
     void Update()
     {
         PhysicsPlugin.UpdateParticleManager(Time.deltaTime);
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log("TERM : "+PhysicsPlugin.TermParticleManager());
     }
 }

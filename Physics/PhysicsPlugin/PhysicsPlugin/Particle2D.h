@@ -22,12 +22,12 @@ public:
 
 	void AddForce(Vector3 newForce);
 	void AddTorque(float newTorque);
+	void SetInertia(float width, float height);
+	void SetMass(float newMass);
 
 private:
 	float inertia = 0;
 
-	void SetInertia(float width, float height);
-	void SetMass(float newMass);
 	Vector3 force;
 
 	float torque = 0;
