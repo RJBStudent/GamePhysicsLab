@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <map>
 
 class Particle2D;
 
@@ -20,17 +20,21 @@ class ParticleManager
 {
 public:
 
-	void AddParticle(ParticleWrapper particle);
+	int AddParticle(float posX, float posY, float posZ, float rot, float mass);
 
-	void Update();
+	void Update(float dt);
 
 
 	ParticleManager();
 	~ParticleManager();
 
+	Particle2D* getParticle(int key);
+
 private:
 
-	std::vector<Particle2D*> particleList;
+	int index = 0;
+
+	std::map<int, Particle2D*> particleList;
 
 };
 

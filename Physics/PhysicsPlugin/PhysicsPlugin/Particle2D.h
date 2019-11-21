@@ -1,11 +1,10 @@
 #pragma once
+#include "Vector3.h"
 
-
-class Vector3 {};
 class Particle2D
 {
 public:
-	Particle2D() {}
+	Particle2D();
 	~Particle2D() {}
 
 	
@@ -19,24 +18,24 @@ public:
 	float mass = 0;
 	float massInv = 0;
 
-	void Update();
+	void Update(float dt);
 
+	void AddForce(Vector3 newForce);
+	void AddTorque(float newTorque);
 
 private:
 	float inertia = 0;
 
-	void SetInertia();
-	void SetMass();
+	void SetInertia(float width, float height);
+	void SetMass(float newMass);
 	Vector3 force;
-	void AddForce();
 
 	float torque = 0;
-	void AddTorque();
 
 	void UpdateAcceleration();
-	void UpdatePosition();
+	void UpdatePosition(float dt);
 
-	void UpdateRotation();
+	void UpdateRotation(float dt);
 	void UpdateAngularAcceleration();
 
 	void ClampRotation();

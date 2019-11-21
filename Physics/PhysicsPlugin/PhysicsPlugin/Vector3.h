@@ -36,6 +36,15 @@ public:
 		return out;
 	}
 
+	Vector3 operator += (const Vector3& left)
+	{
+		Vector3 out;
+		out.x = x + left.x;
+		out.y = y + left.y;
+		out.z = z + left.z;
+		return out;
+	}
+
 	float Dot(Vector3 const& left)
 	{
 		float out;

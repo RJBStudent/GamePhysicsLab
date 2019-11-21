@@ -1,5 +1,6 @@
 #include "PhysicsPlugin.h"
 #include "../ParticleManager.h"
+#include "../Particle2D.h"
 
 ParticleManager* inst = NULL;
 
@@ -16,11 +17,11 @@ int InitParticleManager()
 }
 
 
-void UpdateParticleManager()
+void UpdateParticleManager(float dt)
 {
 	if (inst)
 	{
-		inst->Update();
+		inst->Update(dt);
 		
 	}
 }
@@ -36,12 +37,40 @@ int TermParticleManager()
 	return 0;
 }
 
-int AddNewParticle(ParticleWrapper particle)
+float* getParticleValues(int key)
 {
 	if (inst)
 	{
-		inst->AddParticle(particle);
-		return 1;
+		Particle2D*  p = inst->getParticle(key);
+		float particleData[4] = {p->position.x, p->position.y, p->position.z, p->rotation};
+
+		return particleData;
 	}
-	return 0;
+}
+
+int AddNewParticle(float posX, float posY, float posZ, float rot, float mass)
+{
+	if (inst)
+	{
+		return inst->AddParticle(posX, posY, posZ, rot, mass);
+	}
+	return -1;
+}
+
+void AddForce(float x, float y, int key)
+{
+	if (inst)
+	{
+		Particle2D* p = inst->getParticle(key);
+		p->AddForce(Vector3(x, y, 0));
+	}
+}
+
+void AddTorque(float value, int key)
+{
+	if (inst)
+	{
+		Particle2D* p = inst->getParticle(key);
+		p->AddTorque(value);
+	}
 }
