@@ -77,16 +77,16 @@ public class SphereCollision3D : CollisionHull3D
         if (distanceSq <= sumSq)
         {
             //Collision Depth
-           // c.contacts[0].collisionDepth = (other.radius + radius) - distance.magnitude;
+            c.contacts[0].collisionDepth = (other.radius + radius) - distance.magnitude;
            //
            // //Collision Normal 
-           // c.contacts[0].normal = distance / distance.magnitude;
+            c.contacts[0].normal = distance / distance.magnitude;
            //
-           // c.contacts[0].point = c.contacts[0].normal.normalized * other.radius + other.particle.position;
+            c.contacts[0].point = c.contacts[0].normal.normalized * other.radius + other.particle.position;
            //
-           // c.contacts[0].restitution = 0.0001f;
+            c.contacts[0].restitution = 0.000001f;
            //
-           // c.contactCount = 1;
+            c.contactCount = 1;
 
             return true;            
         }

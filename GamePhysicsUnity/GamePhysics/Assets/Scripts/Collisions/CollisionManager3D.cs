@@ -129,123 +129,75 @@ public class CollisionManager3D : MonoBehaviour
 
     void ContactResolve(CollisionHull3D.Collision3D col)
     {
-        //Vector2 relativeVelocity = col.a.particle.velocity - col.b.particle.velocity;
-        //float sepVelocity = (relativeVelocity * col.contacts[0].normal.normalized).magnitude;
+        Vector3 relativeVelocity = col.a.particle.velocity - col.b.particle.velocity;
+        float sepVelocity = Vector3.Cross(relativeVelocity, col.contacts[0].normal.normalized).magnitude;
 
         //// Check whether there is a collision to solve in other words if it is stationary
 
 
         ////calculate new seperating velcocity with restitution
-        //float newSepVelocity = -sepVelocity * col.contacts[0].restitution;
+        float newSepVelocity = -sepVelocity * col.contacts[0].restitution;
 
         ////get the change in the seperating velocities
 
 
-        //float deltaVelocity = newSepVelocity - sepVelocity;
+        float deltaVelocity = newSepVelocity - sepVelocity;
 
 
         ////Apply the change in velocity to each object proprotionate to inverse mass
 
         ////add the two inverse masses together
 
-        //float totalInverseMass = (1 / col.a.particle.GetMass()) + (1 / col.b.particle.GetMass());
+        float totalInverseMass = (1 / col.a.particle.GetMass()) + (1 / col.b.particle.GetMass());
 
 
         //// impulse = change in seperating velocites / total inverse mass
 
-        //float impulse = deltaVelocity / totalInverseMass;
+        float impulse = deltaVelocity / totalInverseMass;
 
         ////the ammount of impulses per mass is the contact normal * impulse
 
-        //Vector2 impulsePerMass = col.contacts[0].normal * impulse;
+        Vector3 impulsePerMass = col.contacts[0].normal * impulse;
 
         ////new velocity = old velocity + impulses per mass * inverse mass;
 
-        //col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * -(1 / col.a.particle.GetMass());
+        col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * -(1 / col.a.particle.GetMass());
 
 
 
         //// the other particle goes om the inverse direction (negate inverse mass)
 
-        //col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * (1 / col.b.particle.GetMass());
+        col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * (1 / col.b.particle.GetMass());
     }
 
     void ResolveInterpentration(CollisionHull3D.Collision3D col)
     {
-        //Vector2 relativeVelocity = col.a.particle.velocity - col.b.particle.velocity;
-        //relativeVelocity *= col.contacts[0].normal.normalized;
+        Vector2 relativeVelocity = col.a.particle.velocity - col.b.particle.velocity;
+        relativeVelocity *= col.contacts[0].normal.normalized;
         //
         //
         ////if there is no penetratione return
-        //if (col.contacts[0].collisionDepth <= 0)
-        //{
-        //    return;
-        //}
+        if (col.contacts[0].collisionDepth <= 0)
+        {
+            return;
+        }
         //
-        //float totalInverseMass = (1 / col.a.particle.GetMass()) + (1 / col.b.particle.GetMass());
+        float totalInverseMass = (1 / col.a.particle.GetMass()) + (1 / col.b.particle.GetMass());
         //
-        //if (totalInverseMass <= 0)
-        //{
-        //    return;
-        //}
+        if (totalInverseMass <= 0)
+        {
+            return;
+        }
         //
         ////fond ammout of penetration per unity of inverse mass
-        //Vector2 movePerIMass = col.contacts[0].normal * (-col.contacts[0].collisionDepth / totalInverseMass);
+        Vector3 movePerIMass = col.contacts[0].normal * (-col.contacts[0].collisionDepth / totalInverseMass);
         //
         ////Apply penetration resolution
-        //col.a.particle.position = col.a.particle.position + movePerIMass * (1 / col.a.particle.GetMass());
+        col.a.particle.position = col.a.particle.position + movePerIMass * (1 / col.a.particle.GetMass());
         //
         //
-        //col.b.particle.position = col.b.particle.position + movePerIMass * (1 / col.b.particle.GetMass());
+        col.b.particle.position = col.b.particle.position + movePerIMass * (1 / col.b.particle.GetMass());
 
     }
 
-    void RestingContactResolution(CollisionHull3D.Collision3D col)
-    {
-        //Vector2 relativeVelocity = col.a.particle.velocity - col.b.particle.velocity;
-        //float sepVelocity = (relativeVelocity * col.contacts[0].normal.normalized).magnitude;
-        //
-        //
-        ////calculate new seperating velcocity with restitution
-        //float newSepVelocity = -sepVelocity * col.contacts[0].restitution;
-        //
-        //// Get velcoity build up due to accleration
-        //
-        //Vector2 accCausedVelocity = col.a.particle.acceleration - col.b.particle.acceleration;
-        //float accCausedSepVelocity = (accCausedVelocity * col.contacts[0].normal.normalized).magnitude;
-        //
-        //
-        ////remove it new seperating velocity
-        //if (accCausedSepVelocity < 0)
-        //{
-        //    newSepVelocity += col.contacts[0].restitution * accCausedSepVelocity;
-        //
-        //    if(newSepVelocity < 0)
-        //    {
-        //        newSepVelocity = 0;
-        //    }
-        //}
-        //
-        //float deltaVelocity = newSepVelocity - sepVelocity;
-        //
-        ////apply velocity in proportoin to inverse mass
-        //
-        //float totalInverseMass = (1 / col.a.particle.GetMass()) + (1 / col.b.particle.GetMass());
-        //
-        //if (totalInverseMass <= 0) return;
-        //
-        //float impulse = deltaVelocity / totalInverseMass;
-        //
-        //Vector2 impulsePerMass = col.contacts[0].normal * impulse;
-        //
-        ////new velocity = old velocity + impulses per mass * inverse mass;
-        //
-        //col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * -(1 / col.a.particle.GetMass());
-        //
-        //
-        //// the other particle goes om the inverse direction (negate inverse mass)
-        //
-        //col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * (1 / col.b.particle.GetMass());
-
-    }
 }
