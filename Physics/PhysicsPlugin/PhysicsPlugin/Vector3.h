@@ -36,13 +36,12 @@ public:
 		return out;
 	}
 
-	Vector3 operator += (const Vector3& left)
+	Vector3& operator += (const Vector3& right)
 	{
-		Vector3 out;
-		out.x = x + left.x;
-		out.y = y + left.y;
-		out.z = z + left.z;
-		return out;
+		this->x += right.x;
+		this->y += right.y;
+		this->z += right.z;
+		return *this;
 	}
 
 	float Dot(Vector3 const& left)

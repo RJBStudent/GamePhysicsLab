@@ -1,0 +1,9 @@
+﻿  pch.cpp
+  dllmain.cpp
+  Particle.cpp
+  ParticleManager.cpp
+C:\Users\thomas.mann\Desktop\GamePhysics\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\Particle.cpp(70,1): error C1010:  unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  PhysicsPlugin.cpp
+C:\Users\thomas.mann\Desktop\GamePhysics\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\ParticleManager.cpp(52,1): error C1010:  unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
+  Generating Code...
+C:\Users\thomas.mann\Desktop\GamePhysics\GamePhysicsLab\Physics\PhysicsPlugin\PhysicsPlugin\src\PhysicsPlugin.cpp(93,1): error C1010:  unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?

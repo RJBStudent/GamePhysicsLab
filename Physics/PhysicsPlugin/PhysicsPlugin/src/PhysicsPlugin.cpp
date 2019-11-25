@@ -53,14 +53,38 @@ float getParticlePosX(int key)
 	if (inst)
 	{
 		Particle2D* p = inst->getParticle(key);
-		float particleData = p->mass;
+		
+		return p->position.x;
+	}
+}
 
-		Vector3 pee = Vector3(1, 1, 1);
-		Vector3 poo = Vector3(2, 2, 2);
+float getParticlePosY(int key)
+{
+	if (inst)
+	{
+		Particle2D* p = inst->getParticle(key);
 
-		pee += poo;
+		return p->position.y;
+	}
+}
 
-		return pee.x;
+float getParticlePosZ(int key)
+{
+	if (inst)
+	{
+		Particle2D* p = inst->getParticle(key);
+
+		return p->position.z;
+	}
+}
+
+float getParticleRotation(int key)
+{
+	if (inst)
+	{
+		Particle2D* p = inst->getParticle(key);
+
+		return p->rotation;
 	}
 }
 

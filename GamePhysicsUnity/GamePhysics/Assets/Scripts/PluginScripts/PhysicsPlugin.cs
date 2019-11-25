@@ -21,4 +21,10 @@ public class PhysicsPlugin
     public static extern void AddTorque(float value, int key);
     [DllImport("PhysicsPlugin")]
     public static extern float getParticlePosX(int key);
+    [DllImport("PhysicsPlugin")]
+    public static extern float getParticlePosY(int key);
+    [DllImport("PhysicsPlugin")]
+    public static extern float getParticlePosZ(int key);
+    [DllImport("PhysicsPlugin")]
+    public static extern float getParticleRotation(int key);
 }

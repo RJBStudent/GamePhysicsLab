@@ -12,7 +12,7 @@ public class ParticleInterface : MonoBehaviour
     {
         key = PhysicsPlugin.AddNewParticle(0, 0, 0, 0, 1);
         Debug.Log(key);
-        PhysicsPlugin.AddForce(-1, 2, key);
+        PhysicsPlugin.AddForce(-8, 16, key);
         PhysicsPlugin.AddTorque(20, key);
 
     }
@@ -20,18 +20,14 @@ public class ParticleInterface : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float[] values= PhysicsPlugin.getParticleValues(key);
-        Debug.Log(values[0] + " " + values[1]);
-        newPos.x = values[0];
-        newPos.y = values[1];
-        //newPos.z = values[2];
-
         
         float xPos = PhysicsPlugin.getParticlePosX(key);
-        Debug.Log("xPos " +xPos);
-        transform.position = new Vector3(xPos, xPos, 0);
+        float yPos = PhysicsPlugin.getParticlePosY(key);
+        float rotation = PhysicsPlugin.getParticleRotation(key);
 
-        transform.rotation = Quaternion.Euler(0f, 0f, (float)values[3]);
+        transform.position = new Vector3(xPos, yPos, 0);
+
+        transform.rotation = Quaternion.Euler(0f, 0f, rotation);
 
 
     }
