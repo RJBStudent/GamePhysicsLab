@@ -17,10 +17,14 @@ public class RotateAroundPlanetScrpt : MonoBehaviour
 
     Particle3D thisParticle;
 
+    Transform thisTransform;
+
     // Start is called before the first frame update
     void Start()
     {
         thisParticle = GetComponent<Particle3D>();
+
+        thisTransform = GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -33,5 +37,7 @@ public class RotateAroundPlanetScrpt : MonoBehaviour
 
         // set transform.position to newPosition;
         thisParticle.position = newPosition;
+
+        thisTransform.up = difference;
     }
 }

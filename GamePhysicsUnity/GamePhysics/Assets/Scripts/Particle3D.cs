@@ -192,11 +192,21 @@ public class Particle3D : MonoBehaviour
     }
 
     //lab 2 step 2
-    Vector2 force;
-    public void AddForce(Vector2 newForce)
+    Vector3 force;
+    public void AddForce(Vector3 newForce)
     {
         //D'Alembert
         force += newForce;
+    }
+
+    public void AddLocalForce(Vector3 newForce)
+    {
+        //D'Alembert
+        Vector3 right = transform.right * newForce.x;
+        Vector3 up = transform.up * newForce.y;
+        Vector3 forward = transform.forward * newForce.z;
+
+        force += (right + up + forward);
     }
 
     public void AddTorque(Vector3 newTorque)
