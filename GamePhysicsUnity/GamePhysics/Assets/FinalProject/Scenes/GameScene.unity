@@ -372,7 +372,7 @@ MonoBehaviour:
   springTransform: {fileID: 0}
   particleShape3D: 0
   length: 0
-  radius: 0
+  radius: 1
   torque: {x: 0, y: 0, z: 0}
   rotationalForce: []
   centerOfMass: {x: 0, y: 0, z: 0}
@@ -410,6 +410,23 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 0
+--- !u!114 &669105976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669105973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebeb3c88b0e52954f9e4921754f02100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particle: {fileID: 669105975}
+  colliding: 0
+  generateCollisionEvent: 1
+  isStatic: 0
+  radius: 0.5
 --- !u!4 &669105978 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 47301a8c3f34bdc458c3efe0c7bfc851,
@@ -431,6 +448,8 @@ MonoBehaviour:
   xSpeed: 0
   ySpeed: 0
   thisParticle: {fileID: 0}
+  thePlanet: {fileID: 882603709}
+  offsetFromPlanetCenter: 5
 --- !u!1 &882603706
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,6 +461,8 @@ GameObject:
   - component: {fileID: 882603709}
   - component: {fileID: 882603708}
   - component: {fileID: 882603707}
+  - component: {fileID: 882603711}
+  - component: {fileID: 882603710}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Untagged
@@ -508,6 +529,154 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &882603710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882603706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 763f717b0b5387b4fa972070f31e9f38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  acceleration: {x: 0, y: 0, z: 0}
+  worldTransformationMatrix:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  rotation: {x: 0, y: 0, z: 0, w: 0}
+  angularVelocity: {x: 0, y: 0, z: 0}
+  angularAcceleration: {x: 0, y: 0, z: 0}
+  startingMass: 9e+11
+  gravity: 0
+  sliding: 0
+  frictionStatic: 0
+  frictionKinetic: 0
+  drag: 0
+  spring: 0
+  startSliding: 0
+  resetPosition: 0
+  resetData: 0
+  resetTime: 0
+  slopeNormal: {x: -0.259, y: 0.93}
+  springTransform: {fileID: 0}
+  particleShape3D: 0
+  length: 0
+  radius: 5
+  torque: {x: 0, y: 0, z: 0}
+  rotationalForce: []
+  centerOfMass: {x: 0, y: 0, z: 0}
+  localToWorldMatrix:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  worldToLocalMatrix:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+--- !u!114 &882603711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882603706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebeb3c88b0e52954f9e4921754f02100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particle: {fileID: 882603710}
+  colliding: 0
+  generateCollisionEvent: 1
+  isStatic: 0
+  radius: 5
+--- !u!1 &1285891122
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1285891124}
+  - component: {fileID: 1285891123}
+  m_Layer: 0
+  m_Name: CollisionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1285891123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285891122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6a52e250732cf4eba5450164f82aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1285891124
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285891122}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.2468401, y: 0.488183, z: -11.040183}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1435544928
 GameObject:
@@ -614,7 +783,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 47301a8c3f34bdc458c3efe0c7bfc851, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.67
+      value: -6.747
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 47301a8c3f34bdc458c3efe0c7bfc851, type: 3}
       propertyPath: m_LocalRotation.x

@@ -30,14 +30,6 @@ public class RotateAroundPlanetScrpt : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        difference = (transform.position - thePlanet.position).normalized;
-        newPosition = difference * offsetFromPlanetCenter;
-
-        //Set rotation with difference and set forward/ up
-
-        // set transform.position to newPosition;
-        thisParticle.position = newPosition;
-
-        thisTransform.up = difference;
+        
     }
 }
