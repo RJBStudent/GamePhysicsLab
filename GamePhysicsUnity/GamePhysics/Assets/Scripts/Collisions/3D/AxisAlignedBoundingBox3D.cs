@@ -315,21 +315,21 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         Vector3 clampedPos = Vector2.zero;
         clampedPos.x = Mathf.Clamp(pos.x, -.5f * width, .5f * width);
         clampedPos.y = Mathf.Clamp(pos.y, -.5f * height, .5f * height);
-        clampedPos.y = Mathf.Clamp(pos.z, -.5f * depth, .5f * depth);
-
+        clampedPos.z = Mathf.Clamp(pos.z, -.5f * depth, .5f * depth);
+            
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= other.radius)
         {
-            //c.contacts[0].normal = clampedPos - pos;
-            //
-            //c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
-            //c.contacts[0].normal.Normalize();
-            //c.contacts[0].point = other.particle.position + (c.contacts[0].normal.normalized * other.radius);
-            //
-            //c.contacts[0].restitution = 0.0001f;
-            //
-            //c.contactCount = 1;
+            c.contacts[0].normal = clampedPos - pos;
+            
+            c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+            c.contacts[0].normal.Normalize();
+            c.contacts[0].point = other.particle.position + (c.contacts[0].normal.normalized * other.radius);
+            
+            c.contacts[0].restitution = 0.0001f;
 
+            c.contactCount = 1;
+            
             return true;
         }
         else

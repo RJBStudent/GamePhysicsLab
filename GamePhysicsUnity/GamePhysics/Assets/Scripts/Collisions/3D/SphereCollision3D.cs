@@ -129,16 +129,16 @@ public class SphereCollision3D : CollisionHull3D
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= radius)
         {
-            //c.contacts[0].normal = pos - clampedPos;
+            c.contacts[0].normal = pos - clampedPos;
             //
-            //c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
-            //c.contacts[0].normal.Normalize();
+            c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+            c.contacts[0].normal.Normalize();
             //
-            //c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
+            c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
             //
-            //c.contacts[0].restitution = 0.0001f;
+            c.contacts[0].restitution = 0.0001f;
             //
-            //c.contactCount = 1;
+            c.contactCount = 1;
             return true;
         }
         else
@@ -148,7 +148,7 @@ public class SphereCollision3D : CollisionHull3D
 
     }
 
-   
+    Vector3 drawPosition;
 
     public override bool TestCollisionVsOBB_3D(ObjectBoundingBox3D other, ref Collision3D c)
     {
@@ -178,21 +178,23 @@ public class SphereCollision3D : CollisionHull3D
         ////  5. Compare clamped position against circles radius
         if ((posInOBBSpace - clampedPos).magnitude <= radius)
         {
-            //    //top = new Vector2(Mathf.Cos(-zRot), Mathf.Sin(-zRot));
-            //    //bottom = new Vector2(-Mathf.Sin(-zRot), Mathf.Cos(-zRot));
-            //    //
-            //    //
-            //    //c.contacts[0].normal = clampedPos - pos;
-            //    //
-            //    //c.contacts[0].normal.x = c.contacts[0].normal.x * top.x + c.contacts[0].normal.y * top.y;
-            //    //c.contacts[0].normal.y = c.contacts[0].normal.x * bottom.x + c.contacts[0].normal.y * bottom.y;
-            //    //
-            //    //c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
-            //    //
-            //    //c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
-            //    //
-            //    //c.contactCount = 1;
-            Debug.Log("hewwo");
+            
+            
+            c.contacts[0].normal = clampedPos - posInOBBSpace;
+            c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+
+            Debug.Log("Pre World normal " + c.contacts[0].normal.normalized);
+            //c.contacts[0].normal = other.transform.worldToLocalMatrix.inverse.MultiplyPoint3x4(c.contacts[0].normal);
+            c.contacts[0].normal.Normalize();
+            Debug.Log("Post World normal " + c.contacts[0].normal.normalized);
+            c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
+            drawPosition = c.contacts[0].point;
+            //Debug.Break();
+
+            c.contacts[0].restitution = 0.00000000001f;
+
+            c.contactCount = 1;
+            Debug.Log("HOWWO THIS IS SPHERE");
             return true;
         }
         else
@@ -201,6 +203,11 @@ public class SphereCollision3D : CollisionHull3D
         }
 
         //return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(drawPosition, 0.1f);
     }
 
 

@@ -127,11 +127,13 @@ public class CollisionManager : MonoBehaviour
         currentCollisions.Clear();
     }
 
+    
+
     void ContactResolve(CollisionHull2D.Collision col)
     {
         Vector2 relativeVelocity = col.a.particle.velocity - col.b.particle.velocity;
         float sepVelocity = (relativeVelocity * col.contacts[0].normal.normalized).magnitude;
-
+        
         // Check whether there is a collision to solve in other words if it is stationary
 
 
@@ -160,14 +162,14 @@ public class CollisionManager : MonoBehaviour
         Vector2 impulsePerMass = col.contacts[0].normal * impulse;
 
         //new velocity = old velocity + impulses per mass * inverse mass;
-
-        col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * -(1 / col.a.particle.GetMass());
+        if (!col.a.isStatic)
+            col.a.particle.velocity = col.a.particle.velocity + impulsePerMass * -(1 / col.a.particle.GetMass());
 
 
 
         // the other particle goes om the inverse direction (negate inverse mass)
-
-        col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * (1 / col.b.particle.GetMass());
+        if (!col.b.isStatic)
+            col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * (1 / col.b.particle.GetMass());
     }
 
     void ResolveInterpentration(CollisionHull2D.Collision col)
@@ -193,10 +195,11 @@ public class CollisionManager : MonoBehaviour
         Vector2 movePerIMass = col.contacts[0].normal * (-col.contacts[0].collisionDepth / totalInverseMass);
 
         //Apply penetration resolution
+        if(!col.a.isStatic)
         col.a.particle.position = col.a.particle.position + movePerIMass * (1 / col.a.particle.GetMass());
 
-
-        col.b.particle.position = col.b.particle.position + movePerIMass * (1 / col.b.particle.GetMass());
+        if (!col.b.isStatic)
+            col.b.particle.position = col.b.particle.position + movePerIMass * (1 / col.b.particle.GetMass());
 
     }
 

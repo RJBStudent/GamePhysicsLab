@@ -53,6 +53,7 @@ public abstract class CollisionHull3D : MonoBehaviour
 
     public bool colliding;
 
+    public bool restingContantact;
 
     public delegate void CollisionEvent(CollisionHull3D col);
     public CollisionEvent callMethod;
@@ -124,7 +125,7 @@ public abstract class CollisionHull3D : MonoBehaviour
         //negate if opposite
         // closing velocity = (scalar position a - scalar position b) * (position a - position b)
 
-        return (a.position.magnitude - b.position.magnitude) * Vector3.Cross(a.position, b.position);
+        return (a.position.magnitude - b.position.magnitude) * Vector3.Scale(a.position, b.position);
         //return (a.position.magnitude - b.position.magnitude) * (a.position * b.position);
     }
 }
