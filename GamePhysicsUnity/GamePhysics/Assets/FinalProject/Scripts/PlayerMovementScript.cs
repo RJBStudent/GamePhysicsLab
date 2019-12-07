@@ -11,18 +11,20 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField]
     float ySpeed;
 
+    public Vector3 maxSpeeds;
+    public Vector3 defaultForwardForce;
+
+    public Vector2 maxRotations;
+
     [SerializeField]
     Particle3D thisParticle;
 
 
     float xInput = 0;
     float yInput = 0;
+    float spaceBar = 0;
 
     Transform thisTransform;
-    [SerializeField]
-    Transform thePlanet;
-    [SerializeField]
-    float offsetFromPlanetCenter;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +38,8 @@ public class PlayerMovementScript : MonoBehaviour
     {
         UpdateInput();
         UpdatePosition();
-        RotateAroundPlanet();
+        ClampVelocity();
+        ClampRotation();
     }
 
     void UpdateInput()
@@ -44,36 +47,50 @@ public class PlayerMovementScript : MonoBehaviour
 
         xInput = Input.GetAxisRaw("Horizontal");
         yInput = Input.GetAxisRaw("Vertical");
-        
+        spaceBar = Input.GetAxisRaw("Jump");
+
 
     }
 
-    Vector3 force = new Vector3();
     void UpdatePosition()
     {
-        force.x = xInput;
-        force.y = 0;
-        force.z = yInput;
-        
-        thisParticle.AddForce(thisTransform.TransformDirection(force));
+        thisParticle.AddTorque(new Vector3(yInput, xInput ,0));
+        thisParticle.AddRelativeForce(defaultForwardForce);
 
-        //thisParticle.AddTorque(new Vector3(0, xInput * 100, 0))
-       // thisParticle.angularVelocity = new Vector3(0, xInput * 100, 0);
     }
 
-    void RotateAroundPlanet()
+    void ClampVelocity()
     {
-        Vector3 difference = (thisParticle.position - thePlanet.position).normalized;
-        Vector3 newPosition = difference * offsetFromPlanetCenter;
+        Vector3 vel = thisParticle.velocity;
 
-        //Set rotation with difference and set forward/ up
+        vel.z = Mathf.Clamp(vel.z, 0, maxSpeeds.z);
 
-        // set transform.position to newPosition;
-        //thisParticle.position = newPosition;
-        thisParticle.AddForce(difference* -5);
-
-        thisTransform.up = difference;
-        //Quaternion targetRotation = Quaternion.FromToRotation(thisTransform.up, difference) * thisTransform.rotation;
-        //thisTransform.rotation = Quaternion.Slerp(thisTransform.rotation, targetRotation, 50 * Time.deltaTime);
+        thisParticle.velocity = vel;
     }
+
+    void ClampRotation()
+    {
+        float xRot = thisTransform.rotation.x * Mathf.Rad2Deg;
+        float yRot = thisTransform.rotation.y * Mathf.Rad2Deg;
+        float zRot = thisTransform.rotation.z * Mathf.Rad2Deg;
+
+        //xRot = Mathf.Clamp(thisTransform.rotation.x * Mathf.Rad2Deg, -maxRotations.x, maxRotations.x);
+        //yRot = Mathf.Clamp(thisTransform.rotation.y * Mathf.Rad2Deg, -maxRotations.x, maxRotations.y);
+
+
+        //thisTransform.rotation = Quaternion.Euler(xRot, yRot, zRot);
+
+        if (Mathf.Abs(thisTransform.rotation.x * Mathf.Rad2Deg) > maxRotations.x)
+        {
+            thisParticle.angularVelocity.x = 0;
+        }
+
+        if (Mathf.Abs(thisTransform.rotation.y * Mathf.Rad2Deg) > maxRotations.y)
+        {
+            thisParticle.angularVelocity.y = 0;
+        }
+
+        thisTransform.rotation = Quaternion.Euler(xRot, yRot, 0);
+    }
+
 }

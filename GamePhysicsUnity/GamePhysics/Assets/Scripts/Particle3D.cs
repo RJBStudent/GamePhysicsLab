@@ -71,8 +71,10 @@ public class Particle3D : MonoBehaviour
     Matrix4x4 inverseRotationMat;
     [HideInInspector]
     public Matrix4x4 localToWorldMatrix;
-    [HideInInspector]
+
     public Matrix4x4 worldToLocalMatrix;
+
+    public Matrix4x4 actualWorldToLocal;
 
     void Start()
     {
@@ -107,26 +109,38 @@ public class Particle3D : MonoBehaviour
 
     void updateWorldTransformationMatrix()
     {
-        Vector4 vec1 = new Vector4(rotation.w * rotation.w + rotation.x * rotation.x - rotation.y * rotation.y - rotation.z * rotation.z,
-            2 * rotation.x * rotation.y - 2 * rotation.w * rotation.z, 2 * rotation.x * rotation.z + 2 * rotation.w * rotation.y, 0);
+        Vector4 vec1 = new Vector4(1 - (2*rotation.y*rotation.y) - (2*rotation.z*rotation.z),
+            (2*rotation.x*rotation.y) + (2*rotation.w*rotation.z), (2*rotation.x*rotation.z) - (2*rotation.w*rotation.y), 0);
 
-        Vector4 vec2 = new Vector4(2 * rotation.x * rotation.y + 2 * rotation.w * rotation.z,
-            rotation.w * rotation.w - rotation.x * rotation.x + rotation.y * rotation.y - rotation.z * rotation.z, 2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x, 0);
+        Vector4 vec2 = new Vector4((2*rotation.x*rotation.y) - (2*rotation.w*rotation.z),
+            1 - (2*rotation.x*rotation.x) - (2*rotation.z*rotation.z), (2*rotation.y*rotation.z) + (2*rotation.w*rotation.x), 0);
 
-        Vector4 vec3 = new Vector4(2 * rotation.x * rotation.z - 2 * rotation.w * rotation.y,
-            2 * rotation.y * rotation.z + 2 * rotation.w * rotation.x, rotation.w * rotation.w - rotation.x * rotation.x - rotation.y * rotation.y + rotation.z * rotation.z, 0);
+        Vector4 vec3 = new Vector4((2*rotation.x*rotation.z) + (2*rotation.w*rotation.y),
+            (2*rotation.y*rotation.z) - (2*rotation.w*rotation.x), 1 - (2*rotation.x*rotation.x) - (2*rotation.y*rotation.y), 0);
 
         Vector4 vec4 = new Vector4(0, 0, 0, 1);
 
-        rotationMat = new Matrix4x4(vec1, vec2, vec3, vec4);
+        rotationMat = new Matrix4x4(new Vector4(vec1.x, vec2.x, vec3.x, vec4.x), new Vector4(vec1.y, vec2.y, vec3.y, vec4.y), 
+                                    new Vector4(vec1.z, vec2.z, vec3.z, vec4.z), new Vector4(vec1.w, vec2.w, vec3.w, vec4.w));
+
+
+        localToWorldMatrix =  scaleMat * rotationMat;
+        localToWorldMatrix.m03 = position.x;
+        localToWorldMatrix.m13 = position.y;
+        localToWorldMatrix.m23 = position.z;
+
+
+
         inverseRotationMat = rotationMat.transpose;
 
-        Matrix4x4 positionMat = new Matrix4x4(new Vector4(1, 0, 0, position.x), new Vector4(0, 1, 0, position.y), new Vector4(0, 0, 1, position.z), new Vector4(0, 0, 0, 1));
+        Matrix4x4 positionMat = new Matrix4x4(new Vector4(1, 0, 0, 0), new Vector4(0, 1, 0, 0), new Vector4(0, 0, 1, 0), new Vector4(-position.x, -position.y, -position.z, 1));
         Matrix4x4 inversePositionMat = new Matrix4x4(new Vector4(1, 0, 0, -position.x), new Vector4(0, 1, 0, -position.y), new Vector4(0, 0, 1, -position.z), new Vector4(0, 0, 0, 1));
+        worldToLocalMatrix = inverseScaleMat * inverseRotationMat;
+        worldToLocalMatrix.m03 = -position.x * inverseScaleMat.m00;
+        worldToLocalMatrix.m13 = -position.y * inverseScaleMat.m11;
+        worldToLocalMatrix.m23 = -position.z * inverseScaleMat.m22;
 
-
-        localToWorldMatrix =  scaleMat * rotationMat * positionMat;
-        worldToLocalMatrix = inverseScaleMat * inverseRotationMat * inversePositionMat;
+        actualWorldToLocal = transform.worldToLocalMatrix;
     }
 
     void SetInertia()
@@ -199,7 +213,7 @@ public class Particle3D : MonoBehaviour
         force += newForce;
     }
 
-    public void AddLocalForce(Vector3 newForce)
+    public void AddRelativeForce(Vector3 newForce)
     {
         //D'Alembert
         Vector3 right = transform.right * newForce.x;
