@@ -14,7 +14,9 @@ public class PlayerMovementScript : MonoBehaviour
     public Vector3 maxSpeeds;
     public Vector3 defaultForwardForce;
 
-    public Vector2 maxRotations;
+    public Vector3 reticleLengths;
+    public float turnSpeed;
+
 
     [SerializeField]
     Particle3D thisParticle;
@@ -25,6 +27,8 @@ public class PlayerMovementScript : MonoBehaviour
     float spaceBar = 0;
 
     Transform thisTransform;
+
+    Vector3 direction;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +43,7 @@ public class PlayerMovementScript : MonoBehaviour
         UpdateInput();
         UpdatePosition();
         ClampVelocity();
-        ClampRotation();
+        UpdateRotation();
     }
 
     void UpdateInput()
@@ -54,7 +58,7 @@ public class PlayerMovementScript : MonoBehaviour
 
     void UpdatePosition()
     {
-        thisParticle.AddTorque(new Vector3(yInput, xInput ,0));
+        //thisParticle.AddTorque(new Vector3(yInput, xInput ,0));
         thisParticle.AddRelativeForce(defaultForwardForce);
 
     }
@@ -68,29 +72,16 @@ public class PlayerMovementScript : MonoBehaviour
         thisParticle.velocity = vel;
     }
 
-    void ClampRotation()
+    void UpdateRotation()
     {
-        float xRot = thisTransform.rotation.x * Mathf.Rad2Deg;
-        float yRot = thisTransform.rotation.y * Mathf.Rad2Deg;
-        float zRot = thisTransform.rotation.z * Mathf.Rad2Deg;
+        direction.x += xInput * turnSpeed;
+        direction.y -= yInput * turnSpeed;
+        direction.z = reticleLengths.z;
 
-        //xRot = Mathf.Clamp(thisTransform.rotation.x * Mathf.Rad2Deg, -maxRotations.x, maxRotations.x);
-        //yRot = Mathf.Clamp(thisTransform.rotation.y * Mathf.Rad2Deg, -maxRotations.x, maxRotations.y);
+        direction.x = Mathf.Clamp(direction.x, -reticleLengths.x, reticleLengths.x);
+        direction.y = Mathf.Clamp(direction.y, -reticleLengths.y, reticleLengths.y);
 
-
-        //thisTransform.rotation = Quaternion.Euler(xRot, yRot, zRot);
-
-        if (Mathf.Abs(thisTransform.rotation.x * Mathf.Rad2Deg) > maxRotations.x)
-        {
-            thisParticle.angularVelocity.x = 0;
-        }
-
-        if (Mathf.Abs(thisTransform.rotation.y * Mathf.Rad2Deg) > maxRotations.y)
-        {
-            thisParticle.angularVelocity.y = 0;
-        }
-
-        thisTransform.rotation = Quaternion.Euler(xRot, yRot, 0);
+        thisParticle.rotation.SetLookRotation(direction);
     }
 
 }

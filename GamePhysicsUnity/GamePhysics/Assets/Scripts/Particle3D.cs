@@ -71,10 +71,9 @@ public class Particle3D : MonoBehaviour
     Matrix4x4 inverseRotationMat;
     [HideInInspector]
     public Matrix4x4 localToWorldMatrix;
-
+    [HideInInspector]
     public Matrix4x4 worldToLocalMatrix;
 
-    public Matrix4x4 actualWorldToLocal;
 
     void Start()
     {
@@ -130,17 +129,41 @@ public class Particle3D : MonoBehaviour
         localToWorldMatrix.m23 = position.z;
 
 
+        // ********************* Inverse Matrix ************************
+        Vector3 col1 = rotationMat.GetColumn(0);
+        Vector3 col2 = rotationMat.GetColumn(1);
+        Vector3 col3 = rotationMat.GetColumn(2);
 
-        inverseRotationMat = rotationMat.transpose;
+        float a = col1.x;
+        float b = col2.x;
+        float c = col3.x;
+        float d = col1.y;
+        float e = col2.y;
+        float f = col3.y;
+        float g = col1.z;
+        float h = col2.z;
+        float i = col3.z;
 
-        Matrix4x4 positionMat = new Matrix4x4(new Vector4(1, 0, 0, 0), new Vector4(0, 1, 0, 0), new Vector4(0, 0, 1, 0), new Vector4(-position.x, -position.y, -position.z, 1));
-        Matrix4x4 inversePositionMat = new Matrix4x4(new Vector4(1, 0, 0, -position.x), new Vector4(0, 1, 0, -position.y), new Vector4(0, 0, 1, -position.z), new Vector4(0, 0, 0, 1));
+        float det = 1.0f / (a * e * i + d * h * c + g * b * f - a * h * f - g * e * c - d * b * i);
+
+        inverseRotationMat = new Matrix4x4(
+            new Vector4(e * i - f * h, f * g - d * i, d * h - e * g, 0) * det,
+            new Vector4(c * h - b * i, a * i - c * g, b * g - a * h, 0) * det,
+            new Vector4(b * f - c * e, c * d - a * f, a * e - b * d, 0) * det,
+            new Vector4(0, 0, 0, 1));
+
+        inverseRotationMat = inverseRotationMat.transpose;
+
+        Vector3 invPos = new Vector3(position.x, position.y, position.z);
+        invPos = inverseScaleMat * inverseRotationMat * invPos * -1;
+
+        
+
+
         worldToLocalMatrix = inverseScaleMat * inverseRotationMat;
-        worldToLocalMatrix.m03 = -position.x * inverseScaleMat.m00;
-        worldToLocalMatrix.m13 = -position.y * inverseScaleMat.m11;
-        worldToLocalMatrix.m23 = -position.z * inverseScaleMat.m22;
-
-        actualWorldToLocal = transform.worldToLocalMatrix;
+        worldToLocalMatrix.m03 = invPos.x;
+        worldToLocalMatrix.m13 = invPos.y;
+        worldToLocalMatrix.m23 = invPos.z;
     }
 
     void SetInertia()
