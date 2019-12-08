@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Particle3D))]
 public class PlayerMovementScript : MonoBehaviour
@@ -24,17 +26,28 @@ public class PlayerMovementScript : MonoBehaviour
 
     float xInput = 0;
     float yInput = 0;
-    float spaceBar = 0;
+    bool spaceBar = false;
 
     Transform thisTransform;
 
     public Vector3 direction;
 
+    public float StartingHealth = 10;
+    public float CurrentHealth = 10;
+
+    public Slider HealthBar;
+    private float healthBarValue = 1;
+
+    public bool canCollide = true;
     // Start is called before the first frame update
     void Start()
     {
         thisParticle = GetComponent<Particle3D>();
         thisTransform = GetComponent<Transform>();
+
+        CurrentHealth = StartingHealth;
+
+        GetComponent<CollisionHull3D>().callMethod = OnCollisionEvent;
     }
 
     // Update is called once per frame
@@ -44,6 +57,7 @@ public class PlayerMovementScript : MonoBehaviour
         UpdatePosition();
         //ClampVelocity();
         UpdateRotation();
+        UpdateUI();
     }
 
     void UpdateInput()
@@ -51,8 +65,13 @@ public class PlayerMovementScript : MonoBehaviour
 
         xInput = Input.GetAxisRaw("Horizontal");
         yInput = Input.GetAxisRaw("Vertical");
-        spaceBar = Input.GetAxisRaw("Jump");
-
+        spaceBar = Input.GetButtonDown("Fire1");
+        
+        if(spaceBar)
+        {
+            AddHealth(-1);
+            Debug.Log("EEEEEEEEEEEEEEEEEEEE");
+        }
     }
 
     void UpdatePosition()
@@ -99,4 +118,37 @@ public class PlayerMovementScript : MonoBehaviour
         thisParticle.rotation.SetLookRotation(direction);
     }
 
+    void UpdateUI()
+    {
+        HealthBar.value = Mathf.Lerp(HealthBar.value, healthBarValue, .1f);
+    }
+
+    public void AddHealth(float value)
+    {
+        CurrentHealth += value;
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, StartingHealth);
+
+        healthBarValue = CurrentHealth / StartingHealth;
+
+        if(CurrentHealth == 0)
+        {
+            SceneManager.LoadScene("GameScene");
+        }
+    }
+
+    void OnCollisionEvent(CollisionHull3D col)
+    {
+        if (col.gameObject.tag == "Building" && canCollide)
+        {
+            AddHealth(-1);
+            StartCoroutine(WaitForCollisiion(3f));
+        }
+    }
+
+    IEnumerator WaitForCollisiion(float time)
+    {
+        canCollide = false;
+        yield return new WaitForSeconds(time);
+        canCollide = true;
+    }
 }
