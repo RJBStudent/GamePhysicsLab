@@ -40,11 +40,6 @@ public class ScoreManagerScript : MonoBehaviour
     {
         scoreText.text = "Score : " + score.ToString();
 
-        liveText.text = "Lives : ";
-        for (int i = 0; i < currentLives; i++)
-        {
-            liveText.text = liveText.text + " O ";
-        }
 
     }
 

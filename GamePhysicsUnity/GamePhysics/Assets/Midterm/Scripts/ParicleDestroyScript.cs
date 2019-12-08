@@ -13,6 +13,7 @@ public class ParicleDestroyScript : MonoBehaviour
     void Start()
     {
         currentTime = 0;
+        GetComponent<CollisionHull3D>().callMethod = OnCollisionEvent;
     }
 
     private void Awake()
@@ -34,5 +35,10 @@ public class ParicleDestroyScript : MonoBehaviour
         }
         currentTime += Time.deltaTime;
 
+    }
+
+    void OnCollisionEvent(CollisionHull3D col)
+    {
+        gameObject.SetActive(false);
     }
 }

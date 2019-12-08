@@ -21,6 +21,9 @@ public class EnemyManager : MonoBehaviour
     float spawnTime;
     float currentTime;
 
+    [SerializeField]
+    Transform player;
+
     void Start()
     {
         for (int i = 0; i < flyingCount; i++)
@@ -29,6 +32,7 @@ public class EnemyManager : MonoBehaviour
             flyingList.Add(newFlyBoy);
             newFlyBoy.SetActive(false);
             newFlyBoy.GetComponent<EnemyScript>().mCamera = mCamera;
+            newFlyBoy.GetComponent<EnemyScript>().player = player;
         }
     }
 

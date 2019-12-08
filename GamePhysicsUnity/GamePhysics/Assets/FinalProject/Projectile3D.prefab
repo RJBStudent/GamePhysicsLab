@@ -12,11 +12,9 @@ GameObject:
   - component: {fileID: 8726109758190938586}
   - component: {fileID: 1495649557125560113}
   - component: {fileID: 5670176507777896536}
-  - component: {fileID: 7337014564918621267}
   - component: {fileID: 485143049255107197}
   - component: {fileID: -4618140843589197800}
   - component: {fileID: -6128445696084832530}
-  - component: {fileID: 5948652310465695676}
   - component: {fileID: 4570964324902098272}
   m_Layer: 0
   m_Name: Projectile3D
@@ -123,20 +121,6 @@ MonoBehaviour:
   torque: 0
   rotationalForce: []
   centerOfMass: {x: 0, y: 0}
---- !u!114 &7337014564918621267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8312842846561151515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 278c95c070e29df44ab014cd03e2fa9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  yWrapPos: 11
-  xWrapPos: 18
 --- !u!114 &485143049255107197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,20 +237,6 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 0
---- !u!114 &5948652310465695676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8312842846561151515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ba8fdfffa9142645b48c21339b4a1e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thePlanet: {fileID: 0}
-  offsetFromPlanetCenter: 5
 --- !u!114 &4570964324902098272
 MonoBehaviour:
   m_ObjectHideFlags: 0
