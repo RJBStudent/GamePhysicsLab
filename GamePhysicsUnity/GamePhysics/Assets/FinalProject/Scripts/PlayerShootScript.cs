@@ -56,7 +56,6 @@ public class PlayerShootScript : MonoBehaviour
     {
         if (spaceInput == 1f && lastSpaceInput != 1.0f)
         {
-            Debug.Log("Shoot : " + currentBulletIndex);
             currentBulletIndex = (currentBulletIndex + 1) % bulletCount;
             bullets[currentBulletIndex].SetActive(true);
             // bullets[currentBulletIndex].GetComponent<Particle>().position = thisParticle.position;
