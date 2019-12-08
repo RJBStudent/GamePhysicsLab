@@ -224,7 +224,7 @@ public class ObjectBoundingBox3D : CollisionHull3D
         //
         //
         //Vector2 localPos = pos - particle.position;
-        Vector3 posInOBBSpace = transform.worldToLocalMatrix.MultiplyPoint3x4(pos);
+        Vector3 posInOBBSpace = transform.worldToLocalMatrix.MultiplyPoint3x4(pos );
 
         //
         //pos.x = localPos.x * top.x + localPos.y * top.y;
@@ -232,29 +232,32 @@ public class ObjectBoundingBox3D : CollisionHull3D
         //
         ////  4. Clamp circle pos by the extents of the box
         //
-        Vector3 clampedPos = Vector2.zero;
-        clampedPos.x = Mathf.Clamp(pos.x, -.5f * width, .5f * width );
-        clampedPos.y = Mathf.Clamp(pos.y, -.5f * height, .5f * height);
-        clampedPos.z = Mathf.Clamp(pos.z, -.5f * depth, .5f * depth);
+        Vector3 clampedPos = Vector3.zero;
+        clampedPos.x = Mathf.Clamp(posInOBBSpace.x, -.5f * width, .5f * width );
+        clampedPos.y = Mathf.Clamp(posInOBBSpace.y, -.5f * height, .5f * height);
+        clampedPos.z = Mathf.Clamp(posInOBBSpace.z, -.5f * depth, .5f * depth);
         //
         ////  5. Compare clamped position against circles radius
         if ((posInOBBSpace - clampedPos).magnitude <= other.radius)
         {
-        //
-        //    top = new Vector2(Mathf.Cos(-zRot), Mathf.Sin(-zRot));
-        //    bottom = new Vector2(-Mathf.Sin(-zRot), Mathf.Cos(-zRot));
-        //
-        //
-        //    c.contacts[0].normal = clampedPos - pos;
-        //
-        //    c.contacts[0].normal.x = c.contacts[0].normal.x * top.x + c.contacts[0].normal.y * top.y;
-        //    c.contacts[0].normal.y = c.contacts[0].normal.x * bottom.x + c.contacts[0].normal.y * bottom.y;
-        //
-        //    c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
-        //
-        //    c.contacts[0].point = other.particle.position + (c.contacts[0].normal.normalized * other.radius);
-        //
-        //    c.contactCount = 1;
+            
+            
+
+                c.contacts[0].normal =  posInOBBSpace - clampedPos;
+                c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+
+                //c.contacts[0].normal = transform.worldToLocalMatrix.inverse.MultiplyPoint3x4(c.contacts[0].normal);
+
+
+               // c.contacts[0].normal = transform.worldToLocalMatrix.inverse.MultiplyPoint3x4(c.contacts[0].normal);
+                c.contacts[0].normal.Normalize();
+                c.contacts[0].point = other.particle.position + (c.contacts[0].normal.normalized * other.radius);
+
+
+                c.contacts[0].restitution = 0.000000000001f;
+            Debug.Log("HOWWO THIS IS OBB");
+                c.contactCount = 1;
+                
             return true;
         }
         else

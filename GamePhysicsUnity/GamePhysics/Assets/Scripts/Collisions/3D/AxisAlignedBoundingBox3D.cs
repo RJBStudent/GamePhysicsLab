@@ -79,8 +79,8 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         // 11) return true if both axis test are true
 
         // (1)
-        Vector3 otherPos = other.particle.position;
-        Vector3 thisPos = particle.position;
+        Vector3 otherPos = other.particle.position + other.offset;
+        Vector3 thisPos = particle.position + offset;
 
         Vector3 distance = thisPos - otherPos;
 
@@ -90,17 +90,17 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         float otherDepth = other.depth;
 
         // (3)
-        Vector3 thisMaxExtent = new Vector3(particle.position.x + (width / 2), particle.position.y + (height / 2), particle.position.z + +(depth/ 2));
-        Vector3 otherMaxExtent = new Vector3(otherPos.x + (otherWidth / 2), otherPos.y  + (otherHeight/ 2), otherPos.z + (otherDepth/2));
-        
+        Vector3 thisMaxExtent = new Vector3(thisPos.x + (width / 2), thisPos.y + (height / 2), thisPos.z + (depth / 2));
+        Vector3 otherMaxExtent = new Vector3(otherPos.x + (otherWidth / 2), otherPos.y + (otherHeight / 2), otherPos.z + (otherDepth / 2));
+
 
         // (4)
-        Vector3 thisMinExtent = new Vector3(particle.position.x - (width / 2), particle.position.y - (height/ 2), particle.position.z - (depth / 2));
-        Vector3 otherMinExtent = new Vector3(otherPos.x - (otherWidth / 2), otherPos.y - (otherHeight/ 2), otherPos.z - (otherDepth / 2));
+        Vector3 thisMinExtent = new Vector3(thisPos.x - (width / 2), thisPos.y - (height / 2), thisPos.z - (depth / 2));
+        Vector3 otherMinExtent = new Vector3(otherPos.x - (otherWidth / 2), otherPos.y - (otherHeight / 2), otherPos.z - (otherDepth / 2));
 
         // lab 5 collision response
-        Vector3 thisExtent = new Vector3((thisMaxExtent.x - thisMinExtent.x)/2, (thisMaxExtent.y - thisMinExtent.y)/2);
-        Vector3 otherExtent = new Vector3((otherMaxExtent.x - otherMinExtent.x)/2, (otherMaxExtent.y - otherMinExtent.y)/2);
+        Vector3 thisExtent = new Vector3((thisMaxExtent.x - thisMinExtent.x) / 2, (thisMaxExtent.y - thisMinExtent.y) / 2,  (thisMaxExtent.z - thisMinExtent.z) / 2);
+        Vector3 otherExtent = new Vector3((otherMaxExtent.x - otherMinExtent.x) / 2, (otherMaxExtent.y - otherMinExtent.y) / 2, (otherMaxExtent.z - otherMinExtent.z) / 2);
 
         float xOverlap = thisExtent.x + otherExtent.x - Mathf.Abs(distance.x);
         float yOverlap = thisExtent.y + otherExtent.y - Mathf.Abs(distance.y);
@@ -111,7 +111,7 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         bool zTest = false;
 
         // (5)                                     (6)
-        if(thisMaxExtent.x >= otherMinExtent.x && otherMaxExtent.x >= thisMinExtent.x)
+        if (thisMaxExtent.x >= otherMinExtent.x && otherMaxExtent.x >= thisMinExtent.x)
         {
             // (7)
             xTest = true;
@@ -150,34 +150,51 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         if (xTest && yTest && zTest)
         {
 
-/*
-                c.contacts[0].point.x = Mathf.Max(thisMinExtent.x, otherMinExtent.x);
-                c.contacts[0].point.y = Mathf.Max(thisMinExtent.y, otherMinExtent.y);
 
+            c.contacts[0].point.x = Mathf.Max(thisMinExtent.x, otherMinExtent.x);
+            c.contacts[0].point.y = Mathf.Max(thisMinExtent.y, otherMinExtent.y);
+            c.contacts[0].point.z = Mathf.Max(thisMinExtent.z, otherMinExtent.z);
+            
+            
                 c.contacts[1].point.x = Mathf.Min(thisMaxExtent.x, otherMaxExtent.x);
                 c.contacts[1].point.y = Mathf.Min(thisMaxExtent.y, otherMaxExtent.y);
+                c.contacts[1].point.z = Mathf.Min(thisMaxExtent.z, otherMaxExtent.z);
 
 
 
-            if (xOverlap>yOverlap)
+
+
+            if (xOverlap>yOverlap && xOverlap>zOverlap)
             {
-
-
-                c.contacts[0].normal = distance.x < 0 ? new Vector2(1, 0) : new Vector2(-1, 0);
-                c.contacts[1].normal = distance.x < 0 ? new Vector2(1, 0) : new Vector2(-1, 0);
+                c.contacts[0].normal = distance.x < 0 ? new Vector3(-1, 0, 0) : new Vector3(1, 0, 0);
+                c.contacts[1].normal = distance.x < 0 ? new Vector3(-1, 0, 0) : new Vector3(1, 0, 0);
                 c.contacts[0].collisionDepth = xOverlap;
                 c.contacts[1].collisionDepth = xOverlap;
             }
-            else
+            else if(yOverlap > xOverlap && yOverlap > zOverlap)
             { 
-                c.contacts[0].normal = distance.y < 0 ? new Vector2(0, 1) : new Vector2(0, -1);
-                c.contacts[1].normal = distance.y < 0 ? new Vector2(0, 1) : new Vector2(0, -1);
+                c.contacts[0].normal = distance.y < 0 ? new Vector3(0, -1, 0) : new Vector3(0, 1, 0);
+                c.contacts[1].normal = distance.y < 0 ? new Vector3(0, -1, 0) : new Vector3(0, 1, 0);
                 c.contacts[0].collisionDepth = yOverlap;
                 c.contacts[1].collisionDepth = yOverlap;
             }
+            else if (zOverlap > xOverlap && zOverlap > yOverlap)
+            {
+                c.contacts[0].normal = distance.z < 0 ? new Vector3(0, 0, -1) : new Vector3(0, 0, 1);
+                c.contacts[1].normal = distance.z < 0 ? new Vector3(0, 0, -1) : new Vector3(0, 0, 1);
+                c.contacts[0].collisionDepth = zOverlap;
+                c.contacts[1].collisionDepth = zOverlap;
+            }
+            else
+            {
+                Debug.LogError("BREAKING");
+            }
 
-            c.contactCount = 2;
-            */
+
+            c.contacts[0].restitution = 0.0001f;
+            c.contacts[1].restitution = 0.0001f;
+            c.contactCount = 1;
+            
 
             return true;
         }
@@ -186,6 +203,7 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
             return false;
         }
     }
+    
 
 
     public override bool TestCollisionVsOBB_3D(ObjectBoundingBox3D other, ref Collision3D c)
@@ -308,28 +326,28 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
         // 8) TEST : see if new vector2 is within circle radius
 
         // (1)
-        Vector3 pos = other.particle.position;
+        Vector3 pos = other.particle.position + other.offset;
 
-        pos = pos - particle.position;
+        pos = pos - (particle.position + offset);
 
         Vector3 clampedPos = Vector2.zero;
         clampedPos.x = Mathf.Clamp(pos.x, -.5f * width, .5f * width);
         clampedPos.y = Mathf.Clamp(pos.y, -.5f * height, .5f * height);
-        clampedPos.y = Mathf.Clamp(pos.z, -.5f * depth, .5f * depth);
-
+        clampedPos.z = Mathf.Clamp(pos.z, -.5f * depth, .5f * depth);
+            
         //  5. Compare clamped position against circles radius
         if ((pos - clampedPos).magnitude <= other.radius)
         {
-            //c.contacts[0].normal = clampedPos - pos;
-            //
-            //c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
-            //c.contacts[0].normal.Normalize();
-            //c.contacts[0].point = other.particle.position + (c.contacts[0].normal.normalized * other.radius);
-            //
-            //c.contacts[0].restitution = 0.0001f;
-            //
-            //c.contactCount = 1;
+            c.contacts[0].normal = clampedPos - pos;
+            
+            c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
+            c.contacts[0].normal.Normalize();
+            c.contacts[0].point = (other.particle.position + other.offset) + (c.contacts[0].normal.normalized * other.radius);
+            
+            c.contacts[0].restitution = 0.0001f;
 
+            c.contactCount = 1;
+            
             return true;
         }
         else
