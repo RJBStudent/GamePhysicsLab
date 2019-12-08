@@ -56,8 +56,8 @@ public class SphereCollision3D : CollisionHull3D
        
 
         // 1) Get positions
-        Vector3 thisPosition = particle.position;
-        Vector3 otherPosition = other.particle.position;
+        Vector3 thisPosition = (particle.position + offset);
+        Vector3 otherPosition = (other.particle.position + other.offset);
 
         // 2) differnce of the two
         Vector3 distance = thisPosition - otherPosition;
@@ -82,9 +82,9 @@ public class SphereCollision3D : CollisionHull3D
            // //Collision Normal 
             c.contacts[0].normal = distance / distance.magnitude;
            //
-            c.contacts[0].point = c.contacts[0].normal.normalized * other.radius + other.particle.position;
+            c.contacts[0].point = c.contacts[0].normal.normalized * other.radius + (other.particle.position + other.offset);
            //
-            c.contacts[0].restitution = 0.000001f;
+            c.contacts[0].restitution = 0.0001f;
            //
             c.contactCount = 1;
 
@@ -117,9 +117,9 @@ public class SphereCollision3D : CollisionHull3D
         // 8) TEST : see if new vector2 is within circle radius
 
         // (1)
-        Vector3 pos = transform.position;
+        Vector3 pos = (transform.position + offset);
 
-        pos = pos - other.particle.position;
+        pos = pos - (other.particle.position + other.offset);
        
         Vector3 clampedPos = Vector2.zero;
         clampedPos.x = Mathf.Clamp(pos.x, -.5f * other.width, .5f * other.width);
@@ -134,7 +134,7 @@ public class SphereCollision3D : CollisionHull3D
             c.contacts[0].collisionDepth = c.contacts[0].normal.magnitude;
             c.contacts[0].normal.Normalize();
             //
-            c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
+            c.contacts[0].point = (particle.position + offset) + (c.contacts[0].normal.normalized * radius);
             //
             c.contacts[0].restitution = 0.0001f;
             //
@@ -152,7 +152,7 @@ public class SphereCollision3D : CollisionHull3D
 
     public override bool TestCollisionVsOBB_3D(ObjectBoundingBox3D other, ref Collision3D c)
     {
-        Vector3 pos = transform.position;
+        Vector3 pos = (transform.position + offset);
         ////  1. Get z-rotation of OBB
         //float zRot = other.particle.rotation;
         ////  2. Rotate OBB by -Z
@@ -187,7 +187,7 @@ public class SphereCollision3D : CollisionHull3D
             //c.contacts[0].normal = other.transform.worldToLocalMatrix.inverse.MultiplyPoint3x4(c.contacts[0].normal);
             c.contacts[0].normal.Normalize();
             Debug.Log("Post World normal " + c.contacts[0].normal.normalized);
-            c.contacts[0].point = particle.position + (c.contacts[0].normal.normalized * radius);
+            c.contacts[0].point = (particle.position + offset) + (c.contacts[0].normal.normalized * radius);
             drawPosition = c.contacts[0].point;
             //Debug.Break();
 

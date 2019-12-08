@@ -98,6 +98,7 @@ public class CollisionManager3D : MonoBehaviour
 
 
             //calculate seperating velocity
+            // ContactResolve(col);
             ContactResolve(col);
             ResolveInterpentration(col);
 
@@ -152,7 +153,11 @@ public class CollisionManager3D : MonoBehaviour
 
         ////add the two inverse masses together
 
-        float totalInverseMass = (1f / col.a.particle.GetMass()) + (1f / col.b.particle.GetMass());
+        float massA = col.a.isStatic ? 1000000f : col.a.particle.GetMass();
+        float massB = col.b.isStatic ? 1000000f : col.b.particle.GetMass();
+
+
+        float totalInverseMass = (1f / massA) + (1f / massB);
         
 
         //// impulse = change in seperating velocites / total inverse mass
@@ -191,7 +196,11 @@ public class CollisionManager3D : MonoBehaviour
             return;
         }
         //
-        float totalInverseMass = (1 / col.a.particle.GetMass()) + (1 / col.b.particle.GetMass());
+
+        float massA = col.a.isStatic ? 1000000f : col.a.particle.GetMass();
+        float massB = col.b.isStatic ? 1000000f : col.b.particle.GetMass();
+
+        float totalInverseMass = (1 / massA) + (1 / massB);
         //
         if (totalInverseMass <= 0)
         {
@@ -206,6 +215,7 @@ public class CollisionManager3D : MonoBehaviour
         {
             col.a.particle.position = col.a.particle.position + movePerIMass * (1 / col.a.particle.GetMass());
         }
+
         if (!col.b.isStatic)
         {
             col.b.particle.position = col.b.particle.position + movePerIMass * (1 / col.b.particle.GetMass());
@@ -241,7 +251,11 @@ public class CollisionManager3D : MonoBehaviour
 
         //apply velocity in proportoin to inverse mass
 
-        float totalInverseMass = (1 / col.a.particle.GetMass()) + (1 / col.b.particle.GetMass());
+
+        float massA = col.a.isStatic ? 1000000f : col.a.particle.GetMass();
+        float massB = col.b.isStatic ? 1000000f : col.b.particle.GetMass();
+
+        float totalInverseMass = (1 / massA) + (1 / massB);
 
         if (totalInverseMass <= 0) return;
 

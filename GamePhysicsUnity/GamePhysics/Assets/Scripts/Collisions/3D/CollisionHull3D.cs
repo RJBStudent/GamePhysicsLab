@@ -51,9 +51,9 @@ public abstract class CollisionHull3D : MonoBehaviour
 
     public Particle3D particle;
 
-    public bool colliding;
+    public Vector3 offset;
 
-    public bool restingContantact;
+    public bool colliding;
 
     public delegate void CollisionEvent(CollisionHull3D col);
     public CollisionEvent callMethod;

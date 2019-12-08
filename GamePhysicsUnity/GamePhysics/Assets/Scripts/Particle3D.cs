@@ -47,6 +47,8 @@ public class Particle3D : MonoBehaviour
     public Vector2 slopeNormal = new Vector2(-0.259f, 0.93f);
     public Transform springTransform;
 
+    public Vector3 dragVector;
+
 
     //Lab 03 step 1
     [Header("Torque Stuff")]
@@ -323,6 +325,14 @@ public class Particle3D : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (gravity)
+        {
+            AddForce(ForceGenerator3D.GenerateForce_Gravity(mass, -9.81f, Vector2.up));
+        }
+        if(drag)
+        {
+            AddForce(ForceGenerator3D.GenerateForce_drag(velocity, dragVector, 0.5f, 1, 1.0f));
+        }
         //  step 3
         //  choose integrator
         updatePositionExplicitEuler(Time.fixedDeltaTime);
@@ -357,30 +367,6 @@ public class Particle3D : MonoBehaviour
 
         //Lab 2 test: apply gravity: f = mg
 
-        if (gravity)
-        {
-            AddForce(ForceGenerator.GenerateForce_Gravity(mass, -9.81f, Vector2.up));
-        }
-        if (sliding)
-        {
-            AddForce(ForceGenerator.GenerateForce_sliding(new Vector2(0, -9.81f), slopeNormal * 9.81f));
-        }
-        if (frictionKinetic)
-        {
-            AddForce(ForceGenerator.GenerateForce_friction_kinetic(slopeNormal, velocity, .5f));
-        }
-        if (drag)
-        {
-            AddForce(ForceGenerator.GenerateForce_drag(velocity, new Vector2(0, 3f), .5f, 1, 1.05f));
-        }
-        if (spring)
-        {
-            AddForce(ForceGenerator.GenerateForce_spring(position, springTransform.position, 3f, 3f));
-        }
-        if (frictionStatic)
-        {
-            AddForce(ForceGenerator.GenerateForce_friction_static(slopeNormal, acceleration * mass, 5f));
-        }
     }
 
     void ClampRotation()

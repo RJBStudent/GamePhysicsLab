@@ -36,4 +36,14 @@ public class ForceGenerator3D
 
     }
 
+    public static Vector3 GenerateForce_drag(Vector3 particleVelocity, Vector3 fluidVelocity, float fluidDensity, float objectArea_crossSection, float objectDragCoefficient)
+    {
+
+        // f_drag = (p * u^2 * area * coeff)/2
+        Vector3 u = particleVelocity - fluidVelocity;
+        Vector3 f_drag = (fluidDensity * Vector3.Scale(u,  u) * objectArea_crossSection * objectDragCoefficient) * .5f;
+        return f_drag;
+
+    }
+
 }
