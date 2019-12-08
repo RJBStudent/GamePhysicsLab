@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerBullet
   - Asteroid
+  - Ground
   layers:
   - Default
   - TransparentFX

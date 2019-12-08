@@ -248,6 +248,16 @@ public class Particle3D : MonoBehaviour
         force += (right + up + forward);
     }
 
+    public void SetRelativeVelocity(Vector3 newVel)
+    {
+        //D'Alembert
+        Vector3 right = transform.right * newVel.x;
+        Vector3 up = transform.up * newVel.y;
+        Vector3 forward = transform.forward * newVel.z;
+
+        velocity = (right + up + forward);
+    }
+
     public void AddTorque(Vector3 newTorque)
     {
         //D'Alembert

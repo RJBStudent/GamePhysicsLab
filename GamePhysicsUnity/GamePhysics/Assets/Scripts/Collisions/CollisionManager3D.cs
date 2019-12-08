@@ -40,12 +40,14 @@ public class CollisionManager3D : MonoBehaviour
                     CollisionHull3D.Collision3D newCol = new CollisionHull3D.Collision3D();
                     newCol.a = firstCol;
                     newCol.b = secondCol;
+
                     if (CollisionHull3D.TestCollision(firstCol, secondCol, ref newCol))
                     {
                         newCol.status = true;
 
                         //firstCol.colliding = true;
                         //secondCol.colliding = true;
+
 
                         currentCollisions.Add(newCol);
 
@@ -96,6 +98,7 @@ public class CollisionManager3D : MonoBehaviour
             //resove?
             //if not resolved keep in list else delete from list
 
+            //bool collisionExists = checkIfCollisionAlreadyExists(col.a, col.b);
 
             //calculate seperating velocity
             // ContactResolve(col);
@@ -107,6 +110,7 @@ public class CollisionManager3D : MonoBehaviour
                 col.a.CollisionDelegate(col.a.callMethod, col.b);
             //col.b.CollisionDelegate(col.b.callMethod, col.a);
 
+            //currentCollisions.Remove(col);
         }
         currentCollisions.Clear();
     }
@@ -274,6 +278,18 @@ public class CollisionManager3D : MonoBehaviour
         {
             col.b.particle.velocity = col.b.particle.velocity + impulsePerMass * (1 / col.b.particle.GetMass());
         }
+    }
+
+    bool checkIfCollisionAlreadyExists(CollisionHull3D a, CollisionHull3D b)
+    {
+        foreach (CollisionHull3D.Collision3D col in currentCollisions)
+        {
+            if(col.a == a && col.b == b)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

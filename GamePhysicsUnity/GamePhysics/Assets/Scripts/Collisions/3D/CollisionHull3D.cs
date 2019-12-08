@@ -26,10 +26,11 @@ public abstract class CollisionHull3D : MonoBehaviour
         }
 
         public CollisionHull3D a = null, b = null;
+        public bool enter = false, exit = false, stay = false;
         public Contact3D[] contacts = new Contact3D[8];
         public int contactCount = 0;
         public bool status = false;
-        public bool resovled = false;
+        public bool resolved = false;
 
         public Vector3 closingVelocity = Vector3.zero;
     }

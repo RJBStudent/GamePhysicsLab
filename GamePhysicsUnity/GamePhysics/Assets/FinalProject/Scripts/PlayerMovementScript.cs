@@ -12,7 +12,7 @@ public class PlayerMovementScript : MonoBehaviour
     float ySpeed;
 
     public Vector3 maxSpeeds;
-    public Vector3 defaultForwardForce;
+    public Vector3 defaultForwardSpeed;
 
     public Vector3 reticleLengths;
     public float turnSpeed;
@@ -28,7 +28,7 @@ public class PlayerMovementScript : MonoBehaviour
 
     Transform thisTransform;
 
-    Vector3 direction;
+    public Vector3 direction;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +42,7 @@ public class PlayerMovementScript : MonoBehaviour
     {
         UpdateInput();
         UpdatePosition();
-        ClampVelocity();
+        //ClampVelocity();
         UpdateRotation();
     }
 
@@ -53,13 +53,12 @@ public class PlayerMovementScript : MonoBehaviour
         yInput = Input.GetAxisRaw("Vertical");
         spaceBar = Input.GetAxisRaw("Jump");
 
-
     }
 
     void UpdatePosition()
     {
         //thisParticle.AddTorque(new Vector3(yInput, xInput ,0));
-        thisParticle.AddRelativeForce(defaultForwardForce);
+        thisParticle.SetRelativeVelocity(defaultForwardSpeed);
 
     }
 
@@ -74,12 +73,28 @@ public class PlayerMovementScript : MonoBehaviour
 
     void UpdateRotation()
     {
-        direction.x += xInput * turnSpeed;
-        direction.y -= yInput * turnSpeed;
-        direction.z = reticleLengths.z;
+        if(xInput != 0 )
+        {
+            direction.x += xInput * turnSpeed;
+        }
+        else
+        {
+            direction.x = Mathf.Lerp(direction.x, 0, .1f);
+        }
+        if(yInput != 0)
+        {
+            direction.y -= yInput * turnSpeed;
+        }
+        else
+        {
+            direction.y = Mathf.Lerp(direction.y, 0, .1f);
+        }
+        
+
 
         direction.x = Mathf.Clamp(direction.x, -reticleLengths.x, reticleLengths.x);
         direction.y = Mathf.Clamp(direction.y, -reticleLengths.y, reticleLengths.y);
+        direction.z = reticleLengths.z;
 
         thisParticle.rotation.SetLookRotation(direction);
     }
