@@ -212,6 +212,7 @@ MonoBehaviour:
   resetTime: 0
   slopeNormal: {x: -0.259, y: 0.93}
   springTransform: {fileID: 0}
+  dragVector: {x: 0, y: 0, z: 0}
   particleShape3D: 0
   length: 0
   radius: 0
@@ -279,7 +280,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particle: {fileID: -6128445696084832530}
+  offset: {x: 0, y: 0, z: 0}
   colliding: 0
-  generateCollisionEvent: 0
+  generateCollisionEvent: 1
   isStatic: 0
   radius: 0.25
