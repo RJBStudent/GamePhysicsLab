@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 137492585818388585}
   - component: {fileID: 8726109758190938586}
   - component: {fileID: 1495649557125560113}
-  - component: {fileID: 5670176507777896536}
-  - component: {fileID: 485143049255107197}
   - component: {fileID: -4618140843589197800}
   - component: {fileID: -6128445696084832530}
   - component: {fileID: 4570964324902098272}
@@ -83,58 +81,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8312842846561151515}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &5670176507777896536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8312842846561151515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c36a87be20e94b4e8d4617d0edb74b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  position: {x: 1, y: 1}
-  velocity: {x: 0, y: 0}
-  acceleration: {x: 0, y: 0}
-  rotation: 0
-  angularVelocity: 0
-  angularAcceleration: 0
-  startingMass: 1
-  gravity: 0
-  sliding: 0
-  frictionStatic: 0
-  frictionKinetic: 0
-  drag: 0
-  spring: 0
-  startSliding: 0
-  resetPosition: 0
-  resetData: 0
-  resetTime: 0
-  slopeNormal: {x: -0.259, y: 0.93}
-  springTransform: {fileID: 0}
-  particleShape: 0
-  inner: 0
-  outer: 0
-  diskRadius: 0.5
-  torque: 0
-  rotationalForce: []
-  centerOfMass: {x: 0, y: 0}
---- !u!114 &485143049255107197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8312842846561151515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed108e3ec20658b4b85135d57e859743, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxSpeed: 50
-  maxRotation: 100
 --- !u!114 &-4618140843589197800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,4 +200,4 @@ MonoBehaviour:
   colliding: 0
   generateCollisionEvent: 1
   isStatic: 0
-  radius: 0.25
+  radius: 1

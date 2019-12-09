@@ -7,6 +7,8 @@ TagManager:
   - PlayerBullet
   - Asteroid
   - Ground
+  - Building
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX

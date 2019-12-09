@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BuildingScript : MonoBehaviour
 {
+    Particle3D thisParticle;
 
     public AxisAlignedBoundingBox3D boundingBox;
     // Start is called before the first frame update
@@ -14,6 +15,9 @@ public class BuildingScript : MonoBehaviour
         boundingBox.width = transform.localScale.x;
         boundingBox.height = transform.localScale.y;
         boundingBox.depth = transform.localScale.z;
+
+        thisParticle = GetComponent<Particle3D>();
+        thisParticle.position = transform.position;
     }
 
     // Update is called once per frame

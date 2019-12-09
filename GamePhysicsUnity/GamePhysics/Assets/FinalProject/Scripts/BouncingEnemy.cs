@@ -17,8 +17,7 @@ public class BouncingEnemy : MonoBehaviour
         GetComponent<CollisionHull3D>().callMethod = OnCollisionEvent;
 
         thisParticle = GetComponent<Particle3D>();
-
-        thisParticle.AddForce(bounceForce);
+        //thisParticle.AddForce(bounceForce);
     }
 
     // Update is called once per frame
@@ -31,8 +30,13 @@ public class BouncingEnemy : MonoBehaviour
     {
         if(col.tag == "Ground" && canCollide)
         {
+            //thisParticle.position.y = 1f;
+
+            thisParticle.acceleration = Vector3.zero;
             thisParticle.AddForce(bounceForce);
-            StartCoroutine(WaitForCollisiion(.1f));
+            //StartCoroutine(WaitForCollisiion(1f));
+
+            Debug.Log("Bounced");
         }
     }
 

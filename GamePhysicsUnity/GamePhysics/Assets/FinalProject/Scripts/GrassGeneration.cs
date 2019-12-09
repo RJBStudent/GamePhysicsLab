@@ -22,6 +22,7 @@ public class GrassGeneration : MonoBehaviour
         for (int i = 0; i < grassObjects.Length; i++)
         {
             grassObjects[i] = Instantiate(GrassPrefab, new Vector3(0, 0, 30f * i), Quaternion.identity);
+            grassObjects[i].GetComponent<Particle3D>().position = new Vector3(0, 0, 30f * i);
         }
 
     }
@@ -37,6 +38,8 @@ public class GrassGeneration : MonoBehaviour
         if(PlayerTransform.position.z - grassObjects[indexToChange].transform.position.z > 20)
         {
             grassObjects[indexToChange].transform.position = grassObjects[lastIndex].transform.position + new Vector3(0, 0, 30);
+
+            grassObjects[indexToChange].GetComponent<Particle3D>().position = grassObjects[lastIndex].transform.position + new Vector3(0, 0, 30);
 
             lastIndex = indexToChange;
 

@@ -44,11 +44,11 @@ public class AxisAlignedBoundingBox3D : CollisionHull3D
     {
         if (colliding)
         {
-            meshRen.material.color = Color.red;
+            //meshRen.material.color = Color.red;
         }
         else
         {
-            meshRen.material.color = Color.yellow;
+            //meshRen.material.color = Color.yellow;
         }
     }
 

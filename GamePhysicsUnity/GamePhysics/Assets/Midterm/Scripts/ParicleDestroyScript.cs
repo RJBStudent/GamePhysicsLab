@@ -39,6 +39,11 @@ public class ParicleDestroyScript : MonoBehaviour
 
     void OnCollisionEvent(CollisionHull3D col)
     {
-        gameObject.SetActive(false);
+        Debug.Log(col.gameObject.tag);
+        if(col.gameObject.tag != "Building")
+        {
+            gameObject.SetActive(false);
+        }
+        
     }
 }

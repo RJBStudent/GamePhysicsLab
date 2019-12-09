@@ -319,13 +319,13 @@ MonoBehaviour:
   mCamera: {fileID: 0}
   totalHealth: 5
   thisMesh: {fileID: 7963386617072542319}
-  offset: 10
+  offset: 15
   EnemyBullet: {fileID: 8312842846561151515, guid: 713fb3be32d592c4380524a132d17696,
     type: 3}
-  shootTime: 3
+  shootTime: 1.5
   player: {fileID: 0}
   bulletCount: 20
-  scorePrefab: {fileID: 4383004837585895129, guid: 9a7fd197d8e480a49b877917bf40fc7b,
+  scorePrefab: {fileID: 4383004837585895129, guid: 7c2b52d65713fdd45937f55dc7888aad,
     type: 3}
 --- !u!23 &2120558379602763133
 MeshRenderer:

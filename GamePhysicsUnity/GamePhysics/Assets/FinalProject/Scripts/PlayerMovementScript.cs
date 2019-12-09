@@ -67,11 +67,6 @@ public class PlayerMovementScript : MonoBehaviour
         yInput = Input.GetAxisRaw("Vertical");
         spaceBar = Input.GetButtonDown("Fire1");
         
-        if(spaceBar)
-        {
-            AddHealth(-1);
-            Debug.Log("EEEEEEEEEEEEEEEEEEEE");
-        }
     }
 
     void UpdatePosition()
@@ -138,11 +133,13 @@ public class PlayerMovementScript : MonoBehaviour
 
     void OnCollisionEvent(CollisionHull3D col)
     {
-        if (col.gameObject.tag == "Building" && canCollide)
+        if ((col.gameObject.tag == "Building"  || col.gameObject.tag == "EnemyBullet") && canCollide)
         {
+            Debug.Log(col.gameObject.name);
             AddHealth(-1);
             StartCoroutine(WaitForCollisiion(3f));
         }
+        
     }
 
     IEnumerator WaitForCollisiion(float time)

@@ -60,6 +60,8 @@ public class EnemyScript : MonoBehaviour
         {
             GameObject nBullet = (GameObject)Instantiate(EnemyBullet);
             bullet.Add(nBullet);
+            nBullet.transform.localScale = new Vector3(1, 1, 1);
+            nBullet.GetComponent<SphereCollision3D>().radius = 0.5f;
             nBullet.tag = "EnemyBullet";
             nBullet.GetComponent<MeshRenderer>().material.color = Color.red;
             nBullet.SetActive(false);
@@ -136,7 +138,7 @@ public class EnemyScript : MonoBehaviour
             currentTime = 0;
 
             currentBulletIndex = (currentBulletIndex + 1) % bulletCount;
-            Vector3 dir = (player.position + mCamera.forward * 5f) - thisParticle.position;
+            Vector3 dir = (player.position + mCamera.forward * 15f) - thisParticle.position;
             dir.Normalize();
             bullet[currentBulletIndex].SetActive(true);
             bullet[currentBulletIndex].transform.position = thisParticle.position + (dir * 10f);

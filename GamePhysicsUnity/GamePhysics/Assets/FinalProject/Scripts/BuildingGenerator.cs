@@ -4,76 +4,20 @@ using UnityEngine;
 
 public class BuildingGenerator : MonoBehaviour
 {
-    public GameObject[] BuidlingPrefab;
-    public GameObject BridgePrefab;
     public Transform PlayerTransform;
 
-    GameObject[] buildingObjects;
-    GameObject[] bridgeObjects;
+    public GameObject[] cityObjects;
 
-    public int numBuidlings;
-    public int numBridges;
+    public Vector2 xCitySpawnRange;
 
-    public Vector2 xBuildingSpawnRange;
-    public Vector2 zBuildingSpawnRange;
-
-    public Vector2 zBridgeSpawnRange;
-
-    public int indexToChange_Buidling = 0;
-    public int lastIndex_Buidling = 9;
-
-    public int indexToChange_Bridge = 0;
-    public int lastIndex_Bridge = 9;
+    public int indexToChange = 0;
+    public int lastIndex = 9;
 
     // Start is called before the first frame update
     void Start()
     {
-        buildingObjects = new GameObject[numBuidlings];
-        lastIndex_Buidling = buildingObjects.Length - 1;
-        bridgeObjects = new GameObject[numBridges];
-        lastIndex_Bridge = bridgeObjects.Length - 1;
+        lastIndex = cityObjects.Length - 1;
 
-        for (int i = 0; i < bridgeObjects.Length; i++)
-        {
-            Vector3 spawnPos;
-
-            bridgeObjects[i] = Instantiate(BridgePrefab, new Vector3(1000, -1000, 1000), Quaternion.identity);
-
-            if (i == 0)
-            {
-                spawnPos = new Vector3(0, .5f * bridgeObjects[i].transform.localScale.y,
-                                        Random.Range(zBridgeSpawnRange.x, zBridgeSpawnRange.y));
-            }
-            else
-            {
-                spawnPos = new Vector3(0, .5f * bridgeObjects[i].transform.localScale.y,
-                                        bridgeObjects[i - 1].transform.position.z + Random.Range(zBridgeSpawnRange.x, zBridgeSpawnRange.y));
-            }
-
-
-            bridgeObjects[i].transform.position = spawnPos;
-        }
-
-
-        for (int i = 0; i < buildingObjects.Length; i++)
-        {
-            Vector3 spawnPos;
-
-            buildingObjects[i] = Instantiate(BuidlingPrefab[Random.Range(0, BuidlingPrefab.Length)], new Vector3(1000, -1000, 1000), Quaternion.identity);
-
-            if (i == 0)
-            {
-                spawnPos = new Vector3(Random.Range(xBuildingSpawnRange.x, xBuildingSpawnRange.y), .5f * buildingObjects[i].transform.localScale.y, 20);
-            }
-            else
-            {
-                spawnPos = new Vector3(Random.Range(xBuildingSpawnRange.x, xBuildingSpawnRange.y), .5f * buildingObjects[i].transform.localScale.y, 
-                                        buildingObjects[i-1].transform.position.z + Random.Range(zBuildingSpawnRange.x, zBuildingSpawnRange.y));
-            }
-
-
-            buildingObjects[i].transform.position = spawnPos;
-        }
 
     }
 
@@ -85,20 +29,18 @@ public class BuildingGenerator : MonoBehaviour
 
     void generateBuidlings()
     {
-        if (PlayerTransform.position.z - buildingObjects[indexToChange_Buidling].transform.position.z > 20)
+        if (PlayerTransform.position.z - cityObjects[indexToChange].transform.position.z > 35)
         {
+            Debug.Log("AAAAAAA");
+            cityObjects[indexToChange].transform.position = cityObjects[lastIndex].transform.position + new Vector3(0, 0, 35);
 
-            Vector3 offset = new Vector3(Random.Range(xBuildingSpawnRange.x, xBuildingSpawnRange.y), 
-                                                        .5f * buildingObjects[indexToChange_Buidling].transform.localScale.y, 
-                                                        Random.Range(zBuildingSpawnRange.x, zBuildingSpawnRange.y));
+            
+            //cityObjects[indexToChange].GetComponent<Particle3D>().position = cityObjects[lastIndex].transform.position + new Vector3(0, 0, 35);
 
-            buildingObjects[indexToChange_Buidling].transform.position = Vector3.Cross(buildingObjects[lastIndex_Buidling].transform.position, new Vector3(1, 0 ,1)) + offset;
+            lastIndex = indexToChange;
 
-
-            lastIndex_Buidling = indexToChange_Buidling;
-
-            indexToChange_Buidling++;
-            indexToChange_Buidling = indexToChange_Buidling % buildingObjects.Length;
+            indexToChange++;
+            indexToChange = indexToChange % cityObjects.Length;
         }
     }
 }
